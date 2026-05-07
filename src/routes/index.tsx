@@ -3,6 +3,7 @@ import portalImg from "@/assets/portal-hero.jpg";
 import { SiteHeader } from "@/components/buildfirst/SiteHeader";
 import { SiteFooter } from "@/components/buildfirst/SiteFooter";
 import { ArrowRight, Compass, Sparkles, Rocket, Target, Brain, Calendar } from "lucide-react";
+import { RocketLogo } from "@/components/buildfirst/RocketLogo";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -29,8 +30,12 @@ function Landing() {
             aria-hidden
           />
           <div className="absolute inset-0 -z-10 bg-gradient-to-b from-background/30 via-background/70 to-background" aria-hidden />
-          <div className="mx-auto max-w-5xl px-6 pt-28 pb-32 text-center">
-            <div className="inline-flex items-center gap-2 rounded-full border border-border/80 bg-card/60 backdrop-blur px-4 py-1.5 text-xs uppercase tracking-[0.2em] text-muted-foreground animate-float-up">
+          <div className="mx-auto max-w-5xl px-6 pt-20 pb-32 text-center">
+            <div className="flex flex-col items-center gap-3 animate-float-up">
+              <RocketLogo size={88} className="drop-shadow-[0_0_28px_rgba(99,102,241,0.55)]" />
+              <span className="font-display font-semibold tracking-tight text-2xl">BuildFirst<span className="text-electric">.ai</span></span>
+            </div>
+            <div className="mt-8 inline-flex items-center gap-2 rounded-full border border-border/80 bg-card/60 backdrop-blur px-4 py-1.5 text-xs uppercase tracking-[0.2em] text-muted-foreground animate-float-up">
               <span className="w-1.5 h-1.5 rounded-full bg-electric animate-pulse" />
               Founder portal · now open
             </div>
