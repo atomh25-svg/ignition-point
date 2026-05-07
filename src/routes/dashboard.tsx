@@ -74,7 +74,7 @@ function Dashboard() {
             <h3 className="font-semibold">30-day build progress</h3>
             <span className="text-sm text-muted-foreground">{completed}/30 complete</span>
           </div>
-          <div className="grid grid-cols-10 sm:grid-cols-15 md:grid-cols-30 gap-1.5">
+          <div className="grid grid-cols-10 md:grid-cols-15 lg:grid-cols-[repeat(30,minmax(0,1fr))] gap-1.5">
             {tracker.map((d) => {
               const isDone = d <= completed;
               const isToday = d === today;
