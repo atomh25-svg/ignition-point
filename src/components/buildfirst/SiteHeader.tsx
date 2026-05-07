@@ -5,9 +5,9 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 backdrop-blur-xl bg-background/60 border-b border-border/60">
       <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-2 group">
-          <RocketLogo size={28} className="drop-shadow-[0_0_12px_rgba(99,102,241,0.6)]" />
-          <span className="font-display font-semibold tracking-tight text-foreground">BuildFirst<span className="text-electric">.ai</span></span>
+        <Link to="/" className="flex items-center gap-2.5 group">
+          <RocketLogo size={40} className="drop-shadow-[0_0_14px_rgba(99,102,241,0.7)] -ml-1" />
+          <span className="font-display font-semibold tracking-tight text-foreground text-lg">BuildFirst<span className="text-electric">.ai</span></span>
         </Link>
         <nav className="hidden md:flex items-center gap-8 text-sm text-muted-foreground">
           <Link to="/how-it-works" className="hover:text-foreground transition-colors">How it works</Link>
