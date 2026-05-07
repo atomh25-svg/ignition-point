@@ -65,16 +65,13 @@ function Onboarding() {
               })}
             </div>
           </div>
-        ) : (
-          <div className="mt-12 surface-card rounded-3xl p-10 text-center animate-float-up relative overflow-hidden">
-            <div className="absolute -top-32 -left-32 w-72 h-72 rounded-full portal-bg blur-3xl opacity-60" />
-            <p className="relative text-sm uppercase tracking-[0.25em] text-violet-glow">Calibration complete</p>
-            <h2 className="relative mt-3 text-3xl font-semibold">Your business ideas are ready.</h2>
-            <Link to="/ideas" className="relative mt-8 btn-electric inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-medium">
-              Reveal my ideas <ArrowRight className="w-4 h-4" />
-            </Link>
-          </div>
-        )}
+        ) : null}
+      </main>
+    </div>
+  );
+
+  // unreachable
+}
       </main>
     </div>
   );
