@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/buildfirst/SiteHeader";
-import { ArrowRight, Target, Users, Flame, Hammer, Ban, DollarSign, Wrench, Megaphone, Rocket, Calendar } from "lucide-react";
+import { ArrowRight, Users, Flame, Hammer, Ban, DollarSign, Wrench, Megaphone, Rocket, Calendar } from "lucide-react";
 
 export const Route = createFileRoute("/blueprint")({
   head: () => ({
