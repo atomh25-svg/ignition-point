@@ -9,7 +9,6 @@ export function RocketLogo({ className, size = 28 }: { className?: string; size?
       width={size}
       height={size}
       className={cn("inline-block select-none", className)}
-      style={{ transform: "rotate(30deg)" }}
       draggable={false}
     />
   );
