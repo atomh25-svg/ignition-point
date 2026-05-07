@@ -1,7 +1,6 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { SiteHeader } from "@/components/buildfirst/SiteHeader";
-import { ArrowRight } from "lucide-react";
 
 export const Route = createFileRoute("/onboarding")({
   head: () => ({
@@ -23,17 +22,21 @@ const questions = [
 ];
 
 function Onboarding() {
+  const navigate = useNavigate();
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<Record<number, string>>({});
   const total = questions.length;
   const current = questions[step];
-  const progress = ((step) / total) * 100;
-  const done = step >= total;
+  const isLast = step === total - 1;
+  const selected = answers[step];
+  const progress = ((step + (selected ? 1 : 0)) / total) * 100;
 
   const choose = (opt: string) => {
     setAnswers((a) => ({ ...a, [step]: opt }));
-    setTimeout(() => setStep((s) => s + 1), 200);
+    if (!isLast) setTimeout(() => setStep((s) => s + 1), 200);
   };
+
+  const finish = () => navigate({ to: "/ideas" });
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -43,38 +46,37 @@ function Onboarding() {
         <h1 className="mt-3 text-4xl md:text-5xl font-semibold">Calibrate your build path.</h1>
 
         <div className="mt-10 h-1 rounded-full bg-muted overflow-hidden">
-          <div className="h-full transition-all duration-500" style={{ width: `${done ? 100 : progress}%`, background: "var(--gradient-electric)" }} />
+          <div className="h-full transition-all duration-500" style={{ width: `${progress}%`, background: "var(--gradient-electric)" }} />
         </div>
 
-        {!done ? (
-          <div key={step} className="mt-10 surface-card rounded-2xl p-8 animate-float-up">
-            <p className="text-sm text-muted-foreground">Question {step + 1} of {total}</p>
-            <h2 className="mt-3 text-2xl font-semibold">{current.q}</h2>
-            <div className="mt-6 grid gap-3">
-              {current.opts.map((opt) => {
-                const selected = answers[step] === opt;
-                return (
-                  <button
-                    key={opt}
-                    onClick={() => choose(opt)}
-                    className={`text-left px-5 py-4 rounded-xl border transition-all ${selected ? "border-electric bg-primary/10" : "border-border hover:border-electric/60 hover:bg-secondary/40"}`}
-                  >
-                    <span className="font-medium">{opt}</span>
-                  </button>
-                );
-              })}
-            </div>
+        <div key={step} className="mt-10 surface-card rounded-2xl p-8 animate-float-up">
+          <p className="text-sm text-muted-foreground">Question {step + 1} of {total}</p>
+          <h2 className="mt-3 text-2xl font-semibold">{current.q}</h2>
+          <div className="mt-6 grid gap-3">
+            {current.opts.map((opt) => {
+              const isSel = selected === opt;
+              return (
+                <button
+                  key={opt}
+                  onClick={() => choose(opt)}
+                  className={`text-left px-5 py-4 rounded-xl border transition-all ${isSel ? "border-electric bg-primary/10" : "border-border hover:border-electric/60 hover:bg-secondary/40"}`}
+                >
+                  <span className="font-medium">{opt}</span>
+                </button>
+              );
+            })}
           </div>
-        ) : (
-          <div className="mt-12 surface-card rounded-3xl p-10 text-center animate-float-up relative overflow-hidden">
-            <div className="absolute -top-32 -left-32 w-72 h-72 rounded-full portal-bg blur-3xl opacity-60" />
-            <p className="relative text-sm uppercase tracking-[0.25em] text-violet-glow">Calibration complete</p>
-            <h2 className="relative mt-3 text-3xl font-semibold">Your business ideas are ready.</h2>
-            <Link to="/ideas" className="relative mt-8 btn-electric inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-medium">
-              Reveal my ideas <ArrowRight className="w-4 h-4" />
-            </Link>
-          </div>
-        )}
+
+          {isLast && (
+            <button
+              onClick={finish}
+              disabled={!selected}
+              className="btn-electric mt-8 w-full inline-flex items-center justify-center rounded-full px-8 py-4 text-base font-medium disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              Complete survey
+            </button>
+          )}
+        </div>
       </main>
     </div>
   );
