@@ -203,7 +203,7 @@ function Dashboard() {
               </li>
               <li className="flex items-start gap-3">
                 <span className="mt-0.5 w-5 h-5 rounded-full border border-electric bg-primary/10 flex items-center justify-center shrink-0 animate-pulse">
-                  <Flame className="w-3 h-3 text-electric" />
+                  <Rocket className="w-3 h-3 text-electric" />
                 </span>
                 <div>
                   <p className="text-foreground">Publish landing page + waitlist.</p>
