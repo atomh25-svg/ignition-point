@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/buildfirst/SiteHeader";
 import { RocketLogo } from "@/components/buildfirst/RocketLogo";
-import { ArrowRight, Sparkles, FileText, MessageSquare, PenLine, Brain, Check, Flame, Target, TrendingUp } from "lucide-react";
+import { ArrowRight, Sparkles, FileText, MessageSquare, PenLine, Brain, Check, Target, TrendingUp, Rocket } from "lucide-react";
 
 export const Route = createFileRoute("/dashboard")({
   head: () => ({
@@ -60,6 +60,79 @@ function Dashboard() {
 
         {/* Grid layout */}
         <div className="mt-6 grid lg:grid-cols-3 gap-5">
+          {/* 30-day tracker — moved to top */}
+          <section className="lg:col-span-3 surface-card rounded-2xl p-6">
+            <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
+              <div>
+                <h3 className="font-semibold">30-day build progress</h3>
+                <p className="text-xs text-muted-foreground mt-0.5">Each box = one day. Filled = shipped.</p>
+              </div>
+              <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                <span className="flex items-center gap-1.5"><span className="w-3.5 h-3.5 rounded border border-emerald-400/60 bg-emerald-500/20 inline-flex items-center justify-center"><Check className="w-2.5 h-2.5 text-emerald-400" strokeWidth={3.5} /></span> Done</span>
+                <span className="flex items-center gap-1.5"><span className="w-3.5 h-3.5 rounded border border-electric bg-primary/10" /> Today</span>
+                <span className="flex items-center gap-1.5"><span className="w-3.5 h-3.5 rounded border border-border bg-muted/40" /> Upcoming</span>
+              </div>
+            </div>
+            <div className="grid grid-cols-10 md:grid-cols-15 lg:grid-cols-[repeat(30,minmax(0,1fr))] gap-1.5">
+              {tracker.map((d) => {
+                const isDone = d <= completed;
+                const isToday = d === today;
+                return (
+                  <div
+                    key={d}
+                    title={`Day ${d}`}
+                    className={`aspect-square rounded-md border flex items-center justify-center text-[10px] font-display ${
+                      isDone
+                        ? "border-emerald-400/60 bg-emerald-500/15 text-emerald-400"
+                        : isToday
+                        ? "border-electric bg-primary/10 text-electric animate-pulse"
+                        : "border-border bg-muted/40 text-muted-foreground/60"
+                    }`}
+                  >
+                    {isDone ? <Check className="w-4 h-4" strokeWidth={3.5} /> : isToday ? <Rocket className="w-3 h-3" /> : d}
+                  </div>
+                );
+              })}
+            </div>
+            <div className="mt-4 h-1.5 rounded-full bg-muted overflow-hidden">
+              <div className="h-full transition-all" style={{ width: `${pct}%`, background: "var(--gradient-electric)" }} />
+            </div>
+          </section>
+
+          {/* Stat tiles — full width row */}
+          <section className="lg:col-span-3 grid sm:grid-cols-3 gap-5">
+            <div className="surface-card rounded-2xl p-6 relative overflow-hidden">
+              <div className="absolute -top-10 -right-10 w-32 h-32 rounded-full bg-emerald-500/10 blur-2xl" />
+              <div className="relative flex items-center justify-between">
+                <span className="text-xs uppercase tracking-wider text-muted-foreground">Days complete</span>
+                <div className="w-9 h-9 rounded-lg bg-emerald-500/15 border border-emerald-400/40 flex items-center justify-center">
+                  <Check className="w-4 h-4 text-emerald-400" strokeWidth={3} />
+                </div>
+              </div>
+              <p className="relative mt-3 font-display text-4xl">{completed}<span className="text-base text-muted-foreground"> / 30</span></p>
+            </div>
+            <div className="surface-card rounded-2xl p-6 relative overflow-hidden">
+              <div className="absolute -top-10 -right-10 w-32 h-32 rounded-full bg-violet-500/10 blur-2xl" />
+              <div className="relative flex items-center justify-between">
+                <span className="text-xs uppercase tracking-wider text-muted-foreground">Current focus</span>
+                <div className="w-9 h-9 rounded-lg bg-violet-500/15 border border-violet-400/40 flex items-center justify-center">
+                  <Target className="w-4 h-4 text-violet-glow" />
+                </div>
+              </div>
+              <p className="relative mt-3 font-display text-lg leading-snug">Landing + waitlist live</p>
+            </div>
+            <div className="surface-card rounded-2xl p-6 relative overflow-hidden">
+              <div className="absolute -top-10 -right-10 w-32 h-32 rounded-full bg-primary/10 blur-2xl" />
+              <div className="relative flex items-center justify-between">
+                <span className="text-xs uppercase tracking-wider text-muted-foreground">Next milestone</span>
+                <div className="w-9 h-9 rounded-lg bg-primary/15 border border-electric/40 flex items-center justify-center">
+                  <TrendingUp className="w-4 h-4 text-electric" />
+                </div>
+              </div>
+              <p className="relative mt-3 font-display text-lg leading-snug">First 3 paid users · D6</p>
+            </div>
+          </section>
+
           {/* Today card — spans 2 cols */}
           <section className="lg:col-span-2 surface-card rounded-3xl p-8 relative overflow-hidden">
             <div className="absolute -top-32 -right-16 w-80 h-80 rounded-full portal-bg blur-3xl opacity-60" />
@@ -84,72 +157,8 @@ function Dashboard() {
             </div>
           </section>
 
-          {/* Stats column */}
-          <section className="space-y-5">
-            <div className="surface-card rounded-2xl p-5">
-              <div className="flex items-center justify-between">
-                <span className="text-xs uppercase tracking-wider text-muted-foreground">Days complete</span>
-                <Check className="w-4 h-4 text-electric" />
-              </div>
-              <p className="mt-2 font-display text-3xl">{completed}<span className="text-base text-muted-foreground"> / 30</span></p>
-            </div>
-            <div className="surface-card rounded-2xl p-5">
-              <div className="flex items-center justify-between">
-                <span className="text-xs uppercase tracking-wider text-muted-foreground">Current focus</span>
-                <Target className="w-4 h-4 text-violet-glow" />
-              </div>
-              <p className="mt-2 font-display text-base">Landing + waitlist live</p>
-            </div>
-            <div className="surface-card rounded-2xl p-5">
-              <div className="flex items-center justify-between">
-                <span className="text-xs uppercase tracking-wider text-muted-foreground">Next milestone</span>
-                <TrendingUp className="w-4 h-4 text-electric" />
-              </div>
-              <p className="mt-2 font-display text-base">First 3 paid users · D6</p>
-            </div>
-          </section>
-
-          {/* 30-day tracker — spans full */}
-          <section className="lg:col-span-3 surface-card rounded-2xl p-6">
-            <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
-              <div>
-                <h3 className="font-semibold">30-day build progress</h3>
-                <p className="text-xs text-muted-foreground mt-0.5">Each box = one day. Filled = shipped.</p>
-              </div>
-              <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded border border-electric bg-primary/30 inline-flex items-center justify-center"><Check className="w-2 h-2 text-electric" /></span> Done</span>
-                <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded border border-electric bg-primary/10" /> Today</span>
-                <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded border border-border bg-muted/40" /> Upcoming</span>
-              </div>
-            </div>
-            <div className="grid grid-cols-10 md:grid-cols-15 lg:grid-cols-[repeat(30,minmax(0,1fr))] gap-1.5">
-              {tracker.map((d) => {
-                const isDone = d <= completed;
-                const isToday = d === today;
-                return (
-                  <div
-                    key={d}
-                    title={`Day ${d}`}
-                    className={`aspect-square rounded-md border flex items-center justify-center text-[10px] font-display ${
-                      isDone
-                        ? "border-electric bg-primary/30 text-electric"
-                        : isToday
-                        ? "border-electric bg-primary/10 text-electric animate-pulse"
-                        : "border-border bg-muted/40 text-muted-foreground/60"
-                    }`}
-                  >
-                    {isDone ? <Check className="w-3 h-3" strokeWidth={3} /> : isToday ? <Flame className="w-3 h-3" /> : d}
-                  </div>
-                );
-              })}
-            </div>
-            <div className="mt-4 h-1.5 rounded-full bg-muted overflow-hidden">
-              <div className="h-full transition-all" style={{ width: `${pct}%`, background: "var(--gradient-electric)" }} />
-            </div>
-          </section>
-
           {/* Modules */}
-          <section className="lg:col-span-2 surface-card rounded-2xl p-6">
+          <section className="surface-card rounded-2xl p-6">
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-semibold">Build modules</h3>
               <span className="text-xs text-muted-foreground">Open any tool</span>
