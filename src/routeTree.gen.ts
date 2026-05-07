@@ -11,7 +11,11 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
+import { Route as IdeasRouteImport } from './routes/ideas'
 import { Route as HowItWorksRouteImport } from './routes/how-it-works'
+import { Route as FounderTypeRouteImport } from './routes/founder-type'
+import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as BlueprintRouteImport } from './routes/blueprint'
 import { Route as IndexRouteImport } from './routes/index'
 
 const PricingRoute = PricingRouteImport.update({
@@ -24,9 +28,29 @@ const OnboardingRoute = OnboardingRouteImport.update({
   path: '/onboarding',
   getParentRoute: () => rootRouteImport,
 } as any)
+const IdeasRoute = IdeasRouteImport.update({
+  id: '/ideas',
+  path: '/ideas',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HowItWorksRoute = HowItWorksRouteImport.update({
   id: '/how-it-works',
   path: '/how-it-works',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FounderTypeRoute = FounderTypeRouteImport.update({
+  id: '/founder-type',
+  path: '/founder-type',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlueprintRoute = BlueprintRouteImport.update({
+  id: '/blueprint',
+  path: '/blueprint',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -37,34 +61,75 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/blueprint': typeof BlueprintRoute
+  '/dashboard': typeof DashboardRoute
+  '/founder-type': typeof FounderTypeRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/ideas': typeof IdeasRoute
   '/onboarding': typeof OnboardingRoute
   '/pricing': typeof PricingRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/blueprint': typeof BlueprintRoute
+  '/dashboard': typeof DashboardRoute
+  '/founder-type': typeof FounderTypeRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/ideas': typeof IdeasRoute
   '/onboarding': typeof OnboardingRoute
   '/pricing': typeof PricingRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/blueprint': typeof BlueprintRoute
+  '/dashboard': typeof DashboardRoute
+  '/founder-type': typeof FounderTypeRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/ideas': typeof IdeasRoute
   '/onboarding': typeof OnboardingRoute
   '/pricing': typeof PricingRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/how-it-works' | '/onboarding' | '/pricing'
+  fullPaths:
+    | '/'
+    | '/blueprint'
+    | '/dashboard'
+    | '/founder-type'
+    | '/how-it-works'
+    | '/ideas'
+    | '/onboarding'
+    | '/pricing'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/how-it-works' | '/onboarding' | '/pricing'
-  id: '__root__' | '/' | '/how-it-works' | '/onboarding' | '/pricing'
+  to:
+    | '/'
+    | '/blueprint'
+    | '/dashboard'
+    | '/founder-type'
+    | '/how-it-works'
+    | '/ideas'
+    | '/onboarding'
+    | '/pricing'
+  id:
+    | '__root__'
+    | '/'
+    | '/blueprint'
+    | '/dashboard'
+    | '/founder-type'
+    | '/how-it-works'
+    | '/ideas'
+    | '/onboarding'
+    | '/pricing'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BlueprintRoute: typeof BlueprintRoute
+  DashboardRoute: typeof DashboardRoute
+  FounderTypeRoute: typeof FounderTypeRoute
   HowItWorksRoute: typeof HowItWorksRoute
+  IdeasRoute: typeof IdeasRoute
   OnboardingRoute: typeof OnboardingRoute
   PricingRoute: typeof PricingRoute
 }
@@ -85,11 +150,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OnboardingRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/ideas': {
+      id: '/ideas'
+      path: '/ideas'
+      fullPath: '/ideas'
+      preLoaderRoute: typeof IdeasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/how-it-works': {
       id: '/how-it-works'
       path: '/how-it-works'
       fullPath: '/how-it-works'
       preLoaderRoute: typeof HowItWorksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/founder-type': {
+      id: '/founder-type'
+      path: '/founder-type'
+      fullPath: '/founder-type'
+      preLoaderRoute: typeof FounderTypeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blueprint': {
+      id: '/blueprint'
+      path: '/blueprint'
+      fullPath: '/blueprint'
+      preLoaderRoute: typeof BlueprintRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -104,7 +197,11 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BlueprintRoute: BlueprintRoute,
+  DashboardRoute: DashboardRoute,
+  FounderTypeRoute: FounderTypeRoute,
   HowItWorksRoute: HowItWorksRoute,
+  IdeasRoute: IdeasRoute,
   OnboardingRoute: OnboardingRoute,
   PricingRoute: PricingRoute,
 }
