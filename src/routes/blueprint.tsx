@@ -1,59 +1,66 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/buildfirst/SiteHeader";
-import { ArrowRight, Users, Flame, Hammer, Ban, DollarSign, Wrench, Megaphone, Rocket, Calendar } from "lucide-react";
+import { RocketLogo } from "@/components/buildfirst/RocketLogo";
+import { ArrowRight, Users, Flame, Hammer, Ban, DollarSign, Wrench, Megaphone, Calendar, CheckCircle2 } from "lucide-react";
 
 export const Route = createFileRoute("/blueprint")({
   head: () => ({
     meta: [
-      { title: "Launch Blueprint — BuildFirst.ai" },
-      { name: "description", content: "Your mission-briefing style plan: MVP, monetization, tools, and 7-day plan." },
+      { title: "Idea Blueprint — BuildFirst.ai" },
+      { name: "description", content: "Your idea, in plain English: what to build, what to skip, and a 7-day plan." },
     ],
   }),
   component: Blueprint,
 });
 
 const stats = [
-  { icon: Users, label: "Target", value: "Solo B2B founders" },
-  { icon: Flame, label: "Pain", value: "DMs are slow & skipped" },
-  { icon: DollarSign, label: "Price", value: "$29/mo · 200 drafts" },
-  { icon: Calendar, label: "Time to launch", value: "7 days" },
+  { icon: Users, label: "Who it's for", value: "Solo B2B founders running outbound on LinkedIn" },
+  { icon: Flame, label: "Why they'll pay", value: "Their cold DMs get ignored — this writes ones that don't" },
+  { icon: DollarSign, label: "Price", value: "$29/mo · 200 AI drafts included" },
+  { icon: Calendar, label: "Time to first paid user", value: "7 days" },
+];
+
+const inPlainEnglish = [
+  "You'll build a Chrome extension. When a user opens someone's LinkedIn profile, a small button appears next to their name.",
+  "They click it. Your tool reads the prospect's recent posts and job title, sends that to an AI model, and gets back a 3-line opener written in the user's voice.",
+  "The draft drops straight into LinkedIn's message box, ready to edit and send. That's the whole product on day one — one button, one prompt, one draft.",
 ];
 
 const pillars = [
   {
     icon: Hammer,
     tone: "electric",
-    title: "Build first",
-    body: "A Chrome extension button on a LinkedIn profile that opens a 3-line draft, editable in place. One model call, one prompt, one button.",
+    title: "What you're building",
+    body: "A Chrome extension button on LinkedIn profiles that opens an editable, personalized 3-line cold-DM draft. Single AI call per click.",
   },
   {
     icon: Ban,
     tone: "destructive",
-    title: "Don't build yet",
-    body: "No full CRM. No scheduling. No multi-tenant dashboard. No auth on day one. Cut every feature that isn't the draft.",
+    title: "What to skip (for now)",
+    body: "No CRM. No scheduling. No team accounts. No multi-channel. No login on day one — store everything locally in the browser.",
   },
   {
     icon: Wrench,
     tone: "violet",
-    title: "Tools",
-    body: "Lovable for the marketing site. Chrome MV3 for the extension. Lovable AI Gateway for the drafts. Stripe Checkout for money.",
+    title: "Tools you'll use",
+    body: "Lovable for the marketing site. Chrome MV3 boilerplate for the extension. Lovable AI Gateway for drafts. Stripe Checkout for payment.",
   },
   {
     icon: Megaphone,
     tone: "electric",
-    title: "First customers",
-    body: "DM 30 founders you've talked to in the last 90 days. Live Loom demo. Charge the same week — no waitlist theater.",
+    title: "How you'll get the first 10 users",
+    body: "DM 30 founders you've spoken to in the last 90 days. Send a 60-second Loom of you using it. Charge them this same week — no waitlist.",
   },
 ];
 
 const days = [
-  { title: "Landing + waitlist", body: "Publish a one-page site. Capture emails." },
-  { title: "Draft prompt", body: "Ship the generator. Test on 20 real profiles." },
-  { title: "Extension shell", body: "Wrap the prompt in a Chrome MV3 button." },
-  { title: "Stripe + trial", body: "10 free drafts, then paywall. Live checkout." },
-  { title: "Warm DMs", body: "Send 15 Loom demos to past contacts." },
-  { title: "First 3 paid", body: "Onboard live on a call. Watch them use it." },
-  { title: "Public build log", body: "Post the week. Repeat the loop." },
+  { title: "Landing + waitlist", body: "Publish a one-page site explaining the tool. Capture emails." },
+  { title: "Core prompt", body: "Write & test the AI draft prompt against 20 real LinkedIn profiles." },
+  { title: "Extension shell", body: "Wrap the prompt in a Chrome MV3 button that injects on linkedin.com." },
+  { title: "Stripe + free trial", body: "10 free drafts, then paywall. Live Stripe Checkout." },
+  { title: "Warm DMs", body: "Send 15 personal Loom demos to past contacts." },
+  { title: "First 3 paid", body: "Onboard each one live on a 15-min call. Watch them use it." },
+  { title: "Public build log", body: "Post the week's results on LinkedIn. Repeat the loop." },
 ];
 
 const toneMap: Record<string, string> = {
@@ -67,12 +74,12 @@ function Blueprint() {
     <div className="min-h-screen flex flex-col">
       <SiteHeader />
       <main className="flex-1 mx-auto max-w-6xl px-6 py-16 w-full">
-        {/* Mission hero */}
+        {/* Idea hero */}
         <section className="surface-card rounded-3xl p-8 md:p-10 relative overflow-hidden">
           <div className="absolute -top-40 -right-32 w-[28rem] h-[28rem] rounded-full portal-bg blur-3xl opacity-60 animate-pulse-glow" />
           <div className="relative">
             <div className="flex items-center gap-3">
-              <span className="text-xs uppercase tracking-[0.25em] text-electric">Mission briefing</span>
+              <span className="text-xs uppercase tracking-[0.25em] text-electric">Idea</span>
               <span className="h-px flex-1 bg-border" />
               <span className="text-xs font-display text-violet-glow">v1.0 · LOCKED</span>
             </div>
@@ -80,11 +87,11 @@ function Blueprint() {
               <span className="text-gradient">Cold-DM Co-pilot</span>
             </h1>
             <p className="mt-4 max-w-2xl text-muted-foreground">
-              A Chrome extension that drafts personalized LinkedIn DMs from a prospect's recent activity.
-              Read it once. Then begin Day 1.
+              A Chrome extension that writes personalized LinkedIn DMs from a prospect's recent activity.
+              Below is exactly what it does, who it's for, and how you'll ship it.
             </p>
 
-            <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-3">
+            <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-3">
               {stats.map((s) => (
                 <div key={s.label} className="rounded-xl border border-border bg-secondary/30 p-4">
                   <div className="flex items-center gap-2 text-muted-foreground text-xs uppercase tracking-wider">
@@ -95,6 +102,22 @@ function Blueprint() {
               ))}
             </div>
           </div>
+        </section>
+
+        {/* In plain English */}
+        <section className="mt-10 surface-card rounded-2xl p-8">
+          <p className="text-xs uppercase tracking-[0.25em] text-violet-glow">In plain English</p>
+          <h2 className="mt-2 text-2xl md:text-3xl font-semibold">Here's exactly what you'll be building.</h2>
+          <ol className="mt-6 space-y-4">
+            {inPlainEnglish.map((p, i) => (
+              <li key={i} className="flex gap-4">
+                <div className="shrink-0 w-7 h-7 rounded-full portal-bg ring-glow flex items-center justify-center font-display text-xs">
+                  {i + 1}
+                </div>
+                <p className="text-muted-foreground leading-relaxed pt-0.5">{p}</p>
+              </li>
+            ))}
+          </ol>
         </section>
 
         {/* Pillars */}
@@ -121,15 +144,14 @@ function Blueprint() {
           <div className="flex items-end justify-between gap-4 flex-wrap">
             <div>
               <p className="text-xs uppercase tracking-[0.25em] text-electric">Build path</p>
-              <h2 className="mt-2 text-3xl font-semibold">7-day launch trajectory</h2>
+              <h2 className="mt-2 text-3xl font-semibold">7 days to your first paid user</h2>
             </div>
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              <Rocket className="w-4 h-4 text-electric" /> Day 7 = first paid users
+              <RocketLogo size={18} /> Day 7 = real money in
             </div>
           </div>
 
           <div className="mt-8 relative">
-            {/* Spine */}
             <div className="absolute left-5 top-0 bottom-0 w-px md:hidden" style={{ background: "var(--gradient-electric)" }} />
             <div className="hidden md:block absolute top-7 left-0 right-0 h-px" style={{ background: "var(--gradient-electric)", opacity: 0.5 }} />
 
