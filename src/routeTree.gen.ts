@@ -13,7 +13,6 @@ import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as IdeasRouteImport } from './routes/ideas'
 import { Route as HowItWorksRouteImport } from './routes/how-it-works'
-import { Route as FounderTypeRouteImport } from './routes/founder-type'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as BlueprintRouteImport } from './routes/blueprint'
 import { Route as IndexRouteImport } from './routes/index'
@@ -38,11 +37,6 @@ const HowItWorksRoute = HowItWorksRouteImport.update({
   path: '/how-it-works',
   getParentRoute: () => rootRouteImport,
 } as any)
-const FounderTypeRoute = FounderTypeRouteImport.update({
-  id: '/founder-type',
-  path: '/founder-type',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -63,7 +57,6 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/blueprint': typeof BlueprintRoute
   '/dashboard': typeof DashboardRoute
-  '/founder-type': typeof FounderTypeRoute
   '/how-it-works': typeof HowItWorksRoute
   '/ideas': typeof IdeasRoute
   '/onboarding': typeof OnboardingRoute
@@ -73,7 +66,6 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/blueprint': typeof BlueprintRoute
   '/dashboard': typeof DashboardRoute
-  '/founder-type': typeof FounderTypeRoute
   '/how-it-works': typeof HowItWorksRoute
   '/ideas': typeof IdeasRoute
   '/onboarding': typeof OnboardingRoute
@@ -84,7 +76,6 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/blueprint': typeof BlueprintRoute
   '/dashboard': typeof DashboardRoute
-  '/founder-type': typeof FounderTypeRoute
   '/how-it-works': typeof HowItWorksRoute
   '/ideas': typeof IdeasRoute
   '/onboarding': typeof OnboardingRoute
@@ -96,7 +87,6 @@ export interface FileRouteTypes {
     | '/'
     | '/blueprint'
     | '/dashboard'
-    | '/founder-type'
     | '/how-it-works'
     | '/ideas'
     | '/onboarding'
@@ -106,7 +96,6 @@ export interface FileRouteTypes {
     | '/'
     | '/blueprint'
     | '/dashboard'
-    | '/founder-type'
     | '/how-it-works'
     | '/ideas'
     | '/onboarding'
@@ -116,7 +105,6 @@ export interface FileRouteTypes {
     | '/'
     | '/blueprint'
     | '/dashboard'
-    | '/founder-type'
     | '/how-it-works'
     | '/ideas'
     | '/onboarding'
@@ -127,7 +115,6 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   BlueprintRoute: typeof BlueprintRoute
   DashboardRoute: typeof DashboardRoute
-  FounderTypeRoute: typeof FounderTypeRoute
   HowItWorksRoute: typeof HowItWorksRoute
   IdeasRoute: typeof IdeasRoute
   OnboardingRoute: typeof OnboardingRoute
@@ -164,13 +151,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HowItWorksRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/founder-type': {
-      id: '/founder-type'
-      path: '/founder-type'
-      fullPath: '/founder-type'
-      preLoaderRoute: typeof FounderTypeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/dashboard': {
       id: '/dashboard'
       path: '/dashboard'
@@ -199,7 +179,6 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BlueprintRoute: BlueprintRoute,
   DashboardRoute: DashboardRoute,
-  FounderTypeRoute: FounderTypeRoute,
   HowItWorksRoute: HowItWorksRoute,
   IdeasRoute: IdeasRoute,
   OnboardingRoute: OnboardingRoute,
@@ -208,3 +187,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
