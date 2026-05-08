@@ -7,7 +7,7 @@ export const Route = createFileRoute("/how-it-works")({
   head: () => ({
     meta: [
       { title: "How it works — LaunchFly.io" },
-      { name: "description", content: "From impulse to launch in seven steps. The buildup founder journey." },
+      { name: "description", content: "From impulse to launch in seven steps. The LaunchFly founder journey." },
       { property: "og:title", content: "How it works — LaunchFly.io" },
       { property: "og:description", content: "Enter with an idea. Leave with a launch plan." },
     ],
