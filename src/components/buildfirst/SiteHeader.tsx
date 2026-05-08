@@ -7,7 +7,7 @@ export function SiteHeader() {
       <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2.5 group">
           <RocketLogo size={36} className="drop-shadow-[0_0_18px_rgba(255,90,140,0.55)] -ml-1" />
-          <span className="font-display font-semibold tracking-tight text-foreground text-lg lowercase">buildup<span className="text-gradient">.space</span></span>
+          <span className="font-display font-semibold tracking-tight text-foreground text-lg ">LaunchFly<span className="text-gradient">.io</span></span>
         </Link>
         <nav className="hidden md:flex items-center gap-8 text-sm text-muted-foreground">
           <Link to="/how-it-works" className="hover:text-foreground transition-colors">How it works</Link>
