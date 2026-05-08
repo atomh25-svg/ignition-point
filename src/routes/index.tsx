@@ -33,7 +33,7 @@ function Landing() {
           <div className="mx-auto max-w-5xl px-6 pt-20 pb-32 text-center">
             <div className="flex flex-col items-center gap-3 animate-float-up">
               <RocketLogo size={88} className="drop-shadow-[0_0_28px_rgba(99,102,241,0.55)]" />
-              <span className="font-display font-semibold tracking-tight text-2xl">BuildFirst<span className="text-electric">.ai</span></span>
+              <span className="font-display font-semibold tracking-tight text-3xl lowercase">buildup<span className="text-gradient">.space</span></span>
             </div>
             <div className="mt-8 inline-flex items-center gap-2 rounded-full border border-border/80 bg-card/60 backdrop-blur px-4 py-1.5 text-xs uppercase tracking-[0.2em] text-muted-foreground animate-float-up">
               <span className="w-1.5 h-1.5 rounded-full bg-electric animate-pulse" />
