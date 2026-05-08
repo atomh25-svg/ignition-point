@@ -46,8 +46,8 @@
   --popover: oklch(0.16 0.04 265);
   --popover-foreground: oklch(0.97 0.01 250);
 
-  /* Electric blue primary (#1A44CA) */
-  --primary: oklch(0.45 0.22 265);
+  /* Steel blue primary (#3D6E8E) */
+  --primary: oklch(0.55 0.07 235);
   --primary-foreground: oklch(0.12 0.04 265);
   --secondary: oklch(0.24 0.05 265);
   --secondary-foreground: oklch(0.97 0.01 250);
@@ -59,18 +59,18 @@
   --destructive-foreground: oklch(0.98 0 0);
   --border: oklch(0.35 0.06 265 / 0.45);
   --input: oklch(0.25 0.05 265);
-  --ring: oklch(0.45 0.22 265);
+  --ring: oklch(0.55 0.07 235);
 
-  --electric: oklch(0.5 0.23 265);
-  --violet-glow: oklch(0.45 0.22 265);
+  --electric: oklch(0.6 0.08 235);
+  --violet-glow: oklch(0.55 0.07 235);
 
-  /* True electric blue #1A44CA */
-  --gradient-portal: radial-gradient(circle at 30% 50%, oklch(0.45 0.22 265 / 0.55), oklch(0.55 0.2 262 / 0.35) 55%, transparent 80%);
-  --gradient-electric: linear-gradient(110deg, oklch(0.42 0.22 266), oklch(0.55 0.22 262));
-  --gradient-surface: linear-gradient(180deg, oklch(0.2 0.05 265 / 0.6), oklch(0.14 0.04 265 / 0.4));
-  --gradient-text: linear-gradient(110deg, oklch(0.5 0.23 265), oklch(0.62 0.22 262));
+  /* Steel blue #3D6E8E */
+  --gradient-portal: radial-gradient(circle at 30% 50%, oklch(0.55 0.07 235 / 0.55), oklch(0.65 0.06 230 / 0.35) 55%, transparent 80%);
+  --gradient-electric: linear-gradient(110deg, oklch(0.5 0.07 235), oklch(0.65 0.07 230));
+  --gradient-surface: linear-gradient(180deg, oklch(0.2 0.04 235 / 0.6), oklch(0.14 0.03 235 / 0.4));
+  --gradient-text: linear-gradient(110deg, oklch(0.6 0.08 235), oklch(0.72 0.07 230));
 
-  --shadow-glow: 0 0 60px -10px oklch(0.45 0.22 265 / 0.6);
+  --shadow-glow: 0 0 60px -10px oklch(0.55 0.07 235 / 0.6);
   --shadow-elevated: 0 30px 80px -20px oklch(0.05 0.05 265 / 0.8);
   --shadow-inner-glow: inset 0 1px 0 0 oklch(1 0 0 / 0.06);
 
