@@ -6,7 +6,7 @@ import { ArrowRight, Sparkles, FileText, MessageSquare, PenLine, Brain, Check, T
 export const Route = createFileRoute("/dashboard")({
   head: () => ({
     meta: [
-      { title: "Build Dashboard — LaunchStart" },
+      { title: "Build Dashboard — LaunchFly" },
       { name: "description", content: "Your build dashboard. What to do today." },
     ],
   }),

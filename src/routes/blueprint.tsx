@@ -6,7 +6,7 @@ import { ArrowRight, Users, Flame, Hammer, Ban, DollarSign, Wrench, Megaphone, C
 export const Route = createFileRoute("/blueprint")({
   head: () => ({
     meta: [
-      { title: "Idea Blueprint — LaunchStart" },
+      { title: "Idea Blueprint — LaunchFly" },
       { name: "description", content: "Your idea, in plain English: what to build, what to skip, and a 7-day plan." },
     ],
   }),
