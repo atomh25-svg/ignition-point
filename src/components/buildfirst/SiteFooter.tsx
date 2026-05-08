@@ -6,9 +6,9 @@ export function SiteFooter() {
       <div className="mx-auto max-w-7xl px-6 py-10 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
         <div className="flex items-center gap-2">
           <RocketLogo size={20} />
-          <span>buildup.space — The first step from impulse to reality.</span>
+          <span>LaunchFly.io — The first step from impulse to reality.</span>
         </div>
-        <div>© {new Date().getFullYear()} buildup.space</div>
+        <div>© {new Date().getFullYear()} LaunchFly.io</div>
       </div>
     </footer>
   );
