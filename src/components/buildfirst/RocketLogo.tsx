@@ -5,7 +5,7 @@ export function RocketLogo({ className, size = 28 }: { className?: string; size?
   return (
     <img
       src={logo}
-      alt="LaunchFly.io"
+      alt="LaunchStart"
       width={size}
       height={size}
       className={cn("inline-block select-none", className)}
