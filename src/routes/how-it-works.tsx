@@ -6,9 +6,9 @@ import { ArrowRight } from "lucide-react";
 export const Route = createFileRoute("/how-it-works")({
   head: () => ({
     meta: [
-      { title: "How it works — LaunchStart" },
-      { name: "description", content: "From impulse to launch in seven steps. The LaunchStart founder journey." },
-      { property: "og:title", content: "How it works — LaunchStart" },
+      { title: "How it works — LaunchFly" },
+      { name: "description", content: "From impulse to launch in seven steps. The LaunchFly founder journey." },
+      { property: "og:title", content: "How it works — LaunchFly" },
       { property: "og:description", content: "Enter with an idea. Leave with a launch plan." },
     ],
   }),
