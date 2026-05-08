@@ -6,9 +6,9 @@ import { ArrowRight } from "lucide-react";
 export const Route = createFileRoute("/how-it-works")({
   head: () => ({
     meta: [
-      { title: "How it works — BuildFirst.ai" },
-      { name: "description", content: "From impulse to launch in seven steps. The BuildFirst founder journey." },
-      { property: "og:title", content: "How it works — BuildFirst.ai" },
+      { title: "How it works — buildup.space" },
+      { name: "description", content: "From impulse to launch in seven steps. The buildup founder journey." },
+      { property: "og:title", content: "How it works — buildup.space" },
       { property: "og:description", content: "Enter with an idea. Leave with a launch plan." },
     ],
   }),
