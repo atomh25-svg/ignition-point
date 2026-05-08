@@ -60,7 +60,31 @@ function Dashboard() {
 
         {/* Grid layout */}
         <div className="mt-6 grid lg:grid-cols-3 gap-5">
-          {/* 30-day tracker — moved to top */}
+          {/* Today card — spans full width at top */}
+          <section className="lg:col-span-3 surface-card rounded-3xl p-8 relative overflow-hidden">
+            <div className="absolute -top-32 -right-16 w-80 h-80 rounded-full portal-bg blur-3xl opacity-60" />
+            <div className="relative">
+              <div className="flex items-center gap-2">
+                <span className="text-xs uppercase tracking-[0.25em] text-violet-glow">Today's step · Day {today}</span>
+              </div>
+              <h2 className="mt-3 text-2xl md:text-3xl font-semibold leading-tight">
+                <span className="text-gradient">Publish your landing page and open the waitlist.</span>
+              </h2>
+              <p className="mt-3 text-muted-foreground max-w-xl text-sm">
+                Use the Landing copy module. Ship a single page with a hero, one promise, and an email capture. Don't iterate. Just publish.
+              </p>
+              <div className="mt-6 flex flex-wrap gap-3">
+                <button className="btn-electric inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-medium">
+                  Begin step <ArrowRight className="w-4 h-4" />
+                </button>
+                <button className="rounded-full px-6 py-3 text-sm font-medium border border-border hover:bg-secondary/50 transition-colors">
+                  Mark complete
+                </button>
+              </div>
+            </div>
+          </section>
+
+          {/* 30-day tracker */}
           <section className="lg:col-span-3 surface-card rounded-2xl p-6">
             <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
               <div>
@@ -133,32 +157,8 @@ function Dashboard() {
             </div>
           </section>
 
-          {/* Today card — spans 2 cols */}
-          <section className="lg:col-span-2 surface-card rounded-3xl p-8 relative overflow-hidden">
-            <div className="absolute -top-32 -right-16 w-80 h-80 rounded-full portal-bg blur-3xl opacity-60" />
-            <div className="relative">
-              <div className="flex items-center gap-2">
-                <span className="text-xs uppercase tracking-[0.25em] text-violet-glow">Today's step · Day {today}</span>
-              </div>
-              <h2 className="mt-3 text-2xl md:text-3xl font-semibold leading-tight">
-                <span className="text-gradient">Publish your landing page and open the waitlist.</span>
-              </h2>
-              <p className="mt-3 text-muted-foreground max-w-xl text-sm">
-                Use the Landing copy module. Ship a single page with a hero, one promise, and an email capture. Don't iterate. Just publish.
-              </p>
-              <div className="mt-6 flex flex-wrap gap-3">
-                <button className="btn-electric inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-medium">
-                  Begin step <ArrowRight className="w-4 h-4" />
-                </button>
-                <button className="rounded-full px-6 py-3 text-sm font-medium border border-border hover:bg-secondary/50 transition-colors">
-                  Mark complete
-                </button>
-              </div>
-            </div>
-          </section>
-
           {/* Modules */}
-          <section className="surface-card rounded-2xl p-6">
+          <section className="lg:col-span-2 surface-card rounded-2xl p-6">
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-semibold">Build modules</h3>
               <span className="text-xs text-muted-foreground">Open any tool</span>
