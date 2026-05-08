@@ -62,13 +62,13 @@
   --ring: oklch(0.75 0.18 250);
 
   --electric: oklch(0.78 0.2 240);
-  --violet-glow: oklch(0.65 0.25 295);
+  --violet-glow: oklch(0.6 0.25 265);
 
-  /* Cool: violet → electric blue */
-  --gradient-portal: radial-gradient(circle at 30% 50%, oklch(0.65 0.22 285 / 0.5), oklch(0.7 0.2 250 / 0.35) 55%, transparent 80%);
-  --gradient-electric: linear-gradient(110deg, oklch(0.68 0.2 280), oklch(0.75 0.18 245));
+  /* Electric cobalt blue */
+  --gradient-portal: radial-gradient(circle at 30% 50%, oklch(0.6 0.25 265 / 0.5), oklch(0.7 0.22 250 / 0.35) 55%, transparent 80%);
+  --gradient-electric: linear-gradient(110deg, oklch(0.6 0.26 262), oklch(0.7 0.22 250));
   --gradient-surface: linear-gradient(180deg, oklch(0.2 0.05 265 / 0.6), oklch(0.14 0.04 265 / 0.4));
-  --gradient-text: linear-gradient(110deg, oklch(0.82 0.16 270), oklch(0.82 0.16 240));
+  --gradient-text: linear-gradient(110deg, oklch(0.62 0.26 262), oklch(0.7 0.24 252));
 
   --shadow-glow: 0 0 60px -10px oklch(0.7 0.22 270 / 0.5);
   --shadow-elevated: 0 30px 80px -20px oklch(0.05 0.05 265 / 0.8);
