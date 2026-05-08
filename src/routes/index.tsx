@@ -32,7 +32,7 @@ function Landing() {
           <div className="absolute inset-0 -z-10 bg-gradient-to-b from-background/30 via-background/70 to-background" aria-hidden />
           <div className="mx-auto max-w-5xl px-6 pt-20 pb-32 text-center">
             <div className="flex flex-row items-center justify-center gap-4 animate-float-up">
-              <RocketLogo size={72} className="drop-shadow-[0_0_28px_rgba(45,91,255,0.7)] -rotate-[30deg]" />
+              <RocketLogo size={120} className="drop-shadow-[0_0_28px_rgba(26,68,202,0.7)] rotate-[30deg]" />
               <span className="font-display font-semibold tracking-tight text-5xl md:text-6xl">LaunchFly<span className="text-gradient">.io</span></span>
             </div>
             <div className="mt-8 inline-flex items-center gap-2 rounded-full border border-border/80 bg-card/60 backdrop-blur px-4 py-1.5 text-xs uppercase tracking-[0.2em] text-muted-foreground animate-float-up">
