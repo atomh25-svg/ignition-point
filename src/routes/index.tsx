@@ -33,7 +33,7 @@ function Landing() {
           <div className="mx-auto max-w-5xl px-6 pt-20 pb-32 text-center">
             <div className="flex flex-row items-center justify-center gap-2.5 animate-float-up">
               <RocketLogo size={64} className="drop-shadow-[0_0_18px_rgba(26,68,202,0.7)] rotate-[30deg]" />
-              <span className="font-display font-semibold tracking-tight text-3xl md:text-4xl">Launch<span className="text-gradient">Start</span></span>
+              <span className="font-display font-semibold tracking-tight text-3xl md:text-4xl text-gradient">LaunchStart</span>
             </div>
             <div className="mt-8 inline-flex items-center gap-2 rounded-full border border-border/80 bg-card/60 backdrop-blur px-4 py-1.5 text-xs uppercase tracking-[0.2em] text-muted-foreground animate-float-up">
               <span className="w-1.5 h-1.5 rounded-full bg-electric animate-pulse" />
