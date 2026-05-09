@@ -57,7 +57,7 @@ function Hero() {
         </div>
 
         <h1 className="text-[3.3rem] md:text-[5rem] font-bold tracking-tight leading-[1.05]">
-          The first step<br/>
+          <span className="text-[3.7rem] md:text-[5.6rem]">The first step</span><br/>
           <span className="text-gradient whitespace-nowrap">from idea to takeoff.</span>
         </h1>
 
