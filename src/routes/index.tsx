@@ -23,13 +23,7 @@ export const Route = createFileRoute("/")({
 
 function Home() {
   return (
-    <div className="min-h-screen relative">
-      {/* Hero atmosphere extended page-wide — fixed so it covers every
-          section's viewport instead of cutting off at the hero edge.
-          Gradient first, grid on top so the lines don't get washed out. */}
-      <div aria-hidden className="fixed inset-0 -z-10 bg-gradient-hero pointer-events-none" />
-      <div aria-hidden className="fixed inset-0 -z-10 grid-bg opacity-70 pointer-events-none" />
-
+    <div className="min-h-screen">
       <Navbar />
       <Hero />
       <Problem />
