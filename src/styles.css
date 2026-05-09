@@ -94,8 +94,8 @@
   body {
     background-image:
       /* Grid lines (top layer) */
-      linear-gradient(oklch(1 0 0 / 6%) 1px, transparent 1px),
-      linear-gradient(90deg, oklch(1 0 0 / 6%) 1px, transparent 1px),
+      linear-gradient(oklch(1 0 0 / 3%) 1px, transparent 1px),
+      linear-gradient(90deg, oklch(1 0 0 / 3%) 1px, transparent 1px),
       /* Hero gradient v1: top-center violet + bottom-right cyan */
       radial-gradient(ellipse at top, oklch(0.3 0.15 280 / 60%), transparent 60%),
       radial-gradient(ellipse at bottom right, oklch(0.4 0.18 220 / 35%), transparent 60%),
