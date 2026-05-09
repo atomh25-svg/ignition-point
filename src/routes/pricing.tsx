@@ -6,9 +6,9 @@ import { Check, ArrowRight } from "lucide-react";
 export const Route = createFileRoute("/pricing")({
   head: () => ({
     meta: [
-      { title: "Pricing — LaunchStart" },
-      { name: "description", content: "LaunchStart membership — $19/month. Commit and begin your build journey." },
-      { property: "og:title", content: "Commit & Begin — LaunchStart" },
+      { title: "Pricing — build.ai" },
+      { name: "description", content: "build Membership — $19/month. Commit and begin your build journey." },
+      { property: "og:title", content: "Commit & Begin — build.ai" },
       { property: "og:description", content: "Paying is part of the ritual. Become someone who builds." },
     ],
   }),
@@ -43,7 +43,7 @@ function Pricing() {
           <div className="absolute -top-40 -right-40 w-80 h-80 rounded-full portal-bg blur-3xl opacity-60" />
           <div className="relative">
             <div className="flex items-baseline gap-2">
-              <span className="text-xs uppercase tracking-[0.25em] text-violet-glow">LaunchStart membership</span>
+              <span className="text-xs uppercase tracking-[0.25em] text-violet-glow">build Membership</span>
             </div>
             <div className="mt-4 flex items-baseline gap-2">
               <span className="text-6xl font-semibold font-display">$19</span>
@@ -62,7 +62,7 @@ function Pricing() {
               <ArrowRight className="w-4 h-4" />
             </Link>
             <p className="mt-6 text-sm text-muted-foreground italic">
-              Welcome to LaunchStart. Your vision has entered the build phase.
+              Welcome to build. Your vision has entered the build phase.
             </p>
           </div>
         </div>

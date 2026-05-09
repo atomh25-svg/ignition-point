@@ -46,8 +46,8 @@
   --popover: oklch(0.16 0.04 265);
   --popover-foreground: oklch(0.97 0.01 250);
 
-  /* Magenta primary (#EF00FF) */
-  --primary: oklch(0.65 0.35 325);
+  /* Electric blue primary */
+  --primary: oklch(0.75 0.18 250);
   --primary-foreground: oklch(0.12 0.04 265);
   --secondary: oklch(0.24 0.05 265);
   --secondary-foreground: oklch(0.97 0.01 250);
@@ -59,18 +59,17 @@
   --destructive-foreground: oklch(0.98 0 0);
   --border: oklch(0.35 0.06 265 / 0.45);
   --input: oklch(0.25 0.05 265);
-  --ring: oklch(0.65 0.35 325);
+  --ring: oklch(0.75 0.18 250);
 
-  --electric: oklch(0.7 0.34 325);
-  --violet-glow: oklch(0.65 0.35 325);
+  --electric: oklch(0.78 0.2 240);
+  --violet-glow: oklch(0.65 0.25 295);
 
-  /* Magenta #EF00FF */
-  --gradient-portal: radial-gradient(circle at 30% 50%, oklch(0.65 0.35 325 / 0.55), oklch(0.75 0.3 320 / 0.35) 55%, transparent 80%);
-  --gradient-electric: linear-gradient(110deg, oklch(0.6 0.36 325), oklch(0.75 0.3 320));
-  --gradient-surface: linear-gradient(180deg, oklch(0.22 0.08 325 / 0.6), oklch(0.15 0.06 325 / 0.4));
-  --gradient-text: linear-gradient(110deg, oklch(0.7 0.35 325), oklch(0.8 0.28 320));
+  --gradient-portal: radial-gradient(circle at 50% 50%, oklch(0.65 0.25 295 / 0.55), oklch(0.75 0.2 240 / 0.35) 35%, transparent 70%);
+  --gradient-electric: linear-gradient(135deg, oklch(0.78 0.2 240), oklch(0.65 0.25 295));
+  --gradient-surface: linear-gradient(180deg, oklch(0.2 0.05 265 / 0.6), oklch(0.14 0.04 265 / 0.4));
+  --gradient-text: linear-gradient(135deg, oklch(0.95 0.05 250), oklch(0.78 0.2 240) 50%, oklch(0.7 0.22 295));
 
-  --shadow-glow: 0 0 60px -10px oklch(0.65 0.35 325 / 0.6);
+  --shadow-glow: 0 0 60px -10px oklch(0.7 0.22 270 / 0.5);
   --shadow-elevated: 0 30px 80px -20px oklch(0.05 0.05 265 / 0.8);
   --shadow-inner-glow: inset 0 1px 0 0 oklch(1 0 0 / 0.06);
 

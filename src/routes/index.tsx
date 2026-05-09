@@ -8,9 +8,9 @@ import { RocketLogo } from "@/components/buildfirst/RocketLogo";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "LaunchStart — The first step from impulse to reality" },
-      { name: "description", content: "LaunchStart helps you find your business idea, shape it into a real offer, build the first version, and move toward your first customer." },
-      { property: "og:title", content: "LaunchStart — The first step from impulse to reality" },
+      { title: "build.ai — The first step from impulse to reality" },
+      { name: "description", content: "build.ai helps you find your business idea, shape it into a real offer, build the first version, and move toward your first customer." },
+      { property: "og:title", content: "build.ai — The first step from impulse to reality" },
       { property: "og:description", content: "Enter with an idea. Leave with a launch plan." },
     ],
   }),
@@ -31,9 +31,9 @@ function Landing() {
           />
           <div className="absolute inset-0 -z-10 bg-gradient-to-b from-background/30 via-background/70 to-background" aria-hidden />
           <div className="mx-auto max-w-5xl px-6 pt-20 pb-32 text-center">
-            <div className="flex flex-row items-center justify-center gap-2.5 animate-float-up">
-              <RocketLogo size={64} className="drop-shadow-[0_0_18px_rgba(26,68,202,0.7)] rotate-[30deg]" />
-              <span className="font-display font-semibold tracking-tight text-3xl md:text-4xl">Launch<span className="text-gradient">Start</span></span>
+            <div className="flex flex-col items-center gap-3 animate-float-up">
+              <RocketLogo size={88} className="drop-shadow-[0_0_28px_rgba(99,102,241,0.55)]" />
+              <span className="font-display font-semibold tracking-tight text-2xl">build<span className="text-electric">.ai</span></span>
             </div>
             <div className="mt-8 inline-flex items-center gap-2 rounded-full border border-border/80 bg-card/60 backdrop-blur px-4 py-1.5 text-xs uppercase tracking-[0.2em] text-muted-foreground animate-float-up">
               <span className="w-1.5 h-1.5 rounded-full bg-electric animate-pulse" />
@@ -44,7 +44,7 @@ function Landing() {
               <span className="text-gradient">building what you keep thinking about.</span>
             </h1>
             <p className="mt-8 max-w-2xl mx-auto text-lg text-muted-foreground animate-float-up" style={{ animationDelay: "0.2s" }}>
-              LaunchStart helps you find your business idea, shape it into a real offer, build the first version,
+              build.ai helps you find your business idea, shape it into a real offer, build the first version,
               and move toward your first customer.
             </p>
             <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 animate-float-up" style={{ animationDelay: "0.3s" }}>
