@@ -31,7 +31,7 @@ function Landing() {
           />
           <div className="absolute inset-0 -z-10 bg-gradient-to-b from-background/30 via-background/70 to-background" aria-hidden />
           <div className="mx-auto max-w-5xl px-6 pt-20 pb-32 text-center">
-            <div className="inline-flex items-center gap-2 rounded-full border border-border/80 bg-card/60 backdrop-blur px-4 py-1.5 text-xs uppercase tracking-[0.2em] text-muted-foreground animate-float-up">
+            <div className="mt-32 inline-flex items-center gap-2 rounded-full border border-border/80 bg-card/60 backdrop-blur px-4 py-1.5 text-xs uppercase tracking-[0.2em] text-muted-foreground animate-float-up">
               <span className="w-1.5 h-1.5 rounded-full bg-electric animate-pulse" />
               Founder portal · now open
             </div>
