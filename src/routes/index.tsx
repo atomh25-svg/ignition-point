@@ -23,7 +23,12 @@ export const Route = createFileRoute("/")({
 
 function Home() {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen relative">
+      {/* Hero atmosphere extended page-wide — fixed so it covers every
+          section's viewport instead of cutting off at the hero edge. */}
+      <div aria-hidden className="fixed inset-0 -z-10 grid-bg opacity-40 pointer-events-none" />
+      <div aria-hidden className="fixed inset-0 -z-10 bg-gradient-hero pointer-events-none" />
+
       <Navbar />
       <Hero />
       <Problem />
@@ -40,8 +45,6 @@ function Home() {
 function Hero() {
   return (
     <section className="relative overflow-hidden">
-      <div className="absolute inset-0 grid-bg opacity-40" />
-      <div className="absolute inset-0 bg-gradient-hero" />
       <div className="relative max-w-5xl mx-auto px-6 pt-20 pb-32 text-center animate-fade-in-up">
         {/* Centered logo + wordmark */}
         <div className="flex items-center justify-center gap-2.5 mb-10">
@@ -290,7 +293,6 @@ function Pricing() {
 function FinalCTA() {
   return (
     <section className="relative py-32">
-      <div className="absolute inset-0 bg-gradient-hero" />
       <div className="relative max-w-3xl mx-auto px-6 text-center">
         <h2 className="text-5xl md:text-6xl font-bold tracking-tight">
           Stop circling the idea. <br /><span className="text-gradient">Start flying.</span>
