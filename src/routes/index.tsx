@@ -8,9 +8,9 @@ import { RocketLogo } from "@/components/buildfirst/RocketLogo";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "build.ai — The first step from impulse to reality" },
-      { name: "description", content: "build.ai helps you find your business idea, shape it into a real offer, build the first version, and move toward your first customer." },
-      { property: "og:title", content: "build.ai — The first step from impulse to reality" },
+      { title: "/build.ai — The first step from impulse to reality" },
+      { name: "description", content: "/build.ai helps you find your business idea, shape it into a real offer, build the first version, and move toward your first customer." },
+      { property: "og:title", content: "/build.ai — The first step from impulse to reality" },
       { property: "og:description", content: "Enter with an idea. Leave with a launch plan." },
     ],
   }),
@@ -33,7 +33,7 @@ function Landing() {
           <div className="mx-auto max-w-5xl px-6 pt-20 pb-32 text-center">
             <div className="flex flex-col items-center gap-3 animate-float-up">
               <RocketLogo size={88} className="drop-shadow-[0_0_28px_rgba(99,102,241,0.55)]" />
-              <span className="font-display font-semibold tracking-tight text-2xl">build<span className="text-electric">.ai</span></span>
+              <span className="font-display font-semibold tracking-tight text-2xl">/build<span className="text-electric">.ai</span></span>
             </div>
             <div className="mt-8 inline-flex items-center gap-2 rounded-full border border-border/80 bg-card/60 backdrop-blur px-4 py-1.5 text-xs uppercase tracking-[0.2em] text-muted-foreground animate-float-up">
               <span className="w-1.5 h-1.5 rounded-full bg-electric animate-pulse" />
@@ -44,7 +44,7 @@ function Landing() {
               <span className="text-gradient">building what you keep thinking about.</span>
             </h1>
             <p className="mt-8 max-w-2xl mx-auto text-lg text-muted-foreground animate-float-up" style={{ animationDelay: "0.2s" }}>
-              build.ai helps you find your business idea, shape it into a real offer, build the first version,
+              /build.ai helps you find your business idea, shape it into a real offer, build the first version,
               and move toward your first customer.
             </p>
             <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 animate-float-up" style={{ animationDelay: "0.3s" }}>
