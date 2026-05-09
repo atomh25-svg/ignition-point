@@ -7,7 +7,7 @@ export function SiteHeader() {
       <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2.5 group">
           <RocketLogo size={40} className="drop-shadow-[0_0_14px_rgba(99,102,241,0.7)] -ml-1" />
-          <span className="font-display font-semibold tracking-tight text-foreground text-lg">build<span className="text-electric">.ai</span></span>
+          <span className="font-display font-semibold tracking-tight text-foreground text-lg">/build<span className="text-electric">.ai</span></span>
         </Link>
         <nav className="hidden md:flex items-center gap-8 text-sm text-muted-foreground">
           <Link to="/how-it-works" className="hover:text-foreground transition-colors">How it works</Link>
