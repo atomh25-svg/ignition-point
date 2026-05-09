@@ -71,8 +71,9 @@
   --glow-2: oklch(0.7 0.22 310);
 
   --gradient-primary: linear-gradient(135deg, oklch(0.78 0.18 220), oklch(0.7 0.22 310));
-  --gradient-hero: radial-gradient(ellipse at top, oklch(0.3 0.15 280 / 60%), transparent 60%),
-                   radial-gradient(ellipse at bottom right, oklch(0.4 0.18 220 / 35%), transparent 60%);
+  --gradient-hero: radial-gradient(ellipse 65% 50% at 25% 15%, oklch(0.55 0.25 280 / 80%), transparent 60%),
+                   radial-gradient(ellipse 55% 45% at 80% 40%, oklch(0.55 0.22 220 / 65%), transparent 65%),
+                   radial-gradient(ellipse 70% 55% at 50% 100%, oklch(0.5 0.22 295 / 55%), transparent 60%);
   --gradient-card: linear-gradient(160deg, oklch(0.22 0.05 270 / 70%), oklch(0.15 0.03 270 / 70%));
   --shadow-glow: 0 0 60px -10px oklch(0.78 0.18 220 / 50%);
   --shadow-glow-violet: 0 0 80px -15px oklch(0.7 0.22 310 / 60%);

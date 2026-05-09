@@ -26,7 +26,7 @@ function Home() {
     <div className="min-h-screen relative">
       {/* Page-wide atmosphere — fixed so it covers the viewport on every section,
           not just hero. Z-behind so content sits above it. */}
-      <div aria-hidden className="fixed inset-0 -z-10 grid-bg opacity-30 pointer-events-none" />
+      <div aria-hidden className="fixed inset-0 -z-10 grid-bg opacity-60 pointer-events-none" />
       <div aria-hidden className="fixed inset-0 -z-10 bg-gradient-hero pointer-events-none" />
 
       <Navbar />
