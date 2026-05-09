@@ -5,7 +5,6 @@ import { LayoutDashboard, Brain, Lightbulb, Compass, MessageSquare, Settings, Ro
 const items = [
   { to: "/app/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { to: "/app/founder-dna", label: "Founder DNA", icon: Brain },
-  { to: "/app/founder-type", label: "Founder Type", icon: Rocket },
   { to: "/app/ideas", label: "Ideas", icon: Lightbulb },
   { to: "/app/blueprint", label: "Blueprint", icon: Compass },
 ];

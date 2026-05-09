@@ -13,7 +13,6 @@ import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as AppRouteImport } from './routes/app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppIdeasRouteImport } from './routes/app.ideas'
-import { Route as AppFounderTypeRouteImport } from './routes/app.founder-type'
 import { Route as AppFounderDnaRouteImport } from './routes/app.founder-dna'
 import { Route as AppDashboardRouteImport } from './routes/app.dashboard'
 import { Route as AppBlueprintRouteImport } from './routes/app.blueprint'
@@ -36,11 +35,6 @@ const IndexRoute = IndexRouteImport.update({
 const AppIdeasRoute = AppIdeasRouteImport.update({
   id: '/ideas',
   path: '/ideas',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppFounderTypeRoute = AppFounderTypeRouteImport.update({
-  id: '/founder-type',
-  path: '/founder-type',
   getParentRoute: () => AppRoute,
 } as any)
 const AppFounderDnaRoute = AppFounderDnaRouteImport.update({
@@ -66,7 +60,6 @@ export interface FileRoutesByFullPath {
   '/app/blueprint': typeof AppBlueprintRoute
   '/app/dashboard': typeof AppDashboardRoute
   '/app/founder-dna': typeof AppFounderDnaRoute
-  '/app/founder-type': typeof AppFounderTypeRoute
   '/app/ideas': typeof AppIdeasRoute
 }
 export interface FileRoutesByTo {
@@ -76,7 +69,6 @@ export interface FileRoutesByTo {
   '/app/blueprint': typeof AppBlueprintRoute
   '/app/dashboard': typeof AppDashboardRoute
   '/app/founder-dna': typeof AppFounderDnaRoute
-  '/app/founder-type': typeof AppFounderTypeRoute
   '/app/ideas': typeof AppIdeasRoute
 }
 export interface FileRoutesById {
@@ -87,7 +79,6 @@ export interface FileRoutesById {
   '/app/blueprint': typeof AppBlueprintRoute
   '/app/dashboard': typeof AppDashboardRoute
   '/app/founder-dna': typeof AppFounderDnaRoute
-  '/app/founder-type': typeof AppFounderTypeRoute
   '/app/ideas': typeof AppIdeasRoute
 }
 export interface FileRouteTypes {
@@ -99,7 +90,6 @@ export interface FileRouteTypes {
     | '/app/blueprint'
     | '/app/dashboard'
     | '/app/founder-dna'
-    | '/app/founder-type'
     | '/app/ideas'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -109,7 +99,6 @@ export interface FileRouteTypes {
     | '/app/blueprint'
     | '/app/dashboard'
     | '/app/founder-dna'
-    | '/app/founder-type'
     | '/app/ideas'
   id:
     | '__root__'
@@ -119,7 +108,6 @@ export interface FileRouteTypes {
     | '/app/blueprint'
     | '/app/dashboard'
     | '/app/founder-dna'
-    | '/app/founder-type'
     | '/app/ideas'
   fileRoutesById: FileRoutesById
 }
@@ -159,13 +147,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppIdeasRouteImport
       parentRoute: typeof AppRoute
     }
-    '/app/founder-type': {
-      id: '/app/founder-type'
-      path: '/founder-type'
-      fullPath: '/app/founder-type'
-      preLoaderRoute: typeof AppFounderTypeRouteImport
-      parentRoute: typeof AppRoute
-    }
     '/app/founder-dna': {
       id: '/app/founder-dna'
       path: '/founder-dna'
@@ -194,7 +175,6 @@ interface AppRouteChildren {
   AppBlueprintRoute: typeof AppBlueprintRoute
   AppDashboardRoute: typeof AppDashboardRoute
   AppFounderDnaRoute: typeof AppFounderDnaRoute
-  AppFounderTypeRoute: typeof AppFounderTypeRoute
   AppIdeasRoute: typeof AppIdeasRoute
 }
 
@@ -202,7 +182,6 @@ const AppRouteChildren: AppRouteChildren = {
   AppBlueprintRoute: AppBlueprintRoute,
   AppDashboardRoute: AppDashboardRoute,
   AppFounderDnaRoute: AppFounderDnaRoute,
-  AppFounderTypeRoute: AppFounderTypeRoute,
   AppIdeasRoute: AppIdeasRoute,
 }
 
