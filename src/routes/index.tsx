@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Navbar } from "@/components/launchfly/Navbar";
 import { Footer } from "@/components/launchfly/Footer";
-import heroRocket from "@/assets/hero-rocket.jpg";
+import heroRocket from "@/assets/hero-rocket.png";
 import {
   Sparkles, Compass, Rocket, ListChecks, Code2, Users,
   Brain, Target, Zap, CheckCircle2, ArrowRight, Calendar,
@@ -73,13 +73,13 @@ function Hero() {
           </div>
         </div>
         <div className="relative">
-          <div className="absolute -inset-10 bg-gradient-primary opacity-20 blur-3xl rounded-full animate-pulse-glow" />
+          <div className="absolute inset-0 bg-gradient-primary opacity-20 blur-3xl rounded-full animate-pulse-glow" />
           <img
             src={heroRocket}
-            alt="Glowing neon rocket launching through orbital rings"
-            width={1280}
-            height={1280}
-            className="relative w-full max-w-lg mx-auto rounded-3xl border border-border/50 shadow-glow animate-float"
+            alt="Glowing neon rocket launching with a long lime green contrail"
+            width={1080}
+            height={1920}
+            className="relative w-full max-w-lg mx-auto -my-16 md:-my-24 scale-110 animate-float drop-shadow-[0_0_60px_oklch(0.9_0.24_135_/_0.5)]"
           />
         </div>
       </div>
