@@ -5,7 +5,7 @@ import { ArrowRight, Zap, Clock, Target } from "lucide-react";
 export const Route = createFileRoute("/ideas")({
   head: () => ({
     meta: [
-      { title: "Your Business Ideas — /build.ai" },
+      { title: "Your Business Ideas — LaunchFly.io" },
       { name: "description", content: "Personalized AI business ideas, shaped to your founder type." },
     ],
   }),

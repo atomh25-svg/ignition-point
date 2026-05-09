@@ -5,7 +5,7 @@ import { SiteHeader } from "@/components/buildfirst/SiteHeader";
 export const Route = createFileRoute("/onboarding")({
   head: () => ({
     meta: [
-      { title: "Calibrate Your Build Path — /build.ai" },
+      { title: "Calibrate Your Build Path — LaunchFly.io" },
       { name: "description", content: "A short founder initiation survey." },
     ],
   }),

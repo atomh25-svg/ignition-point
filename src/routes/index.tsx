@@ -8,9 +8,9 @@ import { RocketLogo } from "@/components/buildfirst/RocketLogo";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "/build.ai — The first step from impulse to reality" },
-      { name: "description", content: "/build.ai helps you find your business idea, shape it into a real offer, build the first version, and move toward your first customer." },
-      { property: "og:title", content: "/build.ai — The first step from impulse to reality" },
+      { title: "LaunchFly.io — The first step from impulse to reality" },
+      { name: "description", content: "LaunchFly.io helps you find your business idea, shape it into a real offer, build the first version, and move toward your first customer." },
+      { property: "og:title", content: "LaunchFly.io — The first step from impulse to reality" },
       { property: "og:description", content: "Enter with an idea. Leave with a launch plan." },
     ],
   }),
@@ -40,7 +40,7 @@ function Landing() {
               <span className="text-gradient">building what you keep thinking about.</span>
             </h1>
             <p className="mt-8 max-w-2xl mx-auto text-lg text-muted-foreground animate-float-up" style={{ animationDelay: "0.2s" }}>
-              /build.ai helps you find your business idea, shape it into a real offer, build the first version,
+              LaunchFly.io helps you find your business idea, shape it into a real offer, build the first version,
               and move toward your first customer.
             </p>
             <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 animate-float-up" style={{ animationDelay: "0.3s" }}>

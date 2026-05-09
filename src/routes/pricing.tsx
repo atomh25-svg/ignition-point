@@ -6,9 +6,9 @@ import { Check, ArrowRight } from "lucide-react";
 export const Route = createFileRoute("/pricing")({
   head: () => ({
     meta: [
-      { title: "Pricing — /build.ai" },
+      { title: "Pricing — LaunchFly.io" },
       { name: "description", content: "build Membership — $19/month. Commit and begin your build journey." },
-      { property: "og:title", content: "Commit & Begin — /build.ai" },
+      { property: "og:title", content: "Commit & Begin — LaunchFly.io" },
       { property: "og:description", content: "Paying is part of the ritual. Become someone who builds." },
     ],
   }),
