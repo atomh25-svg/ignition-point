@@ -11,7 +11,7 @@ export function Navbar() {
         <div className="hidden md:flex items-center gap-8 text-sm text-muted-foreground">
           <a href="/#how" className="hover:text-foreground transition-colors">How It Works</a>
           <a href="/#features" className="hover:text-foreground transition-colors">Features</a>
-          <a href="/#pricing" className="hover:text-foreground transition-colors">Pricing</a>
+          <Link to="/pricing" className="hover:text-foreground transition-colors">Pricing</Link>
           <Link to="/app/dashboard" className="hover:text-foreground transition-colors">Sign In</Link>
         </div>
         <Button asChild variant="hero" size="sm">

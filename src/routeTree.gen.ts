@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as AppRouteImport } from './routes/app'
 import { Route as IndexRouteImport } from './routes/index'
@@ -17,6 +18,11 @@ import { Route as AppFounderDnaRouteImport } from './routes/app.founder-dna'
 import { Route as AppDashboardRouteImport } from './routes/app.dashboard'
 import { Route as AppBlueprintRouteImport } from './routes/app.blueprint'
 
+const PricingRoute = PricingRouteImport.update({
+  id: '/pricing',
+  path: '/pricing',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const OnboardingRoute = OnboardingRouteImport.update({
   id: '/onboarding',
   path: '/onboarding',
@@ -57,6 +63,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
   '/onboarding': typeof OnboardingRoute
+  '/pricing': typeof PricingRoute
   '/app/blueprint': typeof AppBlueprintRoute
   '/app/dashboard': typeof AppDashboardRoute
   '/app/founder-dna': typeof AppFounderDnaRoute
@@ -66,6 +73,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
   '/onboarding': typeof OnboardingRoute
+  '/pricing': typeof PricingRoute
   '/app/blueprint': typeof AppBlueprintRoute
   '/app/dashboard': typeof AppDashboardRoute
   '/app/founder-dna': typeof AppFounderDnaRoute
@@ -76,6 +84,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
   '/onboarding': typeof OnboardingRoute
+  '/pricing': typeof PricingRoute
   '/app/blueprint': typeof AppBlueprintRoute
   '/app/dashboard': typeof AppDashboardRoute
   '/app/founder-dna': typeof AppFounderDnaRoute
@@ -87,6 +96,7 @@ export interface FileRouteTypes {
     | '/'
     | '/app'
     | '/onboarding'
+    | '/pricing'
     | '/app/blueprint'
     | '/app/dashboard'
     | '/app/founder-dna'
@@ -96,6 +106,7 @@ export interface FileRouteTypes {
     | '/'
     | '/app'
     | '/onboarding'
+    | '/pricing'
     | '/app/blueprint'
     | '/app/dashboard'
     | '/app/founder-dna'
@@ -105,6 +116,7 @@ export interface FileRouteTypes {
     | '/'
     | '/app'
     | '/onboarding'
+    | '/pricing'
     | '/app/blueprint'
     | '/app/dashboard'
     | '/app/founder-dna'
@@ -115,10 +127,18 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
   OnboardingRoute: typeof OnboardingRoute
+  PricingRoute: typeof PricingRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/pricing': {
+      id: '/pricing'
+      path: '/pricing'
+      fullPath: '/pricing'
+      preLoaderRoute: typeof PricingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/onboarding': {
       id: '/onboarding'
       path: '/onboarding'
@@ -191,6 +211,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
   OnboardingRoute: OnboardingRoute,
+  PricingRoute: PricingRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
