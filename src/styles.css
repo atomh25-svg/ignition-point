@@ -101,8 +101,16 @@
   }
   body {
     background-image:
+      /* Grid lines (top layer) */
+      linear-gradient(oklch(1 0 0 / 4.5%) 1px, transparent 1px),
+      linear-gradient(90deg, oklch(1 0 0 / 4.5%) 1px, transparent 1px),
+      /* Hero gradient v1: top-center violet + bottom-right cyan */
+      radial-gradient(ellipse at top, oklch(0.3 0.15 280 / 60%), transparent 60%),
+      radial-gradient(ellipse at bottom right, oklch(0.4 0.18 220 / 35%), transparent 60%),
+      /* Existing subtle ambient blooms */
       radial-gradient(ellipse 80% 50% at 50% -10%, oklch(0.35 0.18 280 / 35%), transparent 60%),
       radial-gradient(ellipse 60% 40% at 90% 10%, oklch(0.4 0.2 220 / 25%), transparent 60%);
+    background-size: 48px 48px, 48px 48px, auto, auto, auto, auto;
     background-attachment: fixed;
     font-feature-settings: "ss01", "cv11";
   }
