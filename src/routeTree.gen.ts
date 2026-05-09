@@ -9,42 +9,22 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
-import { Route as IdeasRouteImport } from './routes/ideas'
-import { Route as HowItWorksRouteImport } from './routes/how-it-works'
-import { Route as DashboardRouteImport } from './routes/dashboard'
-import { Route as BlueprintRouteImport } from './routes/blueprint'
+import { Route as AppRouteImport } from './routes/app'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppIdeasRouteImport } from './routes/app.ideas'
+import { Route as AppFounderDnaRouteImport } from './routes/app.founder-dna'
+import { Route as AppDashboardRouteImport } from './routes/app.dashboard'
+import { Route as AppBlueprintRouteImport } from './routes/app.blueprint'
 
-const PricingRoute = PricingRouteImport.update({
-  id: '/pricing',
-  path: '/pricing',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const OnboardingRoute = OnboardingRouteImport.update({
   id: '/onboarding',
   path: '/onboarding',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IdeasRoute = IdeasRouteImport.update({
-  id: '/ideas',
-  path: '/ideas',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const HowItWorksRoute = HowItWorksRouteImport.update({
-  id: '/how-it-works',
-  path: '/how-it-works',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DashboardRoute = DashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BlueprintRoute = BlueprintRouteImport.update({
-  id: '/blueprint',
-  path: '/blueprint',
+const AppRoute = AppRouteImport.update({
+  id: '/app',
+  path: '/app',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -52,84 +32,93 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppIdeasRoute = AppIdeasRouteImport.update({
+  id: '/ideas',
+  path: '/ideas',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppFounderDnaRoute = AppFounderDnaRouteImport.update({
+  id: '/founder-dna',
+  path: '/founder-dna',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDashboardRoute = AppDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppBlueprintRoute = AppBlueprintRouteImport.update({
+  id: '/blueprint',
+  path: '/blueprint',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/blueprint': typeof BlueprintRoute
-  '/dashboard': typeof DashboardRoute
-  '/how-it-works': typeof HowItWorksRoute
-  '/ideas': typeof IdeasRoute
+  '/app': typeof AppRouteWithChildren
   '/onboarding': typeof OnboardingRoute
-  '/pricing': typeof PricingRoute
+  '/app/blueprint': typeof AppBlueprintRoute
+  '/app/dashboard': typeof AppDashboardRoute
+  '/app/founder-dna': typeof AppFounderDnaRoute
+  '/app/ideas': typeof AppIdeasRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/blueprint': typeof BlueprintRoute
-  '/dashboard': typeof DashboardRoute
-  '/how-it-works': typeof HowItWorksRoute
-  '/ideas': typeof IdeasRoute
+  '/app': typeof AppRouteWithChildren
   '/onboarding': typeof OnboardingRoute
-  '/pricing': typeof PricingRoute
+  '/app/blueprint': typeof AppBlueprintRoute
+  '/app/dashboard': typeof AppDashboardRoute
+  '/app/founder-dna': typeof AppFounderDnaRoute
+  '/app/ideas': typeof AppIdeasRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/blueprint': typeof BlueprintRoute
-  '/dashboard': typeof DashboardRoute
-  '/how-it-works': typeof HowItWorksRoute
-  '/ideas': typeof IdeasRoute
+  '/app': typeof AppRouteWithChildren
   '/onboarding': typeof OnboardingRoute
-  '/pricing': typeof PricingRoute
+  '/app/blueprint': typeof AppBlueprintRoute
+  '/app/dashboard': typeof AppDashboardRoute
+  '/app/founder-dna': typeof AppFounderDnaRoute
+  '/app/ideas': typeof AppIdeasRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/blueprint'
-    | '/dashboard'
-    | '/how-it-works'
-    | '/ideas'
+    | '/app'
     | '/onboarding'
-    | '/pricing'
+    | '/app/blueprint'
+    | '/app/dashboard'
+    | '/app/founder-dna'
+    | '/app/ideas'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/blueprint'
-    | '/dashboard'
-    | '/how-it-works'
-    | '/ideas'
+    | '/app'
     | '/onboarding'
-    | '/pricing'
+    | '/app/blueprint'
+    | '/app/dashboard'
+    | '/app/founder-dna'
+    | '/app/ideas'
   id:
     | '__root__'
     | '/'
-    | '/blueprint'
-    | '/dashboard'
-    | '/how-it-works'
-    | '/ideas'
+    | '/app'
     | '/onboarding'
-    | '/pricing'
+    | '/app/blueprint'
+    | '/app/dashboard'
+    | '/app/founder-dna'
+    | '/app/ideas'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  BlueprintRoute: typeof BlueprintRoute
-  DashboardRoute: typeof DashboardRoute
-  HowItWorksRoute: typeof HowItWorksRoute
-  IdeasRoute: typeof IdeasRoute
+  AppRoute: typeof AppRouteWithChildren
   OnboardingRoute: typeof OnboardingRoute
-  PricingRoute: typeof PricingRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/pricing': {
-      id: '/pricing'
-      path: '/pricing'
-      fullPath: '/pricing'
-      preLoaderRoute: typeof PricingRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/onboarding': {
       id: '/onboarding'
       path: '/onboarding'
@@ -137,32 +126,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OnboardingRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/ideas': {
-      id: '/ideas'
-      path: '/ideas'
-      fullPath: '/ideas'
-      preLoaderRoute: typeof IdeasRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/how-it-works': {
-      id: '/how-it-works'
-      path: '/how-it-works'
-      fullPath: '/how-it-works'
-      preLoaderRoute: typeof HowItWorksRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/dashboard': {
-      id: '/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof DashboardRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/blueprint': {
-      id: '/blueprint'
-      path: '/blueprint'
-      fullPath: '/blueprint'
-      preLoaderRoute: typeof BlueprintRouteImport
+    '/app': {
+      id: '/app'
+      path: '/app'
+      fullPath: '/app'
+      preLoaderRoute: typeof AppRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -172,18 +140,68 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/app/ideas': {
+      id: '/app/ideas'
+      path: '/ideas'
+      fullPath: '/app/ideas'
+      preLoaderRoute: typeof AppIdeasRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/founder-dna': {
+      id: '/app/founder-dna'
+      path: '/founder-dna'
+      fullPath: '/app/founder-dna'
+      preLoaderRoute: typeof AppFounderDnaRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/dashboard': {
+      id: '/app/dashboard'
+      path: '/dashboard'
+      fullPath: '/app/dashboard'
+      preLoaderRoute: typeof AppDashboardRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/blueprint': {
+      id: '/app/blueprint'
+      path: '/blueprint'
+      fullPath: '/app/blueprint'
+      preLoaderRoute: typeof AppBlueprintRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
+interface AppRouteChildren {
+  AppBlueprintRoute: typeof AppBlueprintRoute
+  AppDashboardRoute: typeof AppDashboardRoute
+  AppFounderDnaRoute: typeof AppFounderDnaRoute
+  AppIdeasRoute: typeof AppIdeasRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppBlueprintRoute: AppBlueprintRoute,
+  AppDashboardRoute: AppDashboardRoute,
+  AppFounderDnaRoute: AppFounderDnaRoute,
+  AppIdeasRoute: AppIdeasRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  BlueprintRoute: BlueprintRoute,
-  DashboardRoute: DashboardRoute,
-  HowItWorksRoute: HowItWorksRoute,
-  IdeasRoute: IdeasRoute,
+  AppRoute: AppRouteWithChildren,
   OnboardingRoute: OnboardingRoute,
-  PricingRoute: PricingRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
