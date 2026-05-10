@@ -97,7 +97,7 @@ function Banner() {
       <div className="absolute inset-x-0 bottom-10 z-10 mx-auto max-w-7xl px-6">
         <div className="flex items-end justify-between gap-4">
           <p className="text-[0.8rem] uppercase tracking-[0.25em] text-gold/90">
-            Welcome to your launch phase,
+            Welcome to the beginning,
           </p>
           <div className="flex items-center gap-2.5">
             <span className="grid h-10 w-10 place-items-center rounded-lg bg-gradient-gold shadow-gold">
@@ -117,7 +117,7 @@ function Hero() {
   return (
     <section className="relative -mt-20 px-6">
       <div className="mx-auto max-w-5xl text-center">
-        <h1 className="mt-16 whitespace-nowrap text-[2.4rem] font-semibold leading-[1.05] tracking-tight sm:text-[3.2rem] md:text-[4rem]">
+        <h1 className="mt-16 whitespace-nowrap text-[2.55rem] font-semibold leading-[1.05] tracking-tight sm:text-[3.35rem] md:text-[4.15rem]">
           <span className="text-[oklch(0.74_0.17_60)]">Start</span> with the First Move.
         </h1>
 
