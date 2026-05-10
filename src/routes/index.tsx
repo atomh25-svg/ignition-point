@@ -88,7 +88,7 @@ function Banner() {
             <Sparkles className="h-3.5 w-3.5 text-gold" /> The launch OS for first-time builders
           </span>
         </div>
-        <h2 className="mt-4 text-lg font-semibold leading-tight text-foreground sm:text-xl md:text-[1.55rem]">
+        <h2 className="mt-7 text-lg font-semibold leading-tight text-foreground sm:text-xl md:text-[1.55rem]">
           Where late nights turn into <span className="text-gradient-gold">real<br /></span><span style={{ color: "oklch(0.68 0.18 55)" }}>launches</span>.
         </h2>
       </div>
