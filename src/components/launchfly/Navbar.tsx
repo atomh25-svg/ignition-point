@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
-import { Rocket, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
+import { RocketGlyph } from "./RocketGlyph";
 
 export function Navbar() {
   return (
@@ -8,7 +9,7 @@ export function Navbar() {
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <Link to="/" className="flex items-center gap-2">
             <span className="grid h-8 w-8 place-items-center rounded-lg bg-gradient-gold shadow-gold">
-              <Rocket className="h-4 w-4 -rotate-45 text-gold-foreground" />
+              <RocketGlyph className="h-4 w-4 -rotate-45 text-gold-foreground" />
             </span>
             <span className="text-lg font-semibold tracking-tight">
               LaunchFly<span className="text-gold">.io</span>

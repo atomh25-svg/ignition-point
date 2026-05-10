@@ -63,7 +63,7 @@ function Pricing() {
               </ul>
 
               <Link
-                to="/onboarding"
+                to="/app/founder-dna"
                 className="mt-10 inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-gold px-6 py-3 text-base font-medium text-gold-foreground shadow-gold transition hover:opacity-90 sm:w-auto"
               >
                 Commit &amp; Begin

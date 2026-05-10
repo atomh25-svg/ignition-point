@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Footer } from "@/components/launchfly/Footer";
+import { RocketGlyph } from "@/components/launchfly/RocketGlyph";
 import bannerImg from "@/assets/banner-takeoff.png";
 import {
   Sparkles, Compass, Rocket, Code2, Users,
@@ -45,7 +46,7 @@ function Nav() {
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <a href="#top" className="flex items-center gap-2">
             <span className="grid h-8 w-8 place-items-center rounded-lg bg-gradient-gold shadow-gold">
-              <Rocket className="h-4 w-4 -rotate-45 text-gold-foreground" />
+              <RocketGlyph className="h-4 w-4 -rotate-45 text-gold-foreground" />
             </span>
             <span className="text-lg font-semibold tracking-tight">
               LaunchFly<span className="text-gold">.io</span>
@@ -100,7 +101,7 @@ function Banner() {
           </p>
           <div className="flex items-center gap-2.5">
             <span className="grid h-10 w-10 place-items-center rounded-lg bg-gradient-gold shadow-gold">
-              <Rocket className="h-5 w-5 -rotate-45 text-gold-foreground" />
+              <RocketGlyph className="h-5 w-5 -rotate-45 text-gold-foreground" />
             </span>
             <span className="text-lg font-semibold tracking-tight">
               LaunchFly<span className="text-gold">.io</span>
