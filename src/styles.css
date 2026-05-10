@@ -101,6 +101,8 @@
   }
   body {
     background-image:
+      /* Pronounced top radial — concentrated bloom anchored at the page top */
+      radial-gradient(ellipse 100% 55% at 50% -5%, oklch(0.45 0.28 266 / 45%), transparent 65%),
       /* Hero gradient v2: 3-radial muted navy (top-center violet, mid-right cyan, bottom-left violet) */
       radial-gradient(ellipse 80% 50% at 50% 0%, oklch(0.4 0.2 280 / 35%), transparent 60%),
       radial-gradient(ellipse 60% 40% at 90% 15%, oklch(0.4 0.2 220 / 25%), transparent 60%),

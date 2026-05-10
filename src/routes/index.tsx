@@ -38,7 +38,7 @@ function Home() {
         {/* Logo + wordmark anchored toward the bottom of the banner, shifted right */}
         <div className="absolute bottom-2 left-16 md:bottom-6 md:left-44 z-30 flex items-center gap-3 drop-shadow-[0_2px_12px_rgba(0,0,0,0.6)]">
           <div className="relative w-11 h-11 rounded-lg bg-gradient-primary flex items-center justify-center shadow-glow">
-            <Rocket className="w-5 h-5 text-primary-foreground" strokeWidth={2.5} />
+            <Rocket className="w-5 h-5 text-white" strokeWidth={2.5} />
           </div>
           <span className="font-bold tracking-tight text-2xl md:text-3xl">
             LaunchFly<span className="text-gradient">.io</span>
@@ -61,12 +61,13 @@ function Hero() {
   return (
     <section className="relative overflow-hidden">
       <div className="relative max-w-5xl mx-auto px-6 pt-12 pb-32 text-center animate-fade-in-up">
-        <h1 className="text-[2.2rem] md:text-[3.8rem] font-bold tracking-tight leading-[1.1] md:whitespace-nowrap">
+        <h1 className="text-[2.4rem] md:text-[4rem] font-bold tracking-tight leading-[1.1] md:whitespace-nowrap">
           The first step from <span className="text-gradient">idea to takeoff.</span>
         </h1>
 
         <p className="mt-6 text-lg text-muted-foreground max-w-xl mx-auto leading-relaxed">
-          LaunchFly.io helps you go from "I want to start something" to knowing exactly what to build.
+          LaunchFly.io helps you go from "I want to start something" to knowing exactly what to build,<br/>
+          how to start, and what to do next.
         </p>
 
         <div className="mt-8 flex flex-wrap gap-4 justify-center">
@@ -81,9 +82,9 @@ function Hero() {
         </div>
 
         <div className="mt-8 flex items-center justify-center gap-6 text-xs text-muted-foreground flex-wrap">
-          <span className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-primary" /> Cancel anytime</span>
-          <span className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-primary" /> 30-day path</span>
-          <span className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-primary" /> AI coach</span>
+          <span className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-[rgb(0_196_235)]" /> Cancel anytime</span>
+          <span className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-[rgb(0_196_235)]" /> 30-day path</span>
+          <span className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-[rgb(0_196_235)]" /> AI coach</span>
         </div>
 
         <div className="mt-8 inline-flex items-center gap-2 glass rounded-full px-4 py-1.5 text-xs text-muted-foreground">
