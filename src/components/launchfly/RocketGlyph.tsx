@@ -23,7 +23,7 @@ export function RocketGlyph({
       className={className}
     >
       {/* contrail puff — pulled in toward the rocket body */}
-      <path d="M5.5 15.5c-1.05 1.05-1.55 4.2-1.55 4.2s2.85-.3 4.05-1.55c.55-.65.55-1.65-.07-2.27a1.7 1.7 0 0 0-2.43-.38z" />
+      <path d="M5 16c-1.1 1.1-1.6 4.3-1.6 4.3s2.95-.3 4.15-1.6c.55-.65.55-1.65-.07-2.27a1.7 1.7 0 0 0-2.48-.43z" />
       {/* right fin */}
       <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5" />
       {/* rocket body */}
