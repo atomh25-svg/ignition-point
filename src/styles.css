@@ -190,12 +190,6 @@
     background-clip: text;
     color: transparent;
   }
-  .text-gradient-gold-light {
-    background: linear-gradient(135deg, oklch(0.93 0.13 90), oklch(0.85 0.15 65));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
   .bg-gradient-gold { background: var(--gradient-gold); }
   .bg-banner-overlay { background: var(--gradient-banner-overlay); }
   .bg-warm-glow { background: var(--gradient-warm-glow); }
