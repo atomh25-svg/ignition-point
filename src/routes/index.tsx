@@ -89,15 +89,15 @@ function Banner() {
             <Sparkles className="h-3.5 w-3.5 text-gold" /> The launch OS for first-time builders
           </span>
         </div>
-        <h2 className="mt-6 text-lg font-semibold leading-tight text-foreground sm:text-xl md:text-[1.55rem]">
+        <h2 className="mt-6 text-[1.2rem] font-semibold leading-tight text-foreground sm:text-[1.33rem] md:text-[1.63rem]">
           For the <span className="text-gradient-gold">vision inside you.</span>
         </h2>
       </div>
 
       <div className="absolute inset-x-0 bottom-10 z-10 mx-auto max-w-7xl px-6">
         <div className="flex items-end justify-between gap-4">
-          <p className="text-[0.8rem] uppercase tracking-[0.25em] text-gold/90">
-            Welcome to the beginning,
+          <p className="text-[0.88rem] uppercase tracking-[0.25em] text-gold/90">
+            Welcome to your launch,
           </p>
           <div className="flex items-center gap-2.5">
             <span className="grid h-10 w-10 place-items-center rounded-lg bg-gradient-gold shadow-gold">
