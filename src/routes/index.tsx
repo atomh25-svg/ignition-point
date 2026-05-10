@@ -118,7 +118,7 @@ function Hero() {
     <section className="relative -mt-20 px-6">
       <div className="mx-auto max-w-5xl text-center">
         <h1 className="mt-16 whitespace-nowrap text-4xl font-semibold leading-[1.05] tracking-tight sm:text-5xl md:text-6xl">
-          The first step from <span className="text-gradient-gold">idea to takeoff</span>.
+          Your idea is waiting for <span className="text-gradient-gold">a first move.</span>
         </h1>
 
         <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground">
