@@ -61,14 +61,8 @@ function Hero() {
   return (
     <section className="relative overflow-hidden">
       <div className="relative max-w-5xl mx-auto px-6 pt-20 pb-32 text-center animate-fade-in-up">
-        <div className="inline-flex items-center gap-2 glass rounded-full px-4 py-1.5 text-xs text-muted-foreground mb-6">
-          <Sparkles className="w-3.5 h-3.5 text-primary" />
-          AI Founder Portal · Now Boarding
-        </div>
-
-        <h1 className="text-[3.3rem] md:text-[5rem] font-bold tracking-tight leading-[1.05]">
-          <span className="text-[3.7rem] md:text-[5.6rem]">The first step</span><br/>
-          <span className="text-gradient whitespace-nowrap">from idea to takeoff.</span>
+        <h1 className="text-[2rem] md:text-[3.4rem] font-bold tracking-tight leading-[1.1] md:whitespace-nowrap">
+          The first step from <span className="text-gradient">idea to takeoff.</span>
         </h1>
 
         <p className="mt-6 text-lg text-muted-foreground max-w-xl mx-auto leading-relaxed">
@@ -91,6 +85,11 @@ function Hero() {
           <span className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-primary" /> Cancel anytime</span>
           <span className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-primary" /> 30-day path</span>
           <span className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-primary" /> AI coach</span>
+        </div>
+
+        <div className="mt-8 inline-flex items-center gap-2 glass rounded-full px-4 py-1.5 text-xs text-muted-foreground">
+          <Sparkles className="w-3.5 h-3.5 text-primary" />
+          AI Founder Portal · Now Boarding
         </div>
       </div>
     </section>

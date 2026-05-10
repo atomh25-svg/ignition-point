@@ -59,7 +59,7 @@
   --secondary-foreground: oklch(0.98 0.01 250);
   --muted: oklch(0.2 0.03 270);
   --muted-foreground: oklch(0.7 0.02 250);
-  --accent: oklch(0.7 0.22 310);
+  --accent: oklch(0.58 0.25 298);
   --accent-foreground: oklch(0.98 0.01 250);
   --destructive: oklch(0.65 0.24 25);
   --destructive-foreground: oklch(0.98 0.01 250);
@@ -68,16 +68,16 @@
   --ring: oklch(0.78 0.18 220);
 
   --glow: oklch(0.78 0.18 220);
-  --glow-2: oklch(0.7 0.22 310);
+  --glow-2: oklch(0.58 0.25 298);
 
-  --gradient-primary: linear-gradient(135deg, oklch(0.78 0.18 220), oklch(0.7 0.22 310));
+  --gradient-primary: linear-gradient(135deg, oklch(0.78 0.18 220), oklch(0.58 0.25 298));
   --gradient-hero:
     radial-gradient(ellipse 65% 50% at 25% 15%, oklch(0.55 0.25 280 / 80%), transparent 60%),
     radial-gradient(ellipse 55% 45% at 80% 40%, oklch(0.55 0.22 220 / 65%), transparent 65%),
     radial-gradient(ellipse 70% 55% at 50% 100%, oklch(0.5 0.22 295 / 55%), transparent 60%);
   --gradient-card: linear-gradient(160deg, oklch(0.22 0.05 270 / 70%), oklch(0.15 0.03 270 / 70%));
   --shadow-glow: 0 0 60px -10px oklch(0.78 0.18 220 / 50%);
-  --shadow-glow-violet: 0 0 80px -15px oklch(0.7 0.22 310 / 60%);
+  --shadow-glow-violet: 0 0 80px -15px oklch(0.58 0.25 298 / 60%);
   --shadow-elegant: 0 20px 50px -20px oklch(0.05 0 0 / 80%);
 
   --sidebar: oklch(0.15 0.03 270);
@@ -101,9 +101,6 @@
   }
   body {
     background-image:
-      /* Grid lines (top layer) */
-      linear-gradient(oklch(1 0 0 / 4.5%) 1px, transparent 1px),
-      linear-gradient(90deg, oklch(1 0 0 / 4.5%) 1px, transparent 1px),
       /* Hero gradient v2: 3-radial muted navy (top-center violet, mid-right cyan, bottom-left violet) */
       radial-gradient(ellipse 80% 50% at 50% 0%, oklch(0.4 0.2 280 / 35%), transparent 60%),
       radial-gradient(ellipse 60% 40% at 90% 15%, oklch(0.4 0.2 220 / 25%), transparent 60%),
@@ -111,7 +108,6 @@
       /* Existing subtle ambient blooms */
       radial-gradient(ellipse 80% 50% at 50% -10%, oklch(0.35 0.18 280 / 35%), transparent 60%),
       radial-gradient(ellipse 60% 40% at 90% 10%, oklch(0.4 0.2 220 / 25%), transparent 60%);
-    background-size: 48px 48px, 48px 48px, auto, auto, auto, auto, auto;
     background-attachment: fixed;
     font-feature-settings: "ss01", "cv11";
   }
@@ -182,7 +178,7 @@
     filter: drop-shadow(0 0 30px oklch(0.78 0.18 220 / 50%));
   }
   50% {
-    filter: drop-shadow(0 0 60px oklch(0.7 0.22 310 / 70%));
+    filter: drop-shadow(0 0 60px oklch(0.58 0.25 298 / 70%));
   }
 }
 @keyframes fade-in-up {
