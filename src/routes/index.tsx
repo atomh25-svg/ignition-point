@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Navbar } from "@/components/launchfly/Navbar";
 import { Footer } from "@/components/launchfly/Footer";
-import bannerImg from "@/assets/banner.png";
+import bannerImg from "@/assets/benner2.png";
 import {
   Sparkles, Compass, Rocket, Code2, Users,
   Brain, Zap, CheckCircle2, ArrowRight, Calendar,
@@ -35,12 +35,12 @@ function Home() {
           className="block w-full h-auto select-none"
           draggable={false}
         />
-        {/* Logo + wordmark anchored to bottom-left of banner */}
-        <div className="absolute bottom-4 left-4 md:bottom-8 md:left-10 z-30 flex items-center gap-2.5 drop-shadow-[0_2px_12px_rgba(0,0,0,0.6)]">
-          <div className="relative w-9 h-9 rounded-lg bg-gradient-primary flex items-center justify-center shadow-glow">
-            <Rocket className="w-4 h-4 text-primary-foreground" strokeWidth={2.5} />
+        {/* Logo + wordmark anchored toward the bottom of the banner, shifted right */}
+        <div className="absolute bottom-5 left-32 md:bottom-10 md:left-60 z-30 flex items-center gap-3 drop-shadow-[0_2px_12px_rgba(0,0,0,0.6)]">
+          <div className="relative w-11 h-11 rounded-lg bg-gradient-primary flex items-center justify-center shadow-glow">
+            <Rocket className="w-5 h-5 text-primary-foreground" strokeWidth={2.5} />
           </div>
-          <span className="font-bold tracking-tight text-xl md:text-2xl">
+          <span className="font-bold tracking-tight text-2xl md:text-3xl">
             LaunchFly<span className="text-gradient">.io</span>
           </span>
         </div>
