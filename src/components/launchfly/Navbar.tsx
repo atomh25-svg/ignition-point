@@ -21,7 +21,7 @@ export function Navbar() {
             <Link to="/app/dashboard" className="transition hover:text-foreground">Sign In</Link>
           </nav>
           <Link
-            to="/onboarding"
+            to="/pricing"
             className="inline-flex items-center gap-2 rounded-full bg-gradient-gold px-4 py-2 text-sm font-medium text-gold-foreground shadow-gold transition hover:opacity-90"
           >
             Start Your Launch

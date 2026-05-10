@@ -57,13 +57,13 @@ function Nav() {
             <Link to="/pricing" className="transition hover:text-foreground">Pricing</Link>
             <Link to="/app/dashboard" className="transition hover:text-foreground">Sign In</Link>
           </nav>
-          <a
-            href="#pricing"
+          <Link
+            to="/pricing"
             className="inline-flex items-center gap-2 rounded-full bg-gradient-gold px-4 py-2 text-sm font-medium text-gold-foreground shadow-gold transition hover:opacity-90"
           >
             Start Your Launch
             <ArrowRight className="h-4 w-4" />
-          </a>
+          </Link>
         </div>
       </div>
     </header>
@@ -88,7 +88,7 @@ function Banner() {
             <Sparkles className="h-3.5 w-3.5 text-gold" /> The launch OS for first-time builders
           </span>
         </div>
-        <h2 className="mt-7 text-lg font-semibold leading-tight text-foreground sm:text-xl md:text-[1.55rem]">
+        <h2 className="mt-6 text-lg font-semibold leading-tight text-foreground sm:text-xl md:text-[1.55rem]">
           Where late nights turn into <span className="text-gradient-gold">real<br /></span><span style={{ color: "oklch(0.68 0.18 55)" }}>launches</span>.
         </h2>
       </div>
@@ -125,13 +125,13 @@ function Hero() {
           to build, how to start, and what to do next.
         </p>
         <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
-          <a
-            href="#pricing"
+          <Link
+            to="/pricing"
             className="inline-flex items-center gap-2 rounded-full bg-gradient-gold px-6 py-3 text-base font-medium text-gold-foreground shadow-gold transition hover:opacity-90"
           >
             Start Your Launch — $19/month
             <ArrowRight className="h-4 w-4" />
-          </a>
+          </Link>
           <a
             href="#how"
             className="inline-flex items-center gap-2 rounded-full border border-border bg-card/40 px-6 py-3 text-base font-medium text-foreground backdrop-blur transition hover:bg-card"
@@ -363,7 +363,7 @@ function Pricing() {
               ))}
             </ul>
             <Button asChild variant="hero" size="xl" className="w-full">
-              <Link to="/onboarding">Start Your Launch</Link>
+              <Link to="/pricing">Start Your Launch</Link>
             </Button>
           </Card>
         </div>
@@ -382,7 +382,7 @@ function FinalCTA() {
         </h2>
         <div className="mt-10">
           <Button asChild variant="hero" size="xl">
-            <Link to="/onboarding">Start Your Launch <Rocket className="w-4 h-4" /></Link>
+            <Link to="/pricing">Start Your Launch <Rocket className="w-4 h-4" /></Link>
           </Button>
         </div>
       </div>
