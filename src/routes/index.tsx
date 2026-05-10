@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Footer } from "@/components/launchfly/Footer";
 import bannerImg from "@/assets/banner-takeoff.png";
 import {
   Sparkles, Compass, Rocket, Code2, Users,
@@ -34,26 +35,6 @@ function Home() {
       <FinalCTA />
       <Footer />
     </main>
-  );
-}
-
-function Footer() {
-  return (
-    <footer className="border-t border-border px-6 py-10">
-      <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 sm:flex-row">
-        <div className="flex items-center gap-2">
-          <span className="grid h-7 w-7 place-items-center rounded-md bg-gradient-gold">
-            <Rocket className="h-3.5 w-3.5 -rotate-45 text-gold-foreground" />
-          </span>
-          <span className="text-sm font-semibold">
-            LaunchFly<span className="text-gold">.io</span>
-          </span>
-        </div>
-        <p className="text-xs text-muted-foreground">
-          © {new Date().getFullYear()} LaunchFly.io — The first step from idea to takeoff.
-        </p>
-      </div>
-    </footer>
   );
 }
 
@@ -208,72 +189,65 @@ function Problem() {
   );
 }
 
-function Step({ n, title, body }: { n: string; title: string; body: string }) {
-  return (
-    <div className="relative rounded-2xl border border-border bg-card p-6 shadow-card-soft">
-      <div className="mb-4 inline-flex h-9 items-center justify-center rounded-md bg-gradient-gold px-3 text-sm font-semibold text-gold-foreground">
-        Step {n}
-      </div>
-      <h3 className="text-lg font-semibold">{title}</h3>
-      <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{body}</p>
-    </div>
-  );
-}
-
 function HowItWorks() {
+  const steps = [
+    { n: "01", icon: Zap, title: "Commit", text: "Start your membership and enter your launch phase." },
+    { n: "02", icon: Brain, title: "Founder DNA", text: "Share your skills, interests, time, budget, and goals." },
+    { n: "03", icon: Lightbulb, title: "Choose your idea", text: "Get personalized online business ideas matched to you." },
+    { n: "04", icon: Rocket, title: "Follow the path", text: "Get a simple plan, checklist, and daily next steps." },
+  ];
   return (
-    <section id="how" className="border-y border-border bg-secondary/30 px-6 py-28">
-      <div className="mx-auto max-w-6xl">
-        <div className="mx-auto max-w-2xl text-center">
-          <p className="text-xs uppercase tracking-[0.25em] text-gold">How it works</p>
-          <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
-            From idea to liftoff in four steps
-          </h2>
+    <section id="how" className="relative py-24">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="text-center mb-16">
+          <p className="text-xs uppercase tracking-[0.25em] text-gold mb-3">How It Works</p>
+          <h2 className="text-4xl md:text-5xl font-semibold tracking-tight">From idea to liftoff in four steps</h2>
         </div>
-        <div className="mt-14 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
-          <Step n="01" title="Commit" body="Start your membership and enter your launch phase." />
-          <Step n="02" title="Founder DNA" body="Share your skills, interests, time, budget, and goals." />
-          <Step n="03" title="Choose your idea" body="Get personalized online business ideas matched to you." />
-          <Step n="04" title="Follow the path" body="Get a simple plan, checklist, and daily next steps." />
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {steps.map((s) => (
+            <Card key={s.n} className="glass bg-gradient-card p-6 rounded-2xl border-border/50 hover:border-gold/50 transition-all group relative overflow-hidden">
+              <div className="absolute -top-12 -right-12 w-32 h-32 bg-gradient-gold opacity-0 group-hover:opacity-20 blur-3xl transition-opacity" />
+              <div className="relative">
+                <div className="text-xs text-muted-foreground mb-4">{s.n}</div>
+                <div className="w-11 h-11 rounded-xl bg-gradient-gold flex items-center justify-center mb-4 shadow-gold">
+                  <s.icon className="w-5 h-5 text-gold-foreground" />
+                </div>
+                <h3 className="text-lg font-semibold mb-2">{s.title}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">{s.text}</p>
+              </div>
+            </Card>
+          ))}
         </div>
       </div>
     </section>
   );
 }
 
-function Feature({ icon: Icon, title, body }: { icon: any; title: string; body: string }) {
-  return (
-    <div className="group rounded-2xl border border-border bg-card p-6 shadow-card-soft transition hover:border-gold/50 hover:shadow-gold">
-      <div className="mb-4 grid h-11 w-11 place-items-center rounded-lg bg-gradient-gold shadow-gold">
-        <Icon className="h-5 w-5 text-gold-foreground" />
-      </div>
-      <h3 className="text-lg font-semibold">{title}</h3>
-      <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{body}</p>
-    </div>
-  );
-}
-
 function Features() {
-  const items = [
-    { icon: Brain, title: "Founder DNA", body: "A short survey reveals your strengths, style, and best business shape." },
-    { icon: Lightbulb, title: "Personalized Ideas", body: "AI-matched online business ideas based on your unique profile." },
-    { icon: Compass, title: "Launch Blueprint", body: "Target customer, problem, MVP, monetization, tools — clearly mapped." },
-    { icon: Calendar, title: "Today's Launch Step", body: "One small task per day. No overwhelm. Real momentum." },
-    { icon: Code2, title: "MVP Prompt", body: "Ready-to-use prompts to build your first version with AI tools." },
-    { icon: Users, title: "First Customer Plan", body: "Outreach scripts and a strategy to land your very first user." },
+  const features = [
+    { icon: Brain, title: "Founder DNA", text: "A short survey reveals your strengths, style, and best business shape." },
+    { icon: Lightbulb, title: "Personalized Ideas", text: "AI-matched online business ideas based on your unique profile." },
+    { icon: Compass, title: "Launch Blueprint", text: "Target customer, problem, MVP, monetization, tools — clearly mapped." },
+    { icon: Calendar, title: "Today's Launch Step", text: "One small task per day. No overwhelm. Real momentum." },
+    { icon: Code2, title: "MVP Prompt", text: "Ready-to-use prompts to build your first version with AI tools." },
+    { icon: Users, title: "First Customer Plan", text: "Outreach scripts and a strategy to land your very first user." },
   ];
   return (
-    <section id="features" className="px-6 py-28">
-      <div className="mx-auto max-w-6xl">
-        <div className="mx-auto max-w-2xl text-center">
-          <p className="text-xs uppercase tracking-[0.25em] text-gold">Features</p>
-          <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
-            Everything you need to leave the runway
-          </h2>
+    <section id="features" className="relative py-24">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="text-center mb-16">
+          <p className="text-xs uppercase tracking-[0.25em] text-gold mb-3">Features</p>
+          <h2 className="text-4xl md:text-5xl font-semibold tracking-tight">Everything you need to leave the runway</h2>
         </div>
-        <div className="mt-14 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {items.map((it) => (
-            <Feature key={it.title} {...it} />
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {features.map((f) => (
+            <Card key={f.title} className="glass bg-gradient-card p-7 rounded-2xl border-border/50 hover:border-gold/50 hover:shadow-gold hover:-translate-y-1 transition-all">
+              <div className="w-12 h-12 rounded-xl glass glow-ring flex items-center justify-center mb-5">
+                <f.icon className="w-5 h-5 text-gold" />
+              </div>
+              <h3 className="text-xl font-semibold mb-2">{f.title}</h3>
+              <p className="text-muted-foreground leading-relaxed">{f.text}</p>
+            </Card>
           ))}
         </div>
       </div>
@@ -283,32 +257,25 @@ function Features() {
 
 function DashboardPreview() {
   return (
-    <section className="px-6 py-24">
-      <div className="mx-auto max-w-6xl">
-        <div className="mx-auto max-w-2xl text-center">
-          <p className="text-xs uppercase tracking-[0.25em] text-gold">The app</p>
-          <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
+    <section className="relative py-24">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="text-center mb-12">
+          <p className="text-xs uppercase tracking-[0.25em] text-gold mb-3">The App</p>
+          <h2 className="text-4xl md:text-5xl font-semibold tracking-tight">
             Your <span className="text-gradient-gold">launch portal</span>
           </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-muted-foreground">
-            A clean dashboard built around one thing: today's next step.
-          </p>
+          <p className="mt-4 text-muted-foreground max-w-2xl mx-auto">A clean dashboard built around one thing: today's next step.</p>
         </div>
-
-        <div className="relative mt-14 overflow-hidden rounded-3xl border border-border bg-card p-0 shadow-card-soft">
-          <div className="pointer-events-none absolute inset-0 bg-warm-glow" />
-          <div className="relative">
+        <div className="relative">
+          <div className="absolute -inset-4 bg-gradient-gold opacity-20 blur-3xl rounded-3xl" />
+          <div className="relative glass rounded-3xl border-border/60 overflow-hidden shadow-elegant">
             <MockDashboard />
           </div>
         </div>
-
         <div className="text-center mt-8">
-          <Link
-            to="/app/dashboard"
-            className="inline-flex items-center gap-2 rounded-full border border-border bg-card/40 px-6 py-3 text-base font-medium text-foreground backdrop-blur transition hover:bg-card"
-          >
-            Explore the live prototype <ArrowRight className="h-4 w-4" />
-          </Link>
+          <Button asChild variant="glass" size="lg">
+            <Link to="/app/dashboard">Explore the live prototype <ArrowRight className="w-4 h-4" /></Link>
+          </Button>
         </div>
       </div>
     </section>
@@ -318,7 +285,7 @@ function DashboardPreview() {
 function MockDashboard() {
   return (
     <div className="grid grid-cols-12 min-h-[480px]">
-      <aside className="col-span-3 border-r border-border p-5 hidden md:block">
+      <aside className="col-span-3 border-r border-border/50 p-5 hidden md:block">
         <div className="flex items-center gap-2 mb-8">
           <div className="w-7 h-7 rounded-lg bg-gradient-gold" />
           <span className="text-sm font-semibold">LaunchFly</span>
@@ -339,18 +306,18 @@ function MockDashboard() {
           <div className="h-full w-[10%] bg-gradient-gold" />
         </div>
         <div className="grid md:grid-cols-3 gap-4 pt-2">
-          <div className="rounded-2xl border border-border bg-background/60 p-4">
+          <Card className="glass bg-gradient-card p-4 rounded-xl border-border/50">
             <p className="text-xs text-muted-foreground mb-1">MVP Prompt</p>
             <p className="text-sm">Build a Notion-style…</p>
-          </div>
-          <div className="rounded-2xl border border-border bg-background/60 p-4">
+          </Card>
+          <Card className="glass bg-gradient-card p-4 rounded-xl border-border/50">
             <p className="text-xs text-muted-foreground mb-1">Outreach</p>
             <p className="text-sm">3 cold DM templates</p>
-          </div>
-          <div className="rounded-2xl border border-border bg-background/60 p-4">
+          </Card>
+          <Card className="glass bg-gradient-card p-4 rounded-xl border-border/50">
             <p className="text-xs text-muted-foreground mb-1">AI Coach</p>
             <p className="text-sm">"Try this hook…"</p>
-          </div>
+          </Card>
         </div>
       </div>
     </div>
@@ -370,47 +337,35 @@ function Pricing() {
     "Cancel anytime",
   ];
   return (
-    <section id="pricing" className="px-6 py-28">
-      <div className="mx-auto max-w-3xl">
-        <div className="text-center">
-          <p className="text-xs uppercase tracking-[0.25em] text-gold">Pricing</p>
-          <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
-            One simple plan
-          </h2>
+    <section id="pricing" className="relative py-24">
+      <div className="max-w-3xl mx-auto px-6">
+        <div className="text-center mb-12">
+          <p className="text-xs uppercase tracking-[0.25em] text-gold mb-3">Pricing</p>
+          <h2 className="text-4xl md:text-5xl font-semibold tracking-tight">One simple plan</h2>
         </div>
-        <div className="relative mt-12 overflow-hidden rounded-3xl border border-gold/40 bg-card p-8 shadow-gold sm:p-10">
-          <div className="pointer-events-none absolute inset-0 bg-warm-glow" />
-          <div className="relative">
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="text-2xl font-semibold">LaunchFly Membership</h3>
-                <p className="mt-1 text-sm text-muted-foreground">Everything you need to go from idea to first customer.</p>
-              </div>
+        <div className="relative">
+          <div className="absolute -inset-2 bg-gradient-gold opacity-30 blur-2xl rounded-3xl" />
+          <Card className="relative glass bg-gradient-card p-10 rounded-3xl border-gold/30">
+            <div className="flex items-baseline justify-between flex-wrap gap-4 mb-2">
+              <h3 className="text-2xl font-semibold">LaunchFly Membership</h3>
               <div className="text-right">
-                <div className="text-4xl font-semibold">
-                  <span className="text-gradient-gold">$19</span>
-                  <span className="text-base text-muted-foreground">/month</span>
-                </div>
+                <span className="text-5xl font-semibold text-gradient-gold">$19</span>
+                <span className="text-muted-foreground"> / month</span>
               </div>
             </div>
-
-            <ul className="mt-8 grid gap-3 sm:grid-cols-2">
-              {includes.map((f) => (
-                <li key={f} className="flex items-center gap-2 text-sm">
-                  <CheckCircle2 className="h-4 w-4 text-gold" />
-                  {f}
+            <p className="text-muted-foreground mb-8">Everything you need to go from idea to first customer.</p>
+            <ul className="grid sm:grid-cols-2 gap-3 mb-8">
+              {includes.map((i) => (
+                <li key={i} className="flex items-center gap-2 text-sm">
+                  <CheckCircle2 className="w-4 h-4 text-gold shrink-0" />
+                  {i}
                 </li>
               ))}
             </ul>
-
-            <Link
-              to="/onboarding"
-              className="mt-10 inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-gold px-6 py-3 text-base font-medium text-gold-foreground shadow-gold transition hover:opacity-90"
-            >
-              Start Your Launch
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
+            <Button asChild variant="hero" size="xl" className="w-full">
+              <Link to="/onboarding">Start Your Launch</Link>
+            </Button>
+          </Card>
         </div>
       </div>
     </section>
@@ -419,20 +374,17 @@ function Pricing() {
 
 function FinalCTA() {
   return (
-    <section className="relative overflow-hidden px-6 py-32">
+    <section className="relative py-32 overflow-hidden">
       <div className="pointer-events-none absolute inset-0 bg-warm-glow" />
-      <div className="relative mx-auto max-w-3xl text-center">
-        <h2 className="text-4xl font-semibold tracking-tight sm:text-5xl">
-          Stop circling the idea.{" "}
-          <span className="text-gradient-gold">Start flying.</span>
+      <div className="relative max-w-3xl mx-auto px-6 text-center">
+        <h2 className="text-5xl md:text-6xl font-semibold tracking-tight">
+          Stop circling the idea. <br /><span className="text-gradient-gold">Start flying.</span>
         </h2>
-        <Link
-          to="/onboarding"
-          className="mt-10 inline-flex items-center gap-2 rounded-full bg-gradient-gold px-7 py-3.5 text-base font-medium text-gold-foreground shadow-gold transition hover:opacity-90"
-        >
-          Start Your Launch
-          <ArrowRight className="h-4 w-4" />
-        </Link>
+        <div className="mt-10">
+          <Button asChild variant="hero" size="xl">
+            <Link to="/onboarding">Start Your Launch <Rocket className="w-4 h-4" /></Link>
+          </Button>
+        </div>
       </div>
     </section>
   );
