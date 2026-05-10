@@ -25,14 +25,26 @@ export const Route = createFileRoute("/")({
 function Home() {
   return (
     <div className="min-h-screen">
-      <img
-        src={bannerImg}
-        alt=""
-        aria-hidden
-        className="block w-full h-auto select-none"
-        draggable={false}
-      />
       <Navbar />
+      {/* Banner pulled up under the sticky navbar so the navbar overlays it */}
+      <div className="relative -mt-[68px]">
+        <img
+          src={bannerImg}
+          alt=""
+          aria-hidden
+          className="block w-full h-auto select-none"
+          draggable={false}
+        />
+        {/* Logo + wordmark anchored to bottom-left of banner */}
+        <div className="absolute bottom-4 left-4 md:bottom-8 md:left-10 z-30 flex items-center gap-2.5 drop-shadow-[0_2px_12px_rgba(0,0,0,0.6)]">
+          <div className="relative w-9 h-9 rounded-lg bg-gradient-primary flex items-center justify-center shadow-glow">
+            <Rocket className="w-4 h-4 text-primary-foreground" strokeWidth={2.5} />
+          </div>
+          <span className="font-bold tracking-tight text-xl md:text-2xl">
+            LaunchFly<span className="text-gradient">.io</span>
+          </span>
+        </div>
+      </div>
       <Hero />
       <Problem />
       <HowItWorks />
@@ -49,16 +61,6 @@ function Hero() {
   return (
     <section className="relative overflow-hidden">
       <div className="relative max-w-5xl mx-auto px-6 pt-20 pb-32 text-center animate-fade-in-up">
-        {/* Centered logo + wordmark */}
-        <div className="flex items-center justify-center gap-2.5 mb-10">
-          <div className="relative w-9 h-9 rounded-lg bg-gradient-primary flex items-center justify-center shadow-glow">
-            <Rocket className="w-4 h-4 text-primary-foreground" strokeWidth={2.5} />
-          </div>
-          <span className="font-bold tracking-tight text-xl md:text-2xl">
-            LaunchFly<span className="text-gradient">.io</span>
-          </span>
-        </div>
-
         <div className="inline-flex items-center gap-2 glass rounded-full px-4 py-1.5 text-xs text-muted-foreground mb-6">
           <Sparkles className="w-3.5 h-3.5 text-primary" />
           AI Founder Portal · Now Boarding
