@@ -117,8 +117,8 @@ function Hero() {
   return (
     <section className="relative -mt-20 px-6">
       <div className="mx-auto max-w-5xl text-center">
-        <h1 className="mt-16 whitespace-nowrap text-4xl font-semibold leading-[1.05] tracking-tight sm:text-5xl md:text-6xl">
-          <span className="text-[rgb(255_119_24)]">Start</span> with the first move.
+        <h1 className="mt-16 whitespace-nowrap text-[2.6rem] font-semibold leading-[1.05] tracking-tight sm:text-[3.5rem] md:text-[4.4rem]">
+          <span className="text-gradient-gold">Start</span> with the first move.
         </h1>
 
         <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground">
