@@ -36,7 +36,7 @@ function Home() {
           draggable={false}
         />
         {/* Logo + wordmark anchored toward the bottom of the banner, shifted right */}
-        <div className="absolute bottom-5 left-32 md:bottom-10 md:left-60 z-30 flex items-center gap-3 drop-shadow-[0_2px_12px_rgba(0,0,0,0.6)]">
+        <div className="absolute bottom-2 left-24 md:bottom-6 md:left-52 z-30 flex items-center gap-3 drop-shadow-[0_2px_12px_rgba(0,0,0,0.6)]">
           <div className="relative w-11 h-11 rounded-lg bg-gradient-primary flex items-center justify-center shadow-glow">
             <Rocket className="w-5 h-5 text-primary-foreground" strokeWidth={2.5} />
           </div>
@@ -61,7 +61,7 @@ function Hero() {
   return (
     <section className="relative overflow-hidden">
       <div className="relative max-w-5xl mx-auto px-6 pt-20 pb-32 text-center animate-fade-in-up">
-        <h1 className="text-[2rem] md:text-[3.4rem] font-bold tracking-tight leading-[1.1] md:whitespace-nowrap">
+        <h1 className="text-[2.2rem] md:text-[3.8rem] font-bold tracking-tight leading-[1.1] md:whitespace-nowrap">
           The first step from <span className="text-gradient">idea to takeoff.</span>
         </h1>
 

@@ -7,7 +7,9 @@ export function Navbar() {
     <header className="sticky top-0 z-50 w-full">
       <div className="absolute inset-0 glass border-b border-border/50" />
       <nav className="relative max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
-        <Logo />
+        <div className="ml-2 md:ml-6">
+          <Logo />
+        </div>
         <div className="hidden md:flex items-center gap-8 text-sm text-muted-foreground">
           <a href="/#how" className="hover:text-foreground transition-colors">How It Works</a>
           <a href="/#features" className="hover:text-foreground transition-colors">Features</a>
