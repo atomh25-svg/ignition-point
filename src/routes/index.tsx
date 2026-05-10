@@ -90,7 +90,7 @@ function Banner() {
           </span>
         </div>
         <h2 className="mt-6 text-lg font-semibold leading-tight text-foreground sm:text-xl md:text-[1.55rem]">
-          Where late nights turn into <span className="text-gradient-gold">real<br /></span><span style={{ color: "oklch(0.68 0.18 55)" }}>launches</span>.
+          For the <span className="text-gradient-gold">vision</span> inside you.
         </h2>
       </div>
 
@@ -118,7 +118,7 @@ function Hero() {
     <section className="relative -mt-20 px-6">
       <div className="mx-auto max-w-5xl text-center">
         <h1 className="mt-16 whitespace-nowrap text-4xl font-semibold leading-[1.05] tracking-tight sm:text-5xl md:text-6xl">
-          Your idea is waiting for <span className="text-gradient-gold">a first move.</span>
+          Start with the <span className="text-gradient-gold">first move.</span>
         </h1>
 
         <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground">
