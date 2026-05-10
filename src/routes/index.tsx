@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Navbar } from "@/components/launchfly/Navbar";
 import { Footer } from "@/components/launchfly/Footer";
+import bannerImg from "@/assets/banner.png";
 import {
   Sparkles, Compass, Rocket, Code2, Users,
   Brain, Zap, CheckCircle2, ArrowRight, Calendar,
@@ -24,6 +25,13 @@ export const Route = createFileRoute("/")({
 function Home() {
   return (
     <div className="min-h-screen">
+      <img
+        src={bannerImg}
+        alt=""
+        aria-hidden
+        className="block w-full h-auto select-none"
+        draggable={false}
+      />
       <Navbar />
       <Hero />
       <Problem />
