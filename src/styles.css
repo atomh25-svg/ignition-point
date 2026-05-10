@@ -46,7 +46,7 @@
   color-scheme: dark;
   --radius: 0.875rem;
   /* Deep space dark */
-  --background: oklch(0.13 0.045 270);
+  --background: oklch(0.08 0.035 270);
   --foreground: oklch(0.98 0.01 250);
   --card: oklch(0.18 0.035 270 / 70%);
   --card-foreground: oklch(0.98 0.01 250);
