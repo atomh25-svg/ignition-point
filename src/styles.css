@@ -40,6 +40,10 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+  /* Idea Takeoff redesign gold theme */
+  --color-gold: var(--gold);
+  --color-gold-foreground: var(--gold-foreground);
+  --color-amber-glow: var(--amber-glow);
 }
 
 :root {
@@ -88,6 +92,27 @@
   --sidebar-accent-foreground: oklch(0.98 0.01 250);
   --sidebar-border: oklch(1 0 0 / 8%);
   --sidebar-ring: oklch(0.44 0.28 266);
+
+  /* Idea Takeoff redesign palette (gold/amber on dark) */
+  --gold: oklch(0.84 0.16 86);
+  --gold-foreground: oklch(0.18 0.02 70);
+  --amber-glow: oklch(0.78 0.18 65);
+  --gradient-gold: linear-gradient(135deg, oklch(0.86 0.17 88), oklch(0.74 0.17 60));
+  /* Banner overlay fades into our dark blue --background (oklch 0.08 0.035 270) */
+  --gradient-banner-overlay: linear-gradient(
+    to bottom,
+    oklch(0.08 0.035 270 / 0.55) 0%,
+    oklch(0.08 0.035 270 / 0.35) 35%,
+    oklch(0.08 0.035 270 / 0.85) 85%,
+    oklch(0.08 0.035 270) 100%
+  );
+  --gradient-warm-glow: radial-gradient(
+    ellipse at 50% 0%,
+    oklch(0.84 0.16 86 / 0.18),
+    transparent 60%
+  );
+  --shadow-gold: 0 10px 40px -10px oklch(0.84 0.16 86 / 0.45);
+  --shadow-card: 0 8px 30px -12px oklch(0 0 0 / 0.6);
 }
 
 @layer base {
@@ -101,8 +126,8 @@
   }
   body {
     background-image:
-      /* Pronounced top radial — concentrated bloom anchored at the page top */
-      radial-gradient(ellipse 100% 55% at 50% -5%, oklch(0.45 0.28 266 / 45%), transparent 65%),
+      /* Pronounced top radial — concentrated bloom dropped lower into the upper third */
+      radial-gradient(ellipse 100% 55% at 50% 18%, oklch(0.45 0.28 266 / 45%), transparent 65%),
       /* Hero gradient v2: 3-radial muted navy (top-center violet, mid-right cyan, bottom-left violet) */
       radial-gradient(ellipse 80% 50% at 50% 0%, oklch(0.4 0.2 280 / 35%), transparent 60%),
       radial-gradient(ellipse 60% 40% at 90% 15%, oklch(0.4 0.2 220 / 25%), transparent 60%),
@@ -162,6 +187,23 @@
       linear-gradient(oklch(1 0 0 / 4%) 1px, transparent 1px),
       linear-gradient(90deg, oklch(1 0 0 / 4%) 1px, transparent 1px);
     background-size: 48px 48px;
+  }
+  /* Idea Takeoff redesign utilities */
+  .text-gradient-gold {
+    background: var(--gradient-gold);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .bg-gradient-gold { background: var(--gradient-gold); }
+  .bg-banner-overlay { background: var(--gradient-banner-overlay); }
+  .bg-warm-glow { background: var(--gradient-warm-glow); }
+  .shadow-gold { box-shadow: var(--shadow-gold); }
+  .shadow-card-soft { box-shadow: var(--shadow-card); }
+  .glass-nav {
+    background: oklch(0.08 0.035 270 / 0.55);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
   }
 }
 

@@ -1,13 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Navbar } from "@/components/launchfly/Navbar";
 import { Footer } from "@/components/launchfly/Footer";
-import bannerImg from "@/assets/benner2.png";
+import bannerImg from "@/assets/banner-takeoff.png";
 import {
   Sparkles, Compass, Rocket, Code2, Users,
   Brain, Zap, CheckCircle2, ArrowRight, Calendar,
-  Lightbulb,
+  Lightbulb, Map as MapIcon, PlayCircle,
 } from "lucide-react";
 
 export const Route = createFileRoute("/")({
@@ -24,27 +23,9 @@ export const Route = createFileRoute("/")({
 
 function Home() {
   return (
-    <div className="min-h-screen">
-      <Navbar />
-      {/* Banner pulled up under the sticky navbar so the navbar overlays it */}
-      <div className="relative -mt-[68px]">
-        <img
-          src={bannerImg}
-          alt=""
-          aria-hidden
-          className="block w-full h-auto select-none"
-          draggable={false}
-        />
-        {/* Logo + wordmark anchored toward the bottom of the banner, shifted right */}
-        <div className="absolute bottom-2 left-16 md:bottom-6 md:left-44 z-30 flex items-center gap-3 drop-shadow-[0_2px_12px_rgba(0,0,0,0.6)]">
-          <div className="relative w-11 h-11 rounded-lg bg-gradient-primary flex items-center justify-center shadow-glow">
-            <Rocket className="w-5 h-5 text-white" strokeWidth={2.5} />
-          </div>
-          <span className="font-bold tracking-tight text-2xl md:text-3xl">
-            LaunchFly<span className="text-gradient">.io</span>
-          </span>
-        </div>
-      </div>
+    <main className="min-h-screen bg-background text-foreground">
+      <Nav />
+      <Banner />
       <Hero />
       <Problem />
       <HowItWorks />
@@ -53,61 +34,156 @@ function Home() {
       <Pricing />
       <FinalCTA />
       <Footer />
-    </div>
+    </main>
   );
 }
 
-function Hero() {
+function Nav() {
   return (
-    <section className="relative overflow-hidden">
-      <div className="relative max-w-5xl mx-auto px-6 pt-12 pb-32 text-center animate-fade-in-up">
-        <h1 className="text-[2.4rem] md:text-[4rem] font-bold tracking-tight leading-[1.1] md:whitespace-nowrap">
-          The first step from <span className="text-gradient">idea to takeoff.</span>
-        </h1>
-
-        <p className="mt-6 text-lg text-muted-foreground max-w-xl mx-auto leading-relaxed">
-          LaunchFly.io helps you go from "I want to start something" to knowing exactly what to build,<br/>
-          how to start, and what to do next.
-        </p>
-
-        <div className="mt-8 flex flex-wrap gap-4 justify-center">
-          <Button asChild variant="hero" size="xl">
-            <Link to="/onboarding">
-              Start Your Launch <span className="opacity-70 ml-1">— $19/mo</span>
-            </Link>
-          </Button>
-          <Button asChild variant="glass" size="xl">
-            <a href="#how">See How It Works</a>
-          </Button>
+    <header className="absolute inset-x-0 top-0 z-30">
+      <div className="glass-nav border-b border-border/40">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+          <a href="#top" className="flex items-center gap-2">
+            <span className="grid h-8 w-8 place-items-center rounded-lg bg-gradient-gold shadow-gold">
+              <Rocket className="h-4 w-4 -rotate-45 text-gold-foreground" />
+            </span>
+            <span className="text-lg font-semibold tracking-tight">
+              LaunchFly<span className="text-gold">.io</span>
+            </span>
+          </a>
+          <nav className="hidden items-center gap-8 text-sm text-muted-foreground md:flex">
+            <a href="#how" className="transition hover:text-foreground">How It Works</a>
+            <a href="#features" className="transition hover:text-foreground">Features</a>
+            <a href="#pricing" className="transition hover:text-foreground">Pricing</a>
+            <Link to="/app/dashboard" className="transition hover:text-foreground">Sign In</Link>
+          </nav>
+          <a
+            href="#pricing"
+            className="inline-flex items-center gap-2 rounded-full bg-gradient-gold px-4 py-2 text-sm font-medium text-gold-foreground shadow-gold transition hover:opacity-90"
+          >
+            Start Your Launch
+            <ArrowRight className="h-4 w-4" />
+          </a>
         </div>
+      </div>
+    </header>
+  );
+}
 
-        <div className="mt-8 flex items-center justify-center gap-6 text-xs text-muted-foreground flex-wrap">
-          <span className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-[rgb(0_196_235)]" /> Cancel anytime</span>
-          <span className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-[rgb(0_196_235)]" /> 30-day path</span>
-          <span className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-[rgb(0_196_235)]" /> AI coach</span>
+function Banner() {
+  return (
+    <section id="top" className="relative h-[78vh] min-h-[560px] w-full overflow-hidden">
+      <img
+        src={bannerImg}
+        alt="Builder coding late at night, focused on launching their idea"
+        className="absolute inset-0 h-full w-full object-cover"
+      />
+      <div className="absolute inset-0 bg-banner-overlay" />
+      <div className="pointer-events-none absolute inset-0 bg-warm-glow" />
+
+      {/* Banner overlay content */}
+      <div className="absolute inset-x-0 top-20 z-10 mx-auto max-w-7xl px-6">
+        <div className="text-center">
+          <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-3 py-1 text-xs text-muted-foreground backdrop-blur">
+            <Sparkles className="h-3.5 w-3.5 text-gold" /> The launch OS for first-time builders
+          </span>
         </div>
+        <h2 className="mt-4 text-lg font-semibold leading-tight text-foreground sm:text-xl md:text-[1.55rem]">
+          Where late nights turn into <span className="text-gradient-gold">real<br /></span><span style={{ color: "oklch(0.68 0.18 55)" }}>launches</span>.
+        </h2>
+      </div>
 
-        <div className="mt-8 inline-flex items-center gap-2 glass rounded-full px-4 py-1.5 text-xs text-muted-foreground">
-          <Sparkles className="w-3.5 h-3.5 text-primary" />
-          AI Founder Portal · Now Boarding
+      <div className="absolute inset-x-0 bottom-10 z-10 mx-auto max-w-7xl px-6">
+        <div className="flex items-end justify-between gap-4">
+          <p className="text-[0.8rem] uppercase tracking-[0.25em] text-gold/90">
+            Welcome to your launch phase,
+          </p>
+          <div className="flex items-center gap-2.5">
+            <span className="grid h-10 w-10 place-items-center rounded-lg bg-gradient-gold shadow-gold">
+              <Rocket className="h-5 w-5 -rotate-45 text-gold-foreground" />
+            </span>
+            <span className="text-lg font-semibold tracking-tight">
+              LaunchFly<span className="text-gold">.io</span>
+            </span>
+          </div>
         </div>
       </div>
     </section>
   );
 }
 
+function Hero() {
+  return (
+    <section className="relative -mt-20 px-6">
+      <div className="mx-auto max-w-5xl text-center">
+        <h1 className="mt-16 whitespace-nowrap text-4xl font-semibold leading-[1.05] tracking-tight sm:text-5xl md:text-6xl">
+          The first step from <span className="text-gradient-gold">idea to takeoff</span>.
+        </h1>
+
+        <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground">
+          LaunchFly helps you go from "I want to start something" to knowing exactly what
+          to build, how to start, and what to do next.
+        </p>
+        <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
+          <a
+            href="#pricing"
+            className="inline-flex items-center gap-2 rounded-full bg-gradient-gold px-6 py-3 text-base font-medium text-gold-foreground shadow-gold transition hover:opacity-90"
+          >
+            Start Your Launch — $19/month
+            <ArrowRight className="h-4 w-4" />
+          </a>
+          <a
+            href="#how"
+            className="inline-flex items-center gap-2 rounded-full border border-border bg-card/40 px-6 py-3 text-base font-medium text-foreground backdrop-blur transition hover:bg-card"
+          >
+            <PlayCircle className="h-4 w-4 text-gold" />
+            See How It Works
+          </a>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function ProblemCard({ icon: Icon, title, body }: { icon: any; title: string; body: string }) {
+  return (
+    <div className="rounded-2xl border border-border bg-card p-6 shadow-card-soft transition hover:border-gold/40">
+      <div className="mb-4 grid h-10 w-10 place-items-center rounded-lg bg-secondary">
+        <Icon className="h-5 w-5 text-gold" />
+      </div>
+      <h3 className="text-lg font-semibold">{title}</h3>
+      <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{body}</p>
+    </div>
+  );
+}
+
 function Problem() {
   return (
-    <section className="relative py-24">
-      <div className="max-w-4xl mx-auto px-6 text-center">
-        <h2 className="text-4xl md:text-5xl font-bold tracking-tight">
-          You have the idea. <br />
-          Now you need <span className="text-gradient">the first step.</span>
-        </h2>
-        <p className="mt-6 text-lg text-muted-foreground leading-relaxed">
-          Most people get stuck because they do not know what to build, who it is for,
-          or what to do first. LaunchFly turns vague motivation into a clear path.
-        </p>
+    <section className="px-6 py-28">
+      <div className="mx-auto max-w-6xl">
+        <div className="mx-auto max-w-3xl text-center">
+          <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+            You know you want to start.{" "}
+            <span className="text-gradient-gold">LaunchFly tells you what to do next.</span>
+          </h2>
+        </div>
+        <div className="mt-14 grid gap-5 md:grid-cols-3">
+          <ProblemCard
+            icon={Lightbulb}
+            title="Too many ideas"
+            body="You do not know which one to choose."
+          />
+          <ProblemCard
+            icon={Compass}
+            title="No clear first step"
+            body="You know you want to build, but not where to begin."
+          />
+          <ProblemCard
+            icon={MapIcon}
+            title="No launch path"
+            body="You need simple daily steps, not another vague business plan."
+          />
+        </div>
       </div>
     </section>
   );
