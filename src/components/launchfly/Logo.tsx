@@ -1,12 +1,16 @@
 import { Link } from "@tanstack/react-router";
-import { RocketGlyph } from "./RocketGlyph";
+import launchflyMark from "@/assets/launchfly-mark.png";
 
 export function Logo({ to = "/" }: { to?: string }) {
   return (
     <Link to={to} className="flex items-center gap-2 group">
-      <div className="relative w-8 h-8 rounded-lg bg-gradient-primary flex items-center justify-center shadow-glow group-hover:shadow-glow-violet transition-all">
-        <RocketGlyph className="w-4 h-4 text-white" strokeWidth={2.5} />
-      </div>
+      <img
+        src={launchflyMark}
+        alt=""
+        aria-hidden
+        className="h-8 w-8 object-contain shrink-0 transition-all group-hover:opacity-90"
+        draggable={false}
+      />
       <span className="font-semibold tracking-tight text-lg">
         LaunchFly<span className="text-gradient">.io</span>
       </span>
