@@ -90,7 +90,7 @@ function Banner() {
           </span>
         </div>
         <h2 className="mt-6 text-lg font-semibold leading-tight text-foreground sm:text-xl md:text-[1.55rem]">
-          For the <span className="text-gradient-gold">vision</span> inside you.
+          For the <span className="text-gradient-gold">vision inside you.</span>
         </h2>
       </div>
 
