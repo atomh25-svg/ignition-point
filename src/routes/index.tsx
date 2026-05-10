@@ -73,7 +73,7 @@ function Nav() {
           <nav className="hidden items-center gap-8 text-sm text-muted-foreground md:flex">
             <a href="#how" className="transition hover:text-foreground">How It Works</a>
             <a href="#features" className="transition hover:text-foreground">Features</a>
-            <a href="#pricing" className="transition hover:text-foreground">Pricing</a>
+            <Link to="/pricing" className="transition hover:text-foreground">Pricing</Link>
             <Link to="/app/dashboard" className="transition hover:text-foreground">Sign In</Link>
           </nav>
           <a
