@@ -194,7 +194,7 @@
      small lightness sweep so the word reads as one orange tone with
      a touch of depth. */
   .text-gradient-orange-subtle {
-    background: linear-gradient(135deg, rgb(224 164 63), rgb(204 80 34));
+    background: linear-gradient(135deg, rgb(235 150 35), rgb(210 55 18));
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
