@@ -1,6 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState } from "react";
 import { Navbar } from "@/components/launchfly/Navbar";
-import { CheckCircle2, ArrowRight, Rocket } from "lucide-react";
+import { CheckCircle2, ArrowRight, Rocket, Loader2 } from "lucide-react";
+import { createCheckoutSession } from "@/lib/stripe-checkout";
 
 export const Route = createFileRoute("/pricing")({
   head: () => ({
@@ -26,6 +28,25 @@ const includes = [
 ];
 
 function Pricing() {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleCommit = async () => {
+    if (loading) return;
+    setLoading(true);
+    setError(null);
+    try {
+      const { url } = await createCheckoutSession({
+        data: { origin: window.location.origin },
+      });
+      window.location.href = url;
+    } catch (err) {
+      console.error(err);
+      setError("Couldn't start checkout. Please try again in a moment.");
+      setLoading(false);
+    }
+  };
+
   return (
     <main className="min-h-screen flex flex-col bg-background text-foreground">
       <Navbar />
@@ -62,13 +83,27 @@ function Pricing() {
                 ))}
               </ul>
 
-              <Link
-                to="/app/founder-dna"
-                className="mt-10 inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-gold px-6 py-3 text-base font-medium text-gold-foreground shadow-gold transition hover:opacity-90 sm:w-auto"
+              <button
+                type="button"
+                onClick={handleCommit}
+                disabled={loading}
+                className="mt-10 inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-gold px-6 py-3 text-base font-medium text-gold-foreground shadow-gold transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-70 sm:w-auto"
               >
-                Commit &amp; Begin
-                <ArrowRight className="h-4 w-4" />
-              </Link>
+                {loading ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Redirecting to checkout…
+                  </>
+                ) : (
+                  <>
+                    Commit &amp; Begin
+                    <ArrowRight className="h-4 w-4" />
+                  </>
+                )}
+              </button>
+              {error && (
+                <p className="mt-3 text-sm text-destructive">{error}</p>
+              )}
 
               <p className="mt-6 text-sm italic text-muted-foreground">
                 Welcome to LaunchFly. Your vision has entered the build phase.
