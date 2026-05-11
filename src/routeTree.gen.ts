@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as WelcomeRouteImport } from './routes/welcome'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as AppRouteImport } from './routes/app'
 import { Route as IndexRouteImport } from './routes/index'
@@ -17,6 +18,11 @@ import { Route as AppFounderDnaRouteImport } from './routes/app.founder-dna'
 import { Route as AppDashboardRouteImport } from './routes/app.dashboard'
 import { Route as AppBlueprintRouteImport } from './routes/app.blueprint'
 
+const WelcomeRoute = WelcomeRouteImport.update({
+  id: '/welcome',
+  path: '/welcome',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PricingRoute = PricingRouteImport.update({
   id: '/pricing',
   path: '/pricing',
@@ -57,6 +63,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
   '/pricing': typeof PricingRoute
+  '/welcome': typeof WelcomeRoute
   '/app/blueprint': typeof AppBlueprintRoute
   '/app/dashboard': typeof AppDashboardRoute
   '/app/founder-dna': typeof AppFounderDnaRoute
@@ -66,6 +73,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
   '/pricing': typeof PricingRoute
+  '/welcome': typeof WelcomeRoute
   '/app/blueprint': typeof AppBlueprintRoute
   '/app/dashboard': typeof AppDashboardRoute
   '/app/founder-dna': typeof AppFounderDnaRoute
@@ -76,6 +84,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
   '/pricing': typeof PricingRoute
+  '/welcome': typeof WelcomeRoute
   '/app/blueprint': typeof AppBlueprintRoute
   '/app/dashboard': typeof AppDashboardRoute
   '/app/founder-dna': typeof AppFounderDnaRoute
@@ -87,6 +96,7 @@ export interface FileRouteTypes {
     | '/'
     | '/app'
     | '/pricing'
+    | '/welcome'
     | '/app/blueprint'
     | '/app/dashboard'
     | '/app/founder-dna'
@@ -96,6 +106,7 @@ export interface FileRouteTypes {
     | '/'
     | '/app'
     | '/pricing'
+    | '/welcome'
     | '/app/blueprint'
     | '/app/dashboard'
     | '/app/founder-dna'
@@ -105,6 +116,7 @@ export interface FileRouteTypes {
     | '/'
     | '/app'
     | '/pricing'
+    | '/welcome'
     | '/app/blueprint'
     | '/app/dashboard'
     | '/app/founder-dna'
@@ -115,10 +127,18 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
   PricingRoute: typeof PricingRoute
+  WelcomeRoute: typeof WelcomeRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/welcome': {
+      id: '/welcome'
+      path: '/welcome'
+      fullPath: '/welcome'
+      preLoaderRoute: typeof WelcomeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/pricing': {
       id: '/pricing'
       path: '/pricing'
@@ -191,6 +211,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
   PricingRoute: PricingRoute,
+  WelcomeRoute: WelcomeRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

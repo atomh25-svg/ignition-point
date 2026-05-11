@@ -103,9 +103,9 @@
   --gradient-banner-overlay: linear-gradient(
     to bottom,
     oklch(0.16 0.012 70 / 0.55) 0%,
-    oklch(0.16 0.012 70 / 0.35) 35%,
-    oklch(0.16 0.012 70 / 0.85) 85%,
-    oklch(0.16 0.012 70) 100%
+    oklch(0.16 0.012 70 / 0.35) 30%,
+    oklch(0.16 0.012 70 / 0.85) 75%,
+    oklch(0.16 0.012 70) 90%
   );
   --gradient-warm-glow: radial-gradient(
     ellipse at 50% 0%,

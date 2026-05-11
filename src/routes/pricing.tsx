@@ -36,13 +36,19 @@ function Pricing() {
     setLoading(true);
     setError(null);
     try {
-      const { url } = await createCheckoutSession({
-        data: { origin: window.location.origin },
-      });
-      window.location.href = url;
+      const result = await createCheckoutSession();
+      if (result.ok) {
+        window.location.href = result.url;
+        return;
+      }
+      console.error("[checkout]", result);
+      setError(`Couldn't start checkout: ${result.reason}`);
+      setLoading(false);
     } catch (err) {
       console.error(err);
-      setError("Couldn't start checkout. Please try again in a moment.");
+      setError(
+        `Couldn't start checkout: ${err instanceof Error ? err.message : String(err)}`,
+      );
       setLoading(false);
     }
   };
