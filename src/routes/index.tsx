@@ -100,7 +100,7 @@ function Banner() {
 
       <div className="absolute inset-x-0 bottom-[318px] z-10 mx-auto max-w-7xl px-6">
         <div className="flex items-end justify-between gap-4">
-          <p className="text-[1.09rem] uppercase tracking-[0.25em] text-gold/90">
+          <p className="text-[1rem] uppercase tracking-[0.25em] text-gold/90">
             Welcome to the launch,
           </p>
           <div className="flex items-center gap-2">
