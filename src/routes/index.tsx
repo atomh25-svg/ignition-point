@@ -81,7 +81,7 @@ function Banner() {
       <img
         src={bannerImg}
         alt="Builder coding late at night, focused on launching their idea"
-        className="absolute -top-[10px] left-0 right-0 h-[calc(100%+10px)] w-full object-cover"
+        className="absolute -top-[20px] left-0 right-0 h-[calc(100%+20px)] w-full object-cover"
       />
       <div className="absolute inset-0 bg-banner-overlay" />
       <div className="pointer-events-none absolute inset-0 bg-warm-glow" />
