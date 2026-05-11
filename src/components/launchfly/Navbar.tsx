@@ -12,7 +12,7 @@ export function Navbar() {
               src={launchflyMark}
               alt=""
               aria-hidden
-              className="h-8 w-8 object-contain shrink-0"
+              className="h-[26px] w-[26px] object-contain shrink-0"
               draggable={false}
             />
             <span className="text-lg font-semibold tracking-tight">

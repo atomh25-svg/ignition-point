@@ -49,7 +49,7 @@ function Nav() {
               src={launchflyMark}
               alt=""
               aria-hidden
-              className="h-8 w-8 object-contain shrink-0"
+              className="h-[26px] w-[26px] object-contain shrink-0"
               draggable={false}
             />
             <span className="text-lg font-semibold tracking-tight">
@@ -87,14 +87,14 @@ function Banner() {
       <div className="pointer-events-none absolute inset-0 bg-warm-glow" />
 
       {/* Banner overlay content */}
-      <div className="absolute inset-x-0 top-20 z-10 mx-auto max-w-7xl px-6">
+      <div className="absolute inset-x-0 top-[85px] z-10 mx-auto max-w-7xl px-6">
         <div className="text-center">
           <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-3 py-1 text-xs text-muted-foreground backdrop-blur">
             <Sparkles className="h-3.5 w-3.5 text-gold" /> The launch OS for first-time builders
           </span>
         </div>
-        <h2 className="mt-6 text-[1.2rem] font-semibold leading-tight text-foreground sm:text-[1.33rem] md:text-[1.63rem]">
-          For the <span className="text-gradient-gold">vision inside you.</span>
+        <h2 className="mt-[29px] text-[1.2rem] font-semibold leading-tight text-foreground sm:text-[1.33rem] md:text-[1.63rem]">
+          For the <span className="text-gradient-gold">vision inside of you.</span>
         </h2>
       </div>
 
@@ -108,7 +108,7 @@ function Banner() {
               src={launchflyMark}
               alt=""
               aria-hidden
-              className="h-10 w-10 object-contain shrink-0"
+              className="h-8 w-8 object-contain shrink-0"
               draggable={false}
             />
             <span className="text-lg font-semibold tracking-tight">

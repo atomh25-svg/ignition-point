@@ -8,7 +8,7 @@ export function Logo({ to = "/" }: { to?: string }) {
         src={launchflyMark}
         alt=""
         aria-hidden
-        className="h-8 w-8 object-contain shrink-0 transition-all group-hover:opacity-90"
+        className="h-[26px] w-[26px] object-contain shrink-0 transition-all group-hover:opacity-90"
         draggable={false}
       />
       <span className="font-semibold tracking-tight text-lg">
