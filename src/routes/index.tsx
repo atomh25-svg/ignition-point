@@ -49,7 +49,7 @@ function Nav() {
               src={launchflyMark}
               alt=""
               aria-hidden
-              className="h-[25px] w-[25px] object-contain shrink-0"
+              className="h-[25px] w-[25px] object-contain shrink-0 brightness-110"
               draggable={false}
             />
             <span className="text-lg font-semibold tracking-tight">
@@ -98,9 +98,9 @@ function Banner() {
         </h2>
       </div>
 
-      <div className="absolute inset-x-0 bottom-[298px] z-10 mx-auto max-w-7xl px-6">
+      <div className="absolute inset-x-0 bottom-[318px] z-10 mx-auto max-w-7xl px-6">
         <div className="flex items-end justify-between gap-4">
-          <p className="text-[0.88rem] uppercase tracking-[0.25em] text-gold/90">
+          <p className="text-[1.09rem] uppercase tracking-[0.25em] text-gold/90">
             Welcome to the launch,
           </p>
           <div className="flex items-center gap-2">
@@ -108,7 +108,7 @@ function Banner() {
               src={launchflyMark}
               alt=""
               aria-hidden
-              className="h-[31px] w-[31px] object-contain shrink-0"
+              className="h-[31px] w-[31px] object-contain shrink-0 brightness-110"
               draggable={false}
             />
             <span className="text-lg font-semibold tracking-tight">
@@ -125,7 +125,7 @@ function Hero() {
   return (
     <section className="relative -mt-[312px] px-6">
       <div className="mx-auto max-w-5xl text-center">
-        <h1 className="mt-16 whitespace-nowrap text-[2.55rem] font-semibold leading-[1.05] tracking-tight sm:text-[3.35rem] md:text-[4.15rem]">
+        <h1 className="mt-16 whitespace-nowrap text-[2.97rem] font-semibold leading-[1.05] tracking-tight sm:text-[3.77rem] md:text-[4.57rem]">
           <span className="text-gradient-gold">Start</span> with The First Move.
         </h1>
 
