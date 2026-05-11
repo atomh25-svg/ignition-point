@@ -3,7 +3,7 @@ import launchflyMark from "@/assets/launchfly-mark.png";
 
 export function Logo({ to = "/" }: { to?: string }) {
   return (
-    <Link to={to} className="flex items-center gap-2 group">
+    <Link to={to} className="flex items-center gap-1.5 group">
       <img
         src={launchflyMark}
         alt=""

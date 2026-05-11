@@ -44,7 +44,7 @@ function Nav() {
     <header className="absolute inset-x-0 top-0 z-30">
       <div className="glass-nav border-b border-border/40">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-          <a href="#top" className="flex items-center gap-2">
+          <a href="#top" className="flex items-center gap-1.5">
             <img
               src={launchflyMark}
               alt=""
@@ -103,7 +103,7 @@ function Banner() {
           <p className="text-[0.88rem] uppercase tracking-[0.25em] text-gold/90">
             Welcome to the launch,
           </p>
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2">
             <img
               src={launchflyMark}
               alt=""
