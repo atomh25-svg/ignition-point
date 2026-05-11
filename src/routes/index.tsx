@@ -49,7 +49,7 @@ function Nav() {
               src={launchflyMark}
               alt=""
               aria-hidden
-              className="h-[26px] w-[26px] object-contain shrink-0"
+              className="h-[21px] w-[21px] object-contain shrink-0"
               draggable={false}
             />
             <span className="text-lg font-semibold tracking-tight">
@@ -101,14 +101,14 @@ function Banner() {
       <div className="absolute inset-x-0 bottom-[136px] z-10 mx-auto max-w-7xl px-6">
         <div className="flex items-end justify-between gap-4">
           <p className="text-[0.88rem] uppercase tracking-[0.25em] text-gold/90">
-            Welcome to your launch,
+            Welcome to the launch,
           </p>
           <div className="flex items-center gap-2.5">
             <img
               src={launchflyMark}
               alt=""
               aria-hidden
-              className="h-8 w-8 object-contain shrink-0"
+              className="h-[26px] w-[26px] object-contain shrink-0"
               draggable={false}
             />
             <span className="text-lg font-semibold tracking-tight">
@@ -126,7 +126,7 @@ function Hero() {
     <section className="relative -mt-44 px-6">
       <div className="mx-auto max-w-5xl text-center">
         <h1 className="mt-16 whitespace-nowrap text-[2.55rem] font-semibold leading-[1.05] tracking-tight sm:text-[3.35rem] md:text-[4.15rem]">
-          <span className="text-[oklch(0.74_0.17_60)]">Start</span> with the First Move.
+          <span className="text-gradient-orange-subtle">Start</span> with The First Move.
         </h1>
 
         <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground">
