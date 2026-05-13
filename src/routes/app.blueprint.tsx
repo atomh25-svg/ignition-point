@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,6 +14,14 @@ export const Route = createFileRoute("/app/blueprint")({
       { name: "description", content: "Your idea, in plain English: what to build, what to skip, and a 7-day plan." },
     ],
   }),
+  // Same funnel as dashboard, but with a softer gate on the DNA step
+  // (a placeholder rather than a redirect) so the user understands
+  // the page exists and what unlocks it.
+  beforeLoad: ({ context }) => {
+    if (context.founderDnaCompleted && !context.selectedIdeaId) {
+      throw redirect({ to: "/app/ideas" });
+    }
+  },
   component: BlueprintOrGate,
 });
 

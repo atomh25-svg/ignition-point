@@ -8,12 +8,14 @@ import {
 
 export const Route = createFileRoute("/app/dashboard")({
   head: () => ({ meta: [{ title: "Dashboard — LaunchFly.io" }] }),
-  // If the user hasn't completed the Founder DNA survey yet, send them
-  // there first — the dashboard renders results from the survey and
-  // there's nothing meaningful to show without one.
+  // Funnel: survey → ideas → dashboard. Send the user to the next
+  // missing step instead of rendering an empty dashboard.
   beforeLoad: ({ context }) => {
     if (!context.founderDnaCompleted) {
       throw redirect({ to: "/app/founder-dna" });
+    }
+    if (!context.selectedIdeaId) {
+      throw redirect({ to: "/app/ideas" });
     }
   },
   component: Dashboard,

@@ -2,7 +2,8 @@ import { createFileRoute, useNavigate, useRouter } from "@tanstack/react-router"
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { markFounderDnaCompleted } from "@/lib/require-subscription";
+import { completeFounderDna, regenerateIdeas } from "@/lib/require-subscription";
+import { ArrowRight } from "lucide-react";
 
 export const Route = createFileRoute("/app/founder-dna")({
   head: () => ({
@@ -35,25 +36,40 @@ function FounderDNA() {
   const selected = answers[step];
   const progress = ((step + (selected ? 1 : 0)) / total) * 100;
 
+  // No auto-advance — user picks an option and then explicitly clicks Next.
   const choose = (opt: string) => {
     setAnswers((a) => ({ ...a, [step]: opt }));
-    if (!isLast) setTimeout(() => setStep((s) => s + 1), 200);
+  };
+
+  const next = () => {
+    if (!selected || isLast) return;
+    setStep((s) => s + 1);
   };
 
   const finish = async () => {
-    if (finishing) return;
+    if (finishing || !selected) return;
     setFinishing(true);
     try {
-      // Persist completion so Dashboard / Ideas / Blueprint unlock for this user.
-      await markFounderDnaCompleted();
-      // Force the /app gate's beforeLoad to re-run so the new context value
-      // (founderDnaCompleted: true) is picked up before the next route renders.
+      // Persist answers + completion timestamp.
+      await completeFounderDna({
+        data: {
+          answers: Object.fromEntries(
+            Object.entries(answers).map(([k, v]) => [String(k), v]),
+          ),
+        },
+      });
+      // Kick off the initial idea generation so /app/ideas isn't empty
+      // when the user arrives. We don't block on it succeeding — the
+      // Ideas page can also trigger generation if this somehow fails.
+      try {
+        await regenerateIdeas();
+      } catch (err) {
+        console.warn("[founder-dna] initial idea generation failed:", err);
+      }
       await router.invalidate();
       await navigate({ to: "/app/ideas" });
     } catch (err) {
-      console.error("[founder-dna] could not mark completed:", err);
-      // Even if persistence failed, get them to the next screen so the
-      // session doesn't dead-end — the gate just won't unlock yet.
+      console.error("[founder-dna] could not save:", err);
       await navigate({ to: "/app/ideas" });
     } finally {
       setFinishing(false);
@@ -101,17 +117,30 @@ function FounderDNA() {
           })}
         </div>
 
-        {isLast && (
-          <Button
-            variant="hero"
-            size="xl"
-            onClick={finish}
-            disabled={!selected || finishing}
-            className="mt-8 w-full"
-          >
-            {finishing ? "Saving…" : "Complete survey"}
-          </Button>
-        )}
+        <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-end">
+          {!isLast ? (
+            <Button
+              variant="hero"
+              size="xl"
+              onClick={next}
+              disabled={!selected}
+              className="w-full sm:w-auto"
+            >
+              Next
+              <ArrowRight className="ml-1 h-4 w-4" />
+            </Button>
+          ) : (
+            <Button
+              variant="hero"
+              size="xl"
+              onClick={finish}
+              disabled={!selected || finishing}
+              className="w-full sm:w-auto"
+            >
+              {finishing ? "Generating ideas…" : "Complete survey"}
+            </Button>
+          )}
+        </div>
       </Card>
 
       <div className="mt-6 flex justify-between">
@@ -122,11 +151,6 @@ function FounderDNA() {
         >
           ← Back
         </Button>
-        {!isLast && selected && (
-          <Button variant="glass" onClick={() => setStep((s) => s + 1)}>
-            Skip →
-          </Button>
-        )}
       </div>
     </div>
   );

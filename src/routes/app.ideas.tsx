@@ -1,8 +1,24 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, useRouter } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Lightbulb, Users, Target, Zap, Clock, ArrowRight } from "lucide-react";
+import {
+  Sparkles,
+  Users,
+  Target,
+  Zap,
+  Clock,
+  Check,
+  RotateCcw,
+  Loader2,
+} from "lucide-react";
 import { FounderDnaGate } from "@/components/launchfly/FounderDnaGate";
+import {
+  listIdeas,
+  regenerateIdeas,
+  selectIdea,
+  type IdeaRow,
+} from "@/lib/require-subscription";
 
 export const Route = createFileRoute("/app/ideas")({
   head: () => ({ meta: [{ title: "Ideas — LaunchFly" }] }),
@@ -22,56 +38,234 @@ function IdeasOrGate() {
   return <Ideas />;
 }
 
-const ideas = [
-  { name: "AI résumé tailor", concept: "Customizes résumés per job posting in seconds.", audience: "Career switchers, 25-40", fit: 92, diff: "Easy", speed: "14 days", first: "Post in r/jobs and offer free first run" },
-  { name: "Niche newsletter OS", concept: "AI tool that runs a paid newsletter end-to-end.", audience: "Aspiring creators", fit: 86, diff: "Medium", speed: "21 days", first: "DM 10 newsletter writers on X" },
-  { name: "Local pro lead bot", concept: "Generates qualified leads for solo trades.", audience: "Plumbers, electricians", fit: 81, diff: "Medium", speed: "30 days", first: "Cold call 5 local businesses" },
-  { name: "Course slide generator", concept: "Turn any topic into a polished course in minutes.", audience: "Coaches & teachers", fit: 78, diff: "Easy", speed: "10 days", first: "Show demo to 3 coaches you know" },
-];
-
-function Badge({ children, tone = "muted" }: { children: React.ReactNode; tone?: "muted" | "primary" }) {
+function Badge({
+  children,
+  tone = "muted",
+}: {
+  children: React.ReactNode;
+  tone?: "muted" | "primary";
+}) {
   return (
-    <span className={`text-[10px] uppercase tracking-wider px-2 py-1 rounded-md ${tone === "primary" ? "bg-primary/15 text-primary" : "bg-white/5 text-muted-foreground"}`}>
+    <span
+      className={`text-[10px] uppercase tracking-wider px-2 py-1 rounded-md ${
+        tone === "primary"
+          ? "bg-primary/15 text-primary"
+          : "bg-white/5 text-muted-foreground"
+      }`}
+    >
       {children}
     </span>
   );
 }
 
 function Ideas() {
+  const router = useRouter();
+  const { selectedIdeaId } = Route.useRouteContext();
+  const [ideas, setIdeas] = useState<IdeaRow[] | null>(null);
+  const [busy, setBusy] = useState<null | "load" | "regenerate" | string>(
+    "load",
+  );
+  const [error, setError] = useState<string | null>(null);
+
+  // Load the latest batch on mount.
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const result = await listIdeas();
+        if (cancelled) return;
+        if (!result.ok) {
+          setError(`Couldn't load ideas: ${result.reason}`);
+          setIdeas([]);
+        } else {
+          setIdeas(result.ideas);
+        }
+      } catch (err) {
+        if (cancelled) return;
+        setError(err instanceof Error ? err.message : String(err));
+        setIdeas([]);
+      } finally {
+        if (!cancelled) setBusy(null);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const regenerate = async () => {
+    if (busy) return;
+    setBusy("regenerate");
+    setError(null);
+    try {
+      const out = await regenerateIdeas();
+      if (!out.ok) {
+        setError(`Couldn't generate: ${out.reason}`);
+        return;
+      }
+      const list = await listIdeas();
+      if (list.ok) setIdeas(list.ideas);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
+    } finally {
+      setBusy(null);
+    }
+  };
+
+  const pickIdea = async (id: string) => {
+    if (busy) return;
+    setBusy(id);
+    setError(null);
+    try {
+      const out = await selectIdea({ data: { ideaId: id } });
+      if (!out.ok) {
+        setError(`Couldn't select idea: ${out.reason}`);
+        return;
+      }
+      // Invalidate the /app gate so context.selectedIdeaId is fresh on
+      // the next render (Dashboard + Blueprint stop redirecting).
+      await router.invalidate();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
+    } finally {
+      setBusy(null);
+    }
+  };
+
   return (
-    <div className="p-8 max-w-6xl mx-auto">
-      <div className="flex items-center justify-between flex-wrap gap-4 mb-8">
+    <div className="p-8 max-w-7xl mx-auto w-full">
+      <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="text-sm text-primary flex items-center gap-2"><Lightbulb className="w-4 h-4" /> Personalized for AI Wrapper Builder</p>
-          <h1 className="text-3xl font-bold tracking-tight">Ideas matched to your DNA</h1>
+          <p className="text-xs uppercase tracking-[0.25em] text-gold">
+            Your ideas
+          </p>
+          <h1 className="mt-2 text-4xl md:text-5xl font-semibold tracking-tight">
+            Pick the one that calls you.
+          </h1>
+          <p className="mt-3 max-w-xl text-muted-foreground leading-relaxed">
+            These are matched to your Founder DNA. Picking one unlocks your
+            Blueprint and Dashboard — you can switch later.
+          </p>
         </div>
-        <Button variant="glass">Regenerate ideas</Button>
+        <Button
+          variant="glass"
+          onClick={regenerate}
+          disabled={!!busy}
+          className="shrink-0"
+        >
+          {busy === "regenerate" ? (
+            <>
+              <Loader2 className="h-4 w-4 animate-spin" />
+              Generating…
+            </>
+          ) : (
+            <>
+              <RotateCcw className="h-4 w-4" />
+              Generate fresh batch
+            </>
+          )}
+        </Button>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-6">
-        {ideas.map((idea) => (
-          <Card key={idea.name} className="glass bg-gradient-card rounded-2xl p-6 border-border/50 hover:border-primary/40 transition-all">
-            <div className="flex items-start justify-between gap-3 mb-3">
-              <h3 className="text-xl font-semibold">{idea.name}</h3>
-              <Badge tone="primary">{idea.fit}% fit</Badge>
-            </div>
-            <p className="text-sm text-muted-foreground mb-5 leading-relaxed">{idea.concept}</p>
-            <div className="grid grid-cols-2 gap-3 text-xs mb-5">
-              <div className="flex items-center gap-2"><Users className="w-3.5 h-3.5 text-primary" /><span className="text-muted-foreground">{idea.audience}</span></div>
-              <div className="flex items-center gap-2"><Zap className="w-3.5 h-3.5 text-primary" /><span className="text-muted-foreground">Difficulty: {idea.diff}</span></div>
-              <div className="flex items-center gap-2"><Clock className="w-3.5 h-3.5 text-primary" /><span className="text-muted-foreground">First $: {idea.speed}</span></div>
-              <div className="flex items-center gap-2"><Target className="w-3.5 h-3.5 text-primary" /><span className="text-muted-foreground">Match {idea.fit}%</span></div>
-            </div>
-            <div className="glass rounded-xl p-3 text-xs mb-5">
-              <span className="text-primary font-medium">First step: </span>
-              <span className="text-muted-foreground">{idea.first}</span>
-            </div>
-            <Button asChild variant="hero" size="sm" className="w-full">
-              <Link to="/app/blueprint">Choose this idea <ArrowRight className="w-4 h-4" /></Link>
-            </Button>
-          </Card>
-        ))}
-      </div>
+      {error && (
+        <p className="mt-6 text-sm text-destructive">{error}</p>
+      )}
+
+      {ideas === null ? (
+        <div className="mt-16 flex items-center justify-center text-muted-foreground">
+          <Loader2 className="h-5 w-5 animate-spin mr-2" />
+          Loading your ideas…
+        </div>
+      ) : ideas.length === 0 ? (
+        <div className="mt-16 rounded-2xl border border-border bg-card p-10 text-center">
+          <Sparkles className="mx-auto h-8 w-8 text-gold" />
+          <h2 className="mt-4 text-2xl font-semibold">No ideas yet.</h2>
+          <p className="mt-2 text-muted-foreground">
+            Hit the button above and we'll match a first batch to your survey
+            answers.
+          </p>
+        </div>
+      ) : (
+        <div className="mt-10 grid gap-5 md:grid-cols-2">
+          {ideas.map((idea) => {
+            const isSelected = selectedIdeaId === idea.id;
+            return (
+              <Card
+                key={idea.id}
+                className={`glass bg-gradient-card p-7 rounded-2xl transition-all ${
+                  isSelected
+                    ? "border-gold/60 shadow-gold"
+                    : "border-border/50 hover:border-gold/40"
+                }`}
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <h3 className="text-xl font-semibold">{idea.name}</h3>
+                  <Badge tone="primary">{idea.fit}% fit</Badge>
+                </div>
+                <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
+                  {idea.concept}
+                </p>
+                <div className="mt-5 grid gap-3 text-sm">
+                  <div className="flex items-center gap-2 text-muted-foreground">
+                    <Users className="h-4 w-4 text-gold" />
+                    <span className="text-foreground/90">{idea.audience}</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-muted-foreground">
+                    <Target className="h-4 w-4 text-gold" />
+                    <span>Difficulty:&nbsp;</span>
+                    <span className="text-foreground/90">
+                      {idea.difficulty}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2 text-muted-foreground">
+                    <Clock className="h-4 w-4 text-gold" />
+                    <span>Time to first paid user:&nbsp;</span>
+                    <span className="text-foreground/90">{idea.speed}</span>
+                  </div>
+                  <div className="flex items-start gap-2 text-muted-foreground">
+                    <Zap className="h-4 w-4 text-gold mt-0.5" />
+                    <span>
+                      <span className="font-medium text-foreground/90">
+                        First step:&nbsp;
+                      </span>
+                      {idea.first_step}
+                    </span>
+                  </div>
+                </div>
+                <div className="mt-6">
+                  {isSelected ? (
+                    <Button
+                      variant="glass"
+                      className="w-full"
+                      disabled
+                    >
+                      <Check className="h-4 w-4" />
+                      Selected — your Blueprint is unlocked
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="hero"
+                      size="lg"
+                      className="w-full"
+                      onClick={() => pickIdea(idea.id)}
+                      disabled={!!busy}
+                    >
+                      {busy === idea.id ? (
+                        <>
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                          Selecting…
+                        </>
+                      ) : (
+                        <>Choose this idea</>
+                      )}
+                    </Button>
+                  )}
+                </div>
+              </Card>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }

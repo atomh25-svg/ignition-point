@@ -3,11 +3,6 @@ import { AppShell } from "@/components/launchfly/AppShell";
 import { requireActiveSubscription } from "@/lib/require-subscription";
 
 export const Route = createFileRoute("/app")({
-  // Server-side gate. Runs on every navigation into /app/*. Sends
-  // unauthenticated visitors home and unsubscribed users to /pricing.
-  // Exposes `founderDnaCompleted` to child routes via context so they
-  // can decide whether to redirect into the survey or render a
-  // "complete Founder DNA first" placeholder.
   beforeLoad: async () => {
     const result = await requireActiveSubscription();
     if (!result.ok) {
@@ -20,6 +15,7 @@ export const Route = createFileRoute("/app")({
       userId: result.userId,
       subscription: result.subscription,
       founderDnaCompleted: result.founderDnaCompleted,
+      selectedIdeaId: result.selectedIdeaId,
     };
   },
   component: AppShell,
