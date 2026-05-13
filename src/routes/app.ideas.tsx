@@ -2,11 +2,25 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Lightbulb, Users, Target, Zap, Clock, ArrowRight } from "lucide-react";
+import { FounderDnaGate } from "@/components/launchfly/FounderDnaGate";
 
 export const Route = createFileRoute("/app/ideas")({
   head: () => ({ meta: [{ title: "Ideas — LaunchFly" }] }),
-  component: Ideas,
+  component: IdeasOrGate,
 });
+
+function IdeasOrGate() {
+  const { founderDnaCompleted } = Route.useRouteContext();
+  if (!founderDnaCompleted) {
+    return (
+      <FounderDnaGate
+        pageName="Ideas"
+        description="Your personalized business ideas are generated from your Founder DNA — your skills, your interests, your time budget. Finish the survey and they'll appear here."
+      />
+    );
+  }
+  return <Ideas />;
+}
 
 const ideas = [
   { name: "AI résumé tailor", concept: "Customizes résumés per job posting in seconds.", audience: "Career switchers, 25-40", fit: 92, diff: "Easy", speed: "14 days", first: "Post in r/jobs and offer free first run" },

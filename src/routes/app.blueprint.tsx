@@ -5,6 +5,7 @@ import {
   ArrowRight, Users, Flame, Hammer, Ban, DollarSign, Wrench,
   Megaphone, Calendar, Rocket,
 } from "lucide-react";
+import { FounderDnaGate } from "@/components/launchfly/FounderDnaGate";
 
 export const Route = createFileRoute("/app/blueprint")({
   head: () => ({
@@ -13,8 +14,21 @@ export const Route = createFileRoute("/app/blueprint")({
       { name: "description", content: "Your idea, in plain English: what to build, what to skip, and a 7-day plan." },
     ],
   }),
-  component: Blueprint,
+  component: BlueprintOrGate,
 });
+
+function BlueprintOrGate() {
+  const { founderDnaCompleted } = Route.useRouteContext();
+  if (!founderDnaCompleted) {
+    return (
+      <FounderDnaGate
+        pageName="Blueprint"
+        description="Your Launch Blueprint is built from your Founder DNA — target customer, MVP shape, monetization, and a 7-day plan. Finish the survey and it'll appear here."
+      />
+    );
+  }
+  return <Blueprint />;
+}
 
 const stats = [
   { icon: Users, label: "Who it's for", value: "Career switchers applying to 5+ roles per week" },

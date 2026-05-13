@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
@@ -8,6 +8,14 @@ import {
 
 export const Route = createFileRoute("/app/dashboard")({
   head: () => ({ meta: [{ title: "Dashboard — LaunchFly.io" }] }),
+  // If the user hasn't completed the Founder DNA survey yet, send them
+  // there first — the dashboard renders results from the survey and
+  // there's nothing meaningful to show without one.
+  beforeLoad: ({ context }) => {
+    if (!context.founderDnaCompleted) {
+      throw redirect({ to: "/app/founder-dna" });
+    }
+  },
   component: Dashboard,
 });
 

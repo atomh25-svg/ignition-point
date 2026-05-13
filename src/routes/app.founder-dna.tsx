@@ -1,7 +1,8 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, useRouter } from "@tanstack/react-router";
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { markFounderDnaCompleted } from "@/lib/require-subscription";
 
 export const Route = createFileRoute("/app/founder-dna")({
   head: () => ({
@@ -24,8 +25,10 @@ const questions = [
 
 function FounderDNA() {
   const navigate = useNavigate();
+  const router = useRouter();
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<Record<number, string>>({});
+  const [finishing, setFinishing] = useState(false);
   const total = questions.length;
   const current = questions[step];
   const isLast = step === total - 1;
@@ -37,7 +40,25 @@ function FounderDNA() {
     if (!isLast) setTimeout(() => setStep((s) => s + 1), 200);
   };
 
-  const finish = () => navigate({ to: "/app/ideas" });
+  const finish = async () => {
+    if (finishing) return;
+    setFinishing(true);
+    try {
+      // Persist completion so Dashboard / Ideas / Blueprint unlock for this user.
+      await markFounderDnaCompleted();
+      // Force the /app gate's beforeLoad to re-run so the new context value
+      // (founderDnaCompleted: true) is picked up before the next route renders.
+      await router.invalidate();
+      await navigate({ to: "/app/ideas" });
+    } catch (err) {
+      console.error("[founder-dna] could not mark completed:", err);
+      // Even if persistence failed, get them to the next screen so the
+      // session doesn't dead-end — the gate just won't unlock yet.
+      await navigate({ to: "/app/ideas" });
+    } finally {
+      setFinishing(false);
+    }
+  };
 
   return (
     <div className="p-8 max-w-2xl mx-auto w-full">
@@ -85,10 +106,10 @@ function FounderDNA() {
             variant="hero"
             size="xl"
             onClick={finish}
-            disabled={!selected}
+            disabled={!selected || finishing}
             className="mt-8 w-full"
           >
-            Complete survey
+            {finishing ? "Saving…" : "Complete survey"}
           </Button>
         )}
       </Card>
