@@ -116,8 +116,8 @@ function BlueprintLoader() {
       <GeneratingScreen
         title={
           ideaName
-            ? `Building the blueprint for "${ideaName}"`
-            : "Building your blueprint"
+            ? `Building the Blueprint for "${ideaName}"`
+            : "Building your Blueprint"
         }
         hints={BLUEPRINT_HINTS}
       />
@@ -147,19 +147,37 @@ function BlueprintLoader() {
   return <Blueprint data={blueprint} />;
 }
 
+/**
+ * Claude sometimes returns "what_to_skip" as a single line with
+ * inline "- foo - bar - baz" markers and sometimes with proper
+ * newlines. Split it back out into individual items either way so
+ * we can render a clean bullet list.
+ */
+function parseBullets(text: string): string[] {
+  if (!text) return [];
+  const byNewline = text
+    .split(/\r?\n/)
+    .map((line) => line.replace(/^\s*[-*•]\s*/, "").trim())
+    .filter(Boolean);
+  if (byNewline.length > 1) return byNewline;
+  // Single-line case: split on " - " or " * " boundary, but only when
+  // it's actually a list and not a sentence with a hyphenated word.
+  const parts = text
+    .split(/\s+(?:[-*•])\s+/)
+    .map((s) => s.trim())
+    .filter(Boolean);
+  return parts.length > 1 ? parts : [text.trim()];
+}
+
 function Blueprint({ data }: { data: BlueprintData }) {
+  const skipBullets = parseBullets(data.pillars.what_to_skip);
+
   const pillars = [
     {
       icon: Hammer,
       tone: "primary" as const,
       title: "What you're building",
       body: data.pillars.what_youre_building,
-    },
-    {
-      icon: Ban,
-      tone: "destructive" as const,
-      title: "What to skip (for now)",
-      body: data.pillars.what_to_skip,
     },
     {
       icon: Wrench,
@@ -250,11 +268,38 @@ function Blueprint({ data }: { data: BlueprintData }) {
 
       {/* Pillars */}
       <section className="mt-10 grid md:grid-cols-2 gap-4">
+        {/* What to skip — rendered as a real bullet list */}
+        <Card
+          className={`glass bg-gradient-card rounded-2xl p-6 border-l-4 animate-fade-in-up md:col-span-2 ${toneMap.destructive}`}
+        >
+          <div className="flex items-center gap-3">
+            <div
+              className={`w-10 h-10 rounded-xl border ${toneMap.destructive} flex items-center justify-center`}
+            >
+              <Ban className="w-5 h-5" />
+            </div>
+            <h3 className="font-semibold text-lg text-foreground">
+              What to skip (for now)
+            </h3>
+          </div>
+          <ul className="mt-4 space-y-2.5">
+            {skipBullets.map((item, i) => (
+              <li
+                key={i}
+                className="flex gap-3 text-sm text-muted-foreground leading-relaxed"
+              >
+                <span className="mt-2 inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-destructive/70" />
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        </Card>
+
         {pillars.map((p, i) => (
           <Card
             key={p.title}
             className={`glass bg-gradient-card rounded-2xl p-6 border-l-4 animate-fade-in-up ${toneMap[p.tone]}`}
-            style={{ animationDelay: `${i * 0.05}s` }}
+            style={{ animationDelay: `${(i + 1) * 0.05}s` }}
           >
             <div className="flex items-center gap-3">
               <div

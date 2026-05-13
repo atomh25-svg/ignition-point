@@ -270,7 +270,8 @@ Schema (every field is REQUIRED and every string must be non-empty):
     "how_to_get_first_users": string       // 2-3 sentences naming specific communities + the exact ask
   },
   "seven_day_plan": [string, string, string, string, string, string, string]
-  // EXACTLY 7 items, each starting with "Day N — " (em dash, not hyphen)
+  // EXACTLY 7 items, each starting with "Day N — " (em dash, not hyphen).
+  // Each item must be CONCISE — under 80 characters total, max ~10 words after the "Day N —". No time estimates ("Time: 75 min"). No multi-sentence explanations. Just the headline action. Example: "Day 1 — Build the landing page with email capture in Lovable".
 }`;
 
 export async function generateBlueprintFor(
@@ -414,12 +415,12 @@ function parseBlueprint(rawText: string, idea: GeneratedIdea): Blueprint {
     "Day 2 — Build the MVP with Lovable or Cursor",
     "Day 3 — Write the first-customer outreach copy",
     "Day 4 — Post in 2 communities + DM 5 friends",
-    "Day 5 — Onboard 5 testers, watch them use it, take notes",
+    "Day 5 — Onboard 5 testers, take notes",
     "Day 6 — Add Stripe Checkout, ship the paid plan",
     "Day 7 — Convert your first paying customer 🚀",
   ];
   for (let i = 0; i < 7; i++) {
-    plan.push(str(planRaw[i], defaultPlan[i]));
+    plan.push(trim(str(planRaw[i], defaultPlan[i]), 100));
   }
 
   return {
