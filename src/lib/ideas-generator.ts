@@ -19,6 +19,25 @@ export type GeneratedIdea = {
   first_step: string;
 };
 
+export type Blueprint = {
+  headline: string;
+  tagline: string;
+  stats: {
+    who_its_for: string;
+    why_theyll_pay: string;
+    price: string;
+    time_to_first_paid_user: string;
+  };
+  in_plain_english: string[]; // 3 short paragraphs
+  pillars: {
+    what_youre_building: string;
+    what_to_skip: string;
+    tools_youll_use: string;
+    how_to_get_first_users: string;
+  };
+  seven_day_plan: string[]; // 7 strings, each "Day N — …"
+};
+
 const QUESTION_LABELS: Record<string, string> = {
   "0": "Build channel",
   "1": "Weekly hours available",
@@ -199,6 +218,209 @@ function parseAndValidate(rawText: string): GeneratedIdea[] {
     throw new Error("Claude returned no valid ideas after parsing");
   }
   return ideas;
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Blueprint generator                                                       */
+/* -------------------------------------------------------------------------- */
+
+const BLUEPRINT_SYSTEM_PROMPT = `You are a startup advisor turning a founder's chosen idea into a concrete 7-day launch blueprint.
+
+Hard rules:
+- Output ONLY a single JSON object. No prose before or after. No markdown code fences.
+- Be specific. Name real tools (Stripe, Resend, Lovable, Vercel, OpenAI, etc.). Name real communities (specific subreddits, specific X/Twitter circles, specific Slack/Discord groups). Real numbers — "$9/mo", "5 DMs", "Day 3".
+- No generic marketing-speak ("leverage", "synergy", "engage your audience"). Write like an experienced founder talking to a first-timer.
+- The 7-day plan must respect the founder's weekly hours: if they said 2-5 hours/week, each day's task fits in ~30 min.
+- "what_to_skip" is the most important pillar — list things this founder will be tempted to build but doesn't need on day one.
+
+Schema (every field is required):
+{
+  "headline": string,                 // hero-line, e.g. "AI résumé tailor for career switchers" — under 60 chars
+  "tagline": string,                  // 1-2 sentences, plain English
+  "stats": {
+    "who_its_for": string,            // specific persona — name an age range, a job state, a behavior
+    "why_theyll_pay": string,         // the pain in their own voice
+    "price": string,                  // e.g. "$9/mo · unlimited rewrites"
+    "time_to_first_paid_user": string // honest given hours/week
+  },
+  "in_plain_english": [string, string, string],   // exactly 3 sentences walking through the product
+  "pillars": {
+    "what_youre_building": string,
+    "what_to_skip": string,
+    "tools_youll_use": string,
+    "how_to_get_first_users": string
+  },
+  "seven_day_plan": [string, string, string, string, string, string, string]
+  // each plan entry MUST start with "Day N — " (em dash)
+}`;
+
+export async function generateBlueprintFor(
+  idea: GeneratedIdea,
+  answers: SurveyAnswers,
+): Promise<Blueprint> {
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) {
+    console.warn("[blueprint-generator] no ANTHROPIC_API_KEY, using mock");
+    return mockBlueprint(idea);
+  }
+  try {
+    return await generateBlueprintWithClaude(idea, answers, apiKey);
+  } catch (err) {
+    console.error("[blueprint-generator] Claude call failed:", err);
+    return mockBlueprint(idea);
+  }
+}
+
+async function generateBlueprintWithClaude(
+  idea: GeneratedIdea,
+  answers: SurveyAnswers,
+  apiKey: string,
+): Promise<Blueprint> {
+  const profileLines = Object.entries(answers)
+    .map(([key, value]) => `- ${QUESTION_LABELS[key] ?? `Answer ${key}`}: ${value}`)
+    .join("\n");
+
+  const userMessage = `Founder's chosen idea:
+- Name: ${idea.name}
+- Concept: ${idea.concept}
+- Audience: ${idea.audience}
+- Difficulty: ${idea.difficulty}
+- Target time to first paid user: ${idea.speed}
+- First step we suggested: ${idea.first_step}
+
+Founder DNA:
+${profileLines}
+
+Write the blueprint they can execute given those constraints. Return only the JSON object.`;
+
+  const response = await fetch(CLAUDE_ENDPOINT, {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      "x-api-key": apiKey,
+      "anthropic-version": "2023-06-01",
+    },
+    body: JSON.stringify({
+      model: CLAUDE_MODEL,
+      max_tokens: 2048,
+      system: [
+        {
+          type: "text",
+          text: BLUEPRINT_SYSTEM_PROMPT,
+          cache_control: { type: "ephemeral" },
+        },
+      ],
+      messages: [{ role: "user", content: userMessage }],
+    }),
+  });
+
+  if (!response.ok) {
+    const body = await response.text();
+    throw new Error(`Claude HTTP ${response.status}: ${body}`);
+  }
+  const data = (await response.json()) as AnthropicMessagesResponse;
+  if (data.error) throw new Error(`Claude error: ${data.error.message}`);
+
+  const text = data.content?.find((b) => b.type === "text")?.text ?? "";
+  console.log(
+    "[blueprint-generator] Claude usage:",
+    JSON.stringify(data.usage),
+    "stop_reason:",
+    data.stop_reason,
+  );
+
+  return parseBlueprint(text, idea);
+}
+
+function parseBlueprint(rawText: string, idea: GeneratedIdea): Blueprint {
+  const cleaned = rawText
+    .trim()
+    .replace(/^```(?:json)?\s*/i, "")
+    .replace(/\s*```$/i, "")
+    .trim();
+
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(cleaned);
+  } catch {
+    const match = cleaned.match(/\{[\s\S]*\}/);
+    if (!match)
+      throw new Error(`Blueprint output not JSON: ${cleaned.slice(0, 200)}`);
+    parsed = JSON.parse(match[0]);
+  }
+
+  if (!parsed || typeof parsed !== "object") {
+    throw new Error("Blueprint output was not a JSON object");
+  }
+  const o = parsed as Record<string, unknown>;
+  const stats = o.stats as Record<string, unknown> | undefined;
+  const pillars = o.pillars as Record<string, unknown> | undefined;
+  const ipe = Array.isArray(o.in_plain_english) ? o.in_plain_english : [];
+  const plan = Array.isArray(o.seven_day_plan) ? o.seven_day_plan : [];
+
+  if (
+    !stats ||
+    !pillars ||
+    ipe.length < 1 ||
+    plan.length < 7
+  ) {
+    throw new Error("Blueprint output missing required fields");
+  }
+
+  const str = (v: unknown, fallback: string) =>
+    typeof v === "string" && v.trim().length > 0 ? v.trim() : fallback;
+
+  return {
+    headline: str(o.headline, idea.name),
+    tagline: str(o.tagline, idea.concept),
+    stats: {
+      who_its_for: str(stats.who_its_for, idea.audience),
+      why_theyll_pay: str(stats.why_theyll_pay, "—"),
+      price: str(stats.price, "—"),
+      time_to_first_paid_user: str(stats.time_to_first_paid_user, idea.speed),
+    },
+    in_plain_english: ipe.slice(0, 3).map((p, i) => str(p, `Step ${i + 1}.`)),
+    pillars: {
+      what_youre_building: str(pillars.what_youre_building, "—"),
+      what_to_skip: str(pillars.what_to_skip, "—"),
+      tools_youll_use: str(pillars.tools_youll_use, "—"),
+      how_to_get_first_users: str(pillars.how_to_get_first_users, "—"),
+    },
+    seven_day_plan: plan.slice(0, 7).map((d, i) => str(d, `Day ${i + 1} — task`)),
+  };
+}
+
+function mockBlueprint(idea: GeneratedIdea): Blueprint {
+  return {
+    headline: `${idea.name} for ${idea.audience}`,
+    tagline: idea.concept,
+    stats: {
+      who_its_for: idea.audience,
+      why_theyll_pay: "—",
+      price: "$9/mo",
+      time_to_first_paid_user: idea.speed,
+    },
+    in_plain_english: [
+      "(No API key — using a placeholder blueprint.)",
+      "Wire up ANTHROPIC_API_KEY to get a real Claude-generated blueprint here.",
+      "Each blueprint is regenerated per idea and cached in D1.",
+    ],
+    pillars: {
+      what_youre_building: idea.concept,
+      what_to_skip: "Anything not on the 7-day plan.",
+      tools_youll_use: "Lovable, Stripe, Resend, OpenAI API.",
+      how_to_get_first_users: idea.first_step,
+    },
+    seven_day_plan: [
+      "Day 1 — Set up landing page with email capture",
+      "Day 2 — Build the MVP",
+      "Day 3 — Write outreach copy",
+      "Day 4 — Post in 2 communities + share with friends",
+      "Day 5 — Onboard 5 testers, collect feedback",
+      "Day 6 — Add Stripe, ship paid plan",
+      "Day 7 — Convert first paying customer 🚀",
+    ],
+  };
 }
 
 /* -------------------------------------------------------------------------- */

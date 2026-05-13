@@ -2,7 +2,7 @@ import { createFileRoute, useNavigate, useRouter } from "@tanstack/react-router"
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { completeFounderDna, regenerateIdeas } from "@/lib/require-subscription";
+import { completeFounderDna } from "@/lib/require-subscription";
 import { ArrowRight } from "lucide-react";
 
 export const Route = createFileRoute("/app/founder-dna")({
@@ -50,7 +50,9 @@ function FounderDNA() {
     if (finishing || !selected) return;
     setFinishing(true);
     try {
-      // Persist answers + completion timestamp.
+      // Persist answers + completion timestamp. The Ideas page kicks
+      // off the actual Claude generation on mount so the user sees a
+      // progress UI on that page rather than a stuck button here.
       await completeFounderDna({
         data: {
           answers: Object.fromEntries(
@@ -58,14 +60,6 @@ function FounderDNA() {
           ),
         },
       });
-      // Kick off the initial idea generation so /app/ideas isn't empty
-      // when the user arrives. We don't block on it succeeding — the
-      // Ideas page can also trigger generation if this somehow fails.
-      try {
-        await regenerateIdeas();
-      } catch (err) {
-        console.warn("[founder-dna] initial idea generation failed:", err);
-      }
       await router.invalidate();
       await navigate({ to: "/app/ideas" });
     } catch (err) {
@@ -137,7 +131,7 @@ function FounderDNA() {
               disabled={!selected || finishing}
               className="w-full sm:w-auto"
             >
-              {finishing ? "Generating ideas…" : "Complete survey"}
+              {finishing ? "Saving…" : "Complete survey"}
             </Button>
           )}
         </div>

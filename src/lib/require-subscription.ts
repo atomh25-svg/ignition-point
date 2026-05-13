@@ -3,7 +3,9 @@ import { auth } from "@clerk/tanstack-react-start/server";
 // eslint-disable-next-line import/no-unresolved
 import { env } from "cloudflare:workers";
 import {
+  generateBlueprintFor,
   generateIdeasFor,
+  type Blueprint,
   type GeneratedIdea,
   type SurveyAnswers,
 } from "./ideas-generator";
@@ -261,4 +263,163 @@ export const selectIdea = createServerFn({ method: "POST" })
       .run();
 
     return { ok: true as const };
+  });
+
+/**
+ * Returns the cached blueprint for (user, ideaId). If `ideaId` is
+ * omitted, returns the blueprint for the user's currently selected
+ * idea. Resolves to `{ ok: true, blueprint: null }` when there's no
+ * cached blueprint yet — caller should then call `generateBlueprint`.
+ */
+export const getBlueprint = createServerFn({ method: "GET" })
+  .inputValidator((data: { ideaId?: string } | undefined) => data ?? {})
+  .handler(
+    async ({
+      data,
+    }): Promise<
+      | { ok: true; blueprint: Blueprint | null; idea: IdeaRow | null }
+      | { ok: false; reason: string }
+    > => {
+      const { userId } = await auth();
+      if (!userId) return { ok: false, reason: "unauthenticated" };
+      const db = (env as unknown as Env).DB;
+      if (!db) return { ok: false, reason: "no-db" };
+
+      let ideaId = data.ideaId;
+      if (!ideaId) {
+        const row = await db
+          .prepare(
+            `SELECT selected_idea_id FROM subscriptions
+              WHERE clerk_user_id = ? AND status IN ('active','trialing','past_due')
+              ORDER BY updated_at DESC LIMIT 1`,
+          )
+          .bind(userId)
+          .first<{ selected_idea_id: string | null }>();
+        ideaId = row?.selected_idea_id ?? undefined;
+      }
+      if (!ideaId) return { ok: true, blueprint: null, idea: null };
+
+      const idea = await db
+        .prepare(
+          `SELECT id, name, concept, audience, fit, difficulty, speed, first_step
+             FROM generated_ideas WHERE id = ? AND clerk_user_id = ?`,
+        )
+        .bind(ideaId, userId)
+        .first<{
+          id: string;
+          name: string;
+          concept: string;
+          audience: string;
+          fit: number;
+          difficulty: string;
+          speed: string;
+          first_step: string;
+        }>();
+      if (!idea) return { ok: true, blueprint: null, idea: null };
+
+      const cached = await db
+        .prepare(
+          `SELECT payload_json FROM blueprints
+            WHERE clerk_user_id = ? AND idea_id = ?`,
+        )
+        .bind(userId, ideaId)
+        .first<{ payload_json: string }>();
+      const blueprint = cached
+        ? (JSON.parse(cached.payload_json) as Blueprint)
+        : null;
+
+      return {
+        ok: true,
+        blueprint,
+        idea: {
+          id: idea.id,
+          name: idea.name,
+          concept: idea.concept,
+          audience: idea.audience,
+          fit: idea.fit,
+          difficulty: idea.difficulty as GeneratedIdea["difficulty"],
+          speed: idea.speed,
+          first_step: idea.first_step,
+        },
+      };
+    },
+  );
+
+/**
+ * Generates the blueprint for (user, ideaId) via Claude and caches it.
+ * Idempotent — re-running for the same idea overwrites the cached row.
+ */
+export const generateBlueprint = createServerFn({ method: "POST" })
+  .inputValidator((data: { ideaId: string }) => {
+    if (!data || typeof data.ideaId !== "string" || !data.ideaId) {
+      throw new Error("ideaId required");
+    }
+    return data;
+  })
+  .handler(async ({ data }) => {
+    const { userId } = await auth();
+    if (!userId) return { ok: false as const, reason: "unauthenticated" as const };
+    const db = (env as unknown as Env).DB;
+    if (!db) return { ok: false as const, reason: "no-db" as const };
+
+    const idea = await db
+      .prepare(
+        `SELECT id, name, concept, audience, fit, difficulty, speed, first_step
+           FROM generated_ideas WHERE id = ? AND clerk_user_id = ?`,
+      )
+      .bind(data.ideaId, userId)
+      .first<{
+        id: string;
+        name: string;
+        concept: string;
+        audience: string;
+        fit: number;
+        difficulty: string;
+        speed: string;
+        first_step: string;
+      }>();
+    if (!idea) return { ok: false as const, reason: "not-your-idea" as const };
+
+    const sub = await db
+      .prepare(
+        `SELECT founder_dna_answers FROM subscriptions
+          WHERE clerk_user_id = ? AND status IN ('active','trialing','past_due')
+          ORDER BY updated_at DESC LIMIT 1`,
+      )
+      .bind(userId)
+      .first<{ founder_dna_answers: string | null }>();
+    let answers: SurveyAnswers = {};
+    if (sub?.founder_dna_answers) {
+      try {
+        answers = JSON.parse(sub.founder_dna_answers);
+      } catch {
+        /* fall through with empty answers */
+      }
+    }
+
+    const blueprint = await generateBlueprintFor(
+      {
+        name: idea.name,
+        concept: idea.concept,
+        audience: idea.audience,
+        fit: idea.fit,
+        difficulty: idea.difficulty as GeneratedIdea["difficulty"],
+        speed: idea.speed,
+        first_step: idea.first_step,
+      },
+      answers,
+    );
+
+    await db
+      .prepare(
+        `INSERT INTO blueprints (clerk_user_id, idea_id, payload_json, generated_at)
+         VALUES (?, ?, ?, unixepoch())
+         ON CONFLICT(clerk_user_id, idea_id) DO UPDATE SET
+           payload_json = excluded.payload_json,
+           generated_at = unixepoch()`,
+      )
+      .bind(userId, idea.id, JSON.stringify(blueprint))
+      .run();
+
+    return { ok: true as const, blueprint };
   });

@@ -1,5 +1,5 @@
-import { createFileRoute, useRouter } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { createFileRoute, useNavigate, useRouter } from "@tanstack/react-router";
+import { useEffect, useRef, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,6 +13,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { FounderDnaGate } from "@/components/launchfly/FounderDnaGate";
+import { GeneratingScreen } from "@/components/launchfly/GeneratingScreen";
 import {
   listIdeas,
   regenerateIdeas,
@@ -38,6 +39,13 @@ function IdeasOrGate() {
   return <Ideas />;
 }
 
+const GENERATING_HINTS = [
+  "Reading your Founder DNA…",
+  "Pruning ideas that don't fit your time budget…",
+  "Penalizing cold-outreach plans if you said you hate selling…",
+  "Picking 4 that look executable for you…",
+];
+
 function Badge({
   children,
   tone = "muted",
@@ -49,7 +57,7 @@ function Badge({
     <span
       className={`text-[10px] uppercase tracking-wider px-2 py-1 rounded-md ${
         tone === "primary"
-          ? "bg-primary/15 text-primary"
+          ? "bg-gold/15 text-gold"
           : "bg-white/5 text-muted-foreground"
       }`}
     >
@@ -60,14 +68,17 @@ function Badge({
 
 function Ideas() {
   const router = useRouter();
+  const navigate = useNavigate();
   const { selectedIdeaId } = Route.useRouteContext();
   const [ideas, setIdeas] = useState<IdeaRow[] | null>(null);
   const [busy, setBusy] = useState<null | "load" | "regenerate" | string>(
     "load",
   );
   const [error, setError] = useState<string | null>(null);
+  // Avoid double-firing the initial auto-generate in React 18 strict mode.
+  const autoGenStarted = useRef(false);
 
-  // Load the latest batch on mount.
+  // Load the latest batch on mount. If empty, auto-trigger generation.
   useEffect(() => {
     let cancelled = false;
     (async () => {
@@ -77,6 +88,22 @@ function Ideas() {
         if (!result.ok) {
           setError(`Couldn't load ideas: ${result.reason}`);
           setIdeas([]);
+          return;
+        }
+        if (result.ideas.length === 0 && !autoGenStarted.current) {
+          autoGenStarted.current = true;
+          // Empty — first time visiting after the survey. Generate now.
+          setBusy("regenerate");
+          const gen = await regenerateIdeas();
+          if (cancelled) return;
+          if (!gen.ok) {
+            setError(`Couldn't generate ideas: ${gen.reason}`);
+            setIdeas([]);
+            return;
+          }
+          const reloaded = await listIdeas();
+          if (cancelled) return;
+          setIdeas(reloaded.ok ? reloaded.ideas : []);
         } else {
           setIdeas(result.ideas);
         }
@@ -122,15 +149,26 @@ function Ideas() {
         setError(`Couldn't select idea: ${out.reason}`);
         return;
       }
-      // Invalidate the /app gate so context.selectedIdeaId is fresh on
-      // the next render (Dashboard + Blueprint stop redirecting).
+      // Invalidate the /app gate so context.selectedIdeaId is fresh,
+      // then jump to the blueprint — the user expects forward motion.
       await router.invalidate();
+      await navigate({ to: "/app/blueprint" });
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));
     } finally {
       setBusy(null);
     }
   };
+
+  // Full-page loader while we're generating the first batch.
+  if (busy === "regenerate" && (ideas === null || ideas.length === 0)) {
+    return (
+      <GeneratingScreen
+        title="Matching ideas to your Founder DNA"
+        hints={GENERATING_HINTS}
+      />
+    );
+  }
 
   return (
     <div className="p-8 max-w-7xl mx-auto w-full">
@@ -181,7 +219,7 @@ function Ideas() {
           <Sparkles className="mx-auto h-8 w-8 text-gold" />
           <h2 className="mt-4 text-2xl font-semibold">No ideas yet.</h2>
           <p className="mt-2 text-muted-foreground">
-            Hit the button above and we'll match a first batch to your survey
+            Hit the button above and we'll match a fresh batch to your survey
             answers.
           </p>
         </div>
@@ -235,12 +273,13 @@ function Ideas() {
                 <div className="mt-6">
                   {isSelected ? (
                     <Button
-                      variant="glass"
+                      variant="hero"
+                      size="lg"
                       className="w-full"
-                      disabled
+                      onClick={() => navigate({ to: "/app/blueprint" })}
                     >
                       <Check className="h-4 w-4" />
-                      Selected — your Blueprint is unlocked
+                      Open Blueprint
                     </Button>
                   ) : (
                     <Button
@@ -253,7 +292,7 @@ function Ideas() {
                       {busy === idea.id ? (
                         <>
                           <Loader2 className="h-4 w-4 animate-spin" />
-                          Selecting…
+                          Building Blueprint…
                         </>
                       ) : (
                         <>Choose this idea</>
