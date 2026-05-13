@@ -40,7 +40,7 @@ function FounderDNA() {
   const finish = () => navigate({ to: "/app/ideas" });
 
   return (
-    <div className="p-8 max-w-2xl mx-auto w-full md:-translate-x-32">
+    <div className="p-8 max-w-2xl mx-auto w-full">
       <p className="text-xs uppercase tracking-[0.25em] text-primary">Founder DNA</p>
       <h1 className="mt-3 text-4xl md:text-5xl font-semibold tracking-tight">
         Calibrate your build path.
