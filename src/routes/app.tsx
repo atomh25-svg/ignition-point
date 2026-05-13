@@ -16,6 +16,7 @@ export const Route = createFileRoute("/app")({
       subscription: result.subscription,
       founderDnaCompleted: result.founderDnaCompleted,
       selectedIdeaId: result.selectedIdeaId,
+      launchStartedAt: result.launchStartedAt,
     };
   },
   component: AppShell,

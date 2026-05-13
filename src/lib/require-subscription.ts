@@ -38,7 +38,7 @@ export const requireActiveSubscription = createServerFn({ method: "GET" }).handl
     const row = await db
       .prepare(
         `SELECT status, current_period_end, cancel_at_period_end,
-                founder_dna_completed_at, selected_idea_id
+                founder_dna_completed_at, selected_idea_id, launch_started_at
            FROM subscriptions
           WHERE clerk_user_id = ?
             AND status IN ('active', 'trialing', 'past_due')
@@ -52,6 +52,7 @@ export const requireActiveSubscription = createServerFn({ method: "GET" }).handl
         cancel_at_period_end: number;
         founder_dna_completed_at: number | null;
         selected_idea_id: string | null;
+        launch_started_at: number | null;
       }>();
 
     if (!row) {
@@ -68,7 +69,35 @@ export const requireActiveSubscription = createServerFn({ method: "GET" }).handl
       },
       founderDnaCompleted: row.founder_dna_completed_at != null,
       selectedIdeaId: row.selected_idea_id,
+      launchStartedAt: row.launch_started_at,
     };
+  },
+);
+
+/**
+ * Anchors Day 1 in real time. Called from the Blueprint's "Start
+ * Day 1" button. After this runs, /app/dashboard renders the build
+ * tracker; before it runs, /app/dashboard redirects to the Blueprint.
+ * Idempotent — re-running for the same user doesn't reset the anchor.
+ */
+export const startLaunch = createServerFn({ method: "POST" }).handler(
+  async () => {
+    const { userId } = await auth();
+    if (!userId) return { ok: false as const, reason: "unauthenticated" as const };
+    const db = (env as unknown as Env).DB;
+    if (!db) return { ok: false as const, reason: "no-db" as const };
+
+    await db
+      .prepare(
+        `UPDATE subscriptions
+            SET launch_started_at = COALESCE(launch_started_at, unixepoch()),
+                updated_at        = unixepoch()
+          WHERE clerk_user_id = ?
+            AND status IN ('active', 'trialing', 'past_due')`,
+      )
+      .bind(userId)
+      .run();
+    return { ok: true as const };
   },
 );
 

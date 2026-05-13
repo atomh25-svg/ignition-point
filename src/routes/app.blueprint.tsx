@@ -1,4 +1,10 @@
-import { createFileRoute, Link, redirect } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  Link,
+  redirect,
+  useNavigate,
+  useRouter,
+} from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -19,6 +25,7 @@ import { GeneratingScreen } from "@/components/launchfly/GeneratingScreen";
 import {
   generateBlueprint,
   getBlueprint,
+  startLaunch,
 } from "@/lib/require-subscription";
 import type { Blueprint as BlueprintData } from "@/lib/ideas-generator";
 
@@ -170,7 +177,24 @@ function parseBullets(text: string): string[] {
 }
 
 function Blueprint({ data }: { data: BlueprintData }) {
+  const { launchStartedAt } = Route.useRouteContext();
+  const router = useRouter();
+  const navigate = useNavigate();
+  const [launching, setLaunching] = useState(false);
   const skipBullets = parseBullets(data.pillars.what_to_skip);
+
+  const beginDayOne = async () => {
+    if (launching) return;
+    setLaunching(true);
+    try {
+      await startLaunch();
+      await router.invalidate();
+      await navigate({ to: "/app/dashboard" });
+    } catch (err) {
+      console.error("[blueprint] startLaunch failed:", err);
+      setLaunching(false);
+    }
+  };
 
   const toneMap: Record<string, string> = {
     primary: "text-gold border-gold/40 bg-gold/5",
@@ -337,24 +361,43 @@ function Blueprint({ data }: { data: BlueprintData }) {
           ))}
         </ol>
         <div className="mt-6">
-          <Button asChild variant="hero" size="lg">
-            <Link to="/app/dashboard">
-              Start Day 1 <ArrowRight className="w-4 h-4" />
-            </Link>
-          </Button>
+          {launchStartedAt ? (
+            <Button asChild variant="hero" size="lg">
+              <Link to="/app/dashboard">
+                Open today's step <ArrowRight className="w-4 h-4" />
+              </Link>
+            </Button>
+          ) : (
+            <Button
+              variant="hero"
+              size="lg"
+              onClick={beginDayOne}
+              disabled={launching}
+            >
+              {launching ? "Starting…" : "Start Day 1"}
+              <ArrowRight className="w-4 h-4" />
+            </Button>
+          )}
+          {!launchStartedAt && (
+            <p className="mt-3 text-xs text-muted-foreground">
+              This anchors Day 1 to today. You can revisit the Blueprint anytime.
+            </p>
+          )}
         </div>
       </Card>
 
       {/* Final CTA */}
-      <div className="mt-12 text-center">
-        <Link
-          to="/app/dashboard"
-          className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
-        >
-          <Rocket className="w-4 h-4" /> Enter the build dashboard{" "}
-          <ArrowRight className="w-4 h-4" />
-        </Link>
-      </div>
+      {launchStartedAt && (
+        <div className="mt-12 text-center">
+          <Link
+            to="/app/dashboard"
+            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <Rocket className="w-4 h-4" /> Enter the build dashboard{" "}
+            <ArrowRight className="w-4 h-4" />
+          </Link>
+        </div>
+      )}
     </div>
   );
 }
