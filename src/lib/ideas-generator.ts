@@ -19,6 +19,15 @@ export type GeneratedIdea = {
   first_step: string;
 };
 
+/** Trim a string to a max length without leaving a half-word at the end. */
+function trim(s: string, max: number): string {
+  const cleaned = s.trim().replace(/\s+/g, " ");
+  if (cleaned.length <= max) return cleaned;
+  const slice = cleaned.slice(0, max);
+  const lastSpace = slice.lastIndexOf(" ");
+  return (lastSpace > max * 0.6 ? slice.slice(0, lastSpace) : slice).trim();
+}
+
 export type Blueprint = {
   headline: string;
   tagline: string;
@@ -86,15 +95,21 @@ Hard rules:
 - "first_step" must be a concrete action the founder can take in the next 24 hours, not "do research" or "validate the market".
 - "speed" must be honest given their weekly hours.
 
+Length limits — these are hard, not suggestions:
+- "name" must be 2–4 words, under 30 characters total. NOT a sentence.
+- "audience" must be a persona, under 60 characters total. Examples: "Career switchers, 25–40", "Solo plumbers and electricians", "Newsletter creators with <1k subs". NOT a sentence.
+- "concept" is one sentence, under 140 characters.
+- "first_step" is one concrete sentence, under 140 characters.
+
 Each idea object must match exactly this shape:
 {
-  "name": string,         // 2-5 word punchy name
-  "concept": string,      // one sentence, plain English
-  "audience": string,     // the specific person who would pay
-  "fit": integer,         // 50..98
+  "name": string,
+  "concept": string,
+  "audience": string,
+  "fit": integer (50..98),
   "difficulty": "Easy" | "Medium" | "Hard",
-  "speed": string,        // e.g. "10 days", "21 days"
-  "first_step": string    // one concrete action for today
+  "speed": string (e.g. "10 days"),
+  "first_step": string
 }`;
 
 type AnthropicMessagesResponse = {
@@ -203,14 +218,17 @@ function parseAndValidate(rawText: string): GeneratedIdea[] {
       continue;
     if (!["Easy", "Medium", "Hard"].includes(difficulty)) continue;
 
+    // Belt-and-suspenders — Claude occasionally returns a full sentence as
+    // 'audience' or 'name' even when the prompt forbids it. Truncate so
+    // the UI never displays a 30-word headline.
     ideas.push({
-      name,
-      concept,
-      audience,
+      name: trim(name, 30),
+      concept: trim(concept, 140),
+      audience: trim(audience, 60),
       fit: Math.min(98, Math.max(50, Math.round(Number.isFinite(fitRaw) ? fitRaw : 70))),
       difficulty: difficulty as GeneratedIdea["difficulty"],
-      speed,
-      first_step: firstStep,
+      speed: trim(speed, 30),
+      first_step: trim(firstStep, 140),
     });
   }
 
@@ -230,28 +248,29 @@ Hard rules:
 - Output ONLY a single JSON object. No prose before or after. No markdown code fences.
 - Be specific. Name real tools (Stripe, Resend, Lovable, Vercel, OpenAI, etc.). Name real communities (specific subreddits, specific X/Twitter circles, specific Slack/Discord groups). Real numbers — "$9/mo", "5 DMs", "Day 3".
 - No generic marketing-speak ("leverage", "synergy", "engage your audience"). Write like an experienced founder talking to a first-timer.
-- The 7-day plan must respect the founder's weekly hours: if they said 2-5 hours/week, each day's task fits in ~30 min.
-- "what_to_skip" is the most important pillar — list things this founder will be tempted to build but doesn't need on day one.
+- The 7-day plan must respect the founder's weekly hours: if they said 2-5 hours/week, each day's task fits in ~30 min. If they said 10+ hours/week, fill the day.
+- "what_to_skip" must list 3-5 specific features/temptations this founder will want to build but doesn't need on day one. Bullet style — separate items with a newline.
+- Every field must be populated with substantive content. Never leave a field blank or write "TBD" or "—". If you don't have enough information, write your best honest guess.
 
-Schema (every field is required):
+Schema (every field is REQUIRED and every string must be non-empty):
 {
-  "headline": string,                 // hero-line, e.g. "AI résumé tailor for career switchers" — under 60 chars
-  "tagline": string,                  // 1-2 sentences, plain English
+  "headline": string,         // hero-line, 4-10 words, under 60 chars. Just the product idea — NOT including the audience description.
+  "tagline": string,          // 1-2 sentences, plain English, under 200 chars
   "stats": {
-    "who_its_for": string,            // specific persona — name an age range, a job state, a behavior
-    "why_theyll_pay": string,         // the pain in their own voice
-    "price": string,                  // e.g. "$9/mo · unlimited rewrites"
-    "time_to_first_paid_user": string // honest given hours/week
+    "who_its_for": string,           // persona, under 80 chars (age range + situation)
+    "why_theyll_pay": string,        // the pain, 1 sentence, under 160 chars — REQUIRED, do not leave empty
+    "price": string,                 // e.g. "$9/mo · unlimited rewrites", under 60 chars
+    "time_to_first_paid_user": string  // honest given hours/week, under 30 chars
   },
-  "in_plain_english": [string, string, string],   // exactly 3 sentences walking through the product
+  "in_plain_english": [string, string, string],   // EXACTLY 3 sentences walking through the product step-by-step from user click to paid result
   "pillars": {
-    "what_youre_building": string,
-    "what_to_skip": string,
-    "tools_youll_use": string,
-    "how_to_get_first_users": string
+    "what_youre_building": string,         // 2-3 sentences describing the product surface
+    "what_to_skip": string,                // 3-5 bullet items, each on a new line, starting with "- "
+    "tools_youll_use": string,             // comma-separated list of real tools by name
+    "how_to_get_first_users": string       // 2-3 sentences naming specific communities + the exact ask
   },
   "seven_day_plan": [string, string, string, string, string, string, string]
-  // each plan entry MUST start with "Day N — " (em dash)
+  // EXACTLY 7 items, each starting with "Day N — " (em dash, not hyphen)
 }`;
 
 export async function generateBlueprintFor(
@@ -344,8 +363,10 @@ function parseBlueprint(rawText: string, idea: GeneratedIdea): Blueprint {
     parsed = JSON.parse(cleaned);
   } catch {
     const match = cleaned.match(/\{[\s\S]*\}/);
-    if (!match)
-      throw new Error(`Blueprint output not JSON: ${cleaned.slice(0, 200)}`);
+    if (!match) {
+      console.error("[blueprint] not JSON — raw:", cleaned.slice(0, 400));
+      throw new Error("Blueprint output not JSON");
+    }
     parsed = JSON.parse(match[0]);
   }
 
@@ -353,40 +374,86 @@ function parseBlueprint(rawText: string, idea: GeneratedIdea): Blueprint {
     throw new Error("Blueprint output was not a JSON object");
   }
   const o = parsed as Record<string, unknown>;
-  const stats = o.stats as Record<string, unknown> | undefined;
-  const pillars = o.pillars as Record<string, unknown> | undefined;
-  const ipe = Array.isArray(o.in_plain_english) ? o.in_plain_english : [];
-  const plan = Array.isArray(o.seven_day_plan) ? o.seven_day_plan : [];
+  const stats = (o.stats as Record<string, unknown> | undefined) ?? {};
+  const pillars = (o.pillars as Record<string, unknown> | undefined) ?? {};
+  const ipeRaw = Array.isArray(o.in_plain_english) ? o.in_plain_english : [];
+  const planRaw = Array.isArray(o.seven_day_plan) ? o.seven_day_plan : [];
 
-  if (
-    !stats ||
-    !pillars ||
-    ipe.length < 1 ||
-    plan.length < 7
-  ) {
-    throw new Error("Blueprint output missing required fields");
+  // Log what's missing so we can spot patterns in future failures.
+  const missing: string[] = [];
+  if (!stats || Object.keys(stats).length === 0) missing.push("stats");
+  if (!pillars || Object.keys(pillars).length === 0) missing.push("pillars");
+  if (ipeRaw.length < 3) missing.push(`in_plain_english(${ipeRaw.length})`);
+  if (planRaw.length < 7) missing.push(`seven_day_plan(${planRaw.length})`);
+  if (missing.length > 0) {
+    console.warn("[blueprint] partial output — padding:", missing.join(", "));
   }
 
   const str = (v: unknown, fallback: string) =>
     typeof v === "string" && v.trim().length > 0 ? v.trim() : fallback;
 
+  // Forgiving — pad missing fields with sensible defaults derived from
+  // the chosen idea rather than throwing away the entire response.
+  const ipe: string[] = [];
+  for (let i = 0; i < 3; i++) {
+    ipe.push(
+      str(
+        ipeRaw[i],
+        i === 0
+          ? `${idea.audience} signs up and gives the product their job-to-be-done input.`
+          : i === 1
+            ? `${idea.name} produces the output, leveraging an AI step under the hood.`
+            : "They get the result instantly and pay if it's useful.",
+      ),
+    );
+  }
+
+  const plan: string[] = [];
+  const defaultPlan = [
+    "Day 1 — Set up a landing page with email capture",
+    "Day 2 — Build the MVP with Lovable or Cursor",
+    "Day 3 — Write the first-customer outreach copy",
+    "Day 4 — Post in 2 communities + DM 5 friends",
+    "Day 5 — Onboard 5 testers, watch them use it, take notes",
+    "Day 6 — Add Stripe Checkout, ship the paid plan",
+    "Day 7 — Convert your first paying customer 🚀",
+  ];
+  for (let i = 0; i < 7; i++) {
+    plan.push(str(planRaw[i], defaultPlan[i]));
+  }
+
   return {
-    headline: str(o.headline, idea.name),
-    tagline: str(o.tagline, idea.concept),
+    headline: trim(str(o.headline, idea.name), 70),
+    tagline: trim(str(o.tagline, idea.concept), 200),
     stats: {
-      who_its_for: str(stats.who_its_for, idea.audience),
-      why_theyll_pay: str(stats.why_theyll_pay, "—"),
-      price: str(stats.price, "—"),
-      time_to_first_paid_user: str(stats.time_to_first_paid_user, idea.speed),
+      who_its_for: trim(str(stats.who_its_for, idea.audience), 80),
+      why_theyll_pay: trim(
+        str(
+          stats.why_theyll_pay,
+          `Their current option is slow and manual; this saves them hours every week.`,
+        ),
+        160,
+      ),
+      price: trim(str(stats.price, "$9/mo"), 60),
+      time_to_first_paid_user: trim(
+        str(stats.time_to_first_paid_user, idea.speed),
+        30,
+      ),
     },
-    in_plain_english: ipe.slice(0, 3).map((p, i) => str(p, `Step ${i + 1}.`)),
+    in_plain_english: ipe,
     pillars: {
-      what_youre_building: str(pillars.what_youre_building, "—"),
-      what_to_skip: str(pillars.what_to_skip, "—"),
-      tools_youll_use: str(pillars.tools_youll_use, "—"),
-      how_to_get_first_users: str(pillars.how_to_get_first_users, "—"),
+      what_youre_building: str(pillars.what_youre_building, idea.concept),
+      what_to_skip: str(
+        pillars.what_to_skip,
+        `- Login / accounts on day one\n- A polished design system\n- Mobile app\n- Custom branding controls\n- Anything that doesn't get you to the first paying customer`,
+      ),
+      tools_youll_use: str(
+        pillars.tools_youll_use,
+        "Lovable for the app, Stripe Checkout for billing, Resend for email, Anthropic Claude API for the AI step.",
+      ),
+      how_to_get_first_users: str(pillars.how_to_get_first_users, idea.first_step),
     },
-    seven_day_plan: plan.slice(0, 7).map((d, i) => str(d, `Day ${i + 1} — task`)),
+    seven_day_plan: plan,
   };
 }
 
