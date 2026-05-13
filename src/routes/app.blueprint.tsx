@@ -172,27 +172,6 @@ function parseBullets(text: string): string[] {
 function Blueprint({ data }: { data: BlueprintData }) {
   const skipBullets = parseBullets(data.pillars.what_to_skip);
 
-  const pillars = [
-    {
-      icon: Hammer,
-      tone: "primary" as const,
-      title: "What you're building",
-      body: data.pillars.what_youre_building,
-    },
-    {
-      icon: Wrench,
-      tone: "accent" as const,
-      title: "Tools you'll use",
-      body: data.pillars.tools_youll_use,
-    },
-    {
-      icon: Megaphone,
-      tone: "primary" as const,
-      title: "How you'll get the first 10 users",
-      body: data.pillars.how_to_get_first_users,
-    },
-  ];
-
   const toneMap: Record<string, string> = {
     primary: "text-gold border-gold/40 bg-gold/5",
     accent: "text-amber-glow border-amber-glow/40 bg-amber-glow/5",
@@ -266,21 +245,34 @@ function Blueprint({ data }: { data: BlueprintData }) {
         </ol>
       </Card>
 
-      {/* Pillars */}
+      {/* Pillars — 2-col grid. What-to-skip sits in its normal slot
+          but renders a bullet <ul> instead of a paragraph. */}
       <section className="mt-10 grid md:grid-cols-2 gap-4">
-        {/* What to skip — rendered as a real bullet list */}
+        {/* 1) What you're building */}
         <Card
-          className={`glass bg-gradient-card rounded-2xl p-6 border-l-4 animate-fade-in-up md:col-span-2 ${toneMap.destructive}`}
+          className={`glass bg-gradient-card rounded-2xl p-6 border-l-4 animate-fade-in-up ${toneMap.primary}`}
         >
           <div className="flex items-center gap-3">
-            <div
-              className={`w-10 h-10 rounded-xl border ${toneMap.destructive} flex items-center justify-center`}
-            >
+            <div className={`w-10 h-10 rounded-xl border ${toneMap.primary} flex items-center justify-center`}>
+              <Hammer className="w-5 h-5" />
+            </div>
+            <h3 className="font-semibold text-lg text-foreground">What you're building</h3>
+          </div>
+          <p className="mt-4 text-sm text-muted-foreground leading-relaxed">
+            {data.pillars.what_youre_building}
+          </p>
+        </Card>
+
+        {/* 2) What to skip — bullet list */}
+        <Card
+          className={`glass bg-gradient-card rounded-2xl p-6 border-l-4 animate-fade-in-up ${toneMap.destructive}`}
+          style={{ animationDelay: "0.05s" }}
+        >
+          <div className="flex items-center gap-3">
+            <div className={`w-10 h-10 rounded-xl border ${toneMap.destructive} flex items-center justify-center`}>
               <Ban className="w-5 h-5" />
             </div>
-            <h3 className="font-semibold text-lg text-foreground">
-              What to skip (for now)
-            </h3>
+            <h3 className="font-semibold text-lg text-foreground">What to skip (for now)</h3>
           </div>
           <ul className="mt-4 space-y-2.5">
             {skipBullets.map((item, i) => (
@@ -295,27 +287,37 @@ function Blueprint({ data }: { data: BlueprintData }) {
           </ul>
         </Card>
 
-        {pillars.map((p, i) => (
-          <Card
-            key={p.title}
-            className={`glass bg-gradient-card rounded-2xl p-6 border-l-4 animate-fade-in-up ${toneMap[p.tone]}`}
-            style={{ animationDelay: `${(i + 1) * 0.05}s` }}
-          >
-            <div className="flex items-center gap-3">
-              <div
-                className={`w-10 h-10 rounded-xl border ${toneMap[p.tone]} flex items-center justify-center`}
-              >
-                <p.icon className="w-5 h-5" />
-              </div>
-              <h3 className="font-semibold text-lg text-foreground">
-                {p.title}
-              </h3>
+        {/* 3) Tools you'll use */}
+        <Card
+          className={`glass bg-gradient-card rounded-2xl p-6 border-l-4 animate-fade-in-up ${toneMap.accent}`}
+          style={{ animationDelay: "0.1s" }}
+        >
+          <div className="flex items-center gap-3">
+            <div className={`w-10 h-10 rounded-xl border ${toneMap.accent} flex items-center justify-center`}>
+              <Wrench className="w-5 h-5" />
             </div>
-            <p className="mt-4 text-sm text-muted-foreground leading-relaxed">
-              {p.body}
-            </p>
-          </Card>
-        ))}
+            <h3 className="font-semibold text-lg text-foreground">Tools you'll use</h3>
+          </div>
+          <p className="mt-4 text-sm text-muted-foreground leading-relaxed">
+            {data.pillars.tools_youll_use}
+          </p>
+        </Card>
+
+        {/* 4) How you'll get the first 10 users */}
+        <Card
+          className={`glass bg-gradient-card rounded-2xl p-6 border-l-4 animate-fade-in-up ${toneMap.primary}`}
+          style={{ animationDelay: "0.15s" }}
+        >
+          <div className="flex items-center gap-3">
+            <div className={`w-10 h-10 rounded-xl border ${toneMap.primary} flex items-center justify-center`}>
+              <Megaphone className="w-5 h-5" />
+            </div>
+            <h3 className="font-semibold text-lg text-foreground">How you'll get the first 10 users</h3>
+          </div>
+          <p className="mt-4 text-sm text-muted-foreground leading-relaxed">
+            {data.pillars.how_to_get_first_users}
+          </p>
+        </Card>
       </section>
 
       {/* 7-Day Launch Plan */}
