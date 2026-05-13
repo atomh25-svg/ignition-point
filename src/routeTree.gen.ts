@@ -17,6 +17,7 @@ import { Route as AppIdeasRouteImport } from './routes/app.ideas'
 import { Route as AppFounderDnaRouteImport } from './routes/app.founder-dna'
 import { Route as AppDashboardRouteImport } from './routes/app.dashboard'
 import { Route as AppBlueprintRouteImport } from './routes/app.blueprint'
+import { Route as ApiStripeWebhookRouteImport } from './routes/api/stripe-webhook'
 
 const WelcomeRoute = WelcomeRouteImport.update({
   id: '/welcome',
@@ -58,12 +59,18 @@ const AppBlueprintRoute = AppBlueprintRouteImport.update({
   path: '/blueprint',
   getParentRoute: () => AppRoute,
 } as any)
+const ApiStripeWebhookRoute = ApiStripeWebhookRouteImport.update({
+  id: '/api/stripe-webhook',
+  path: '/api/stripe-webhook',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
   '/pricing': typeof PricingRoute
   '/welcome': typeof WelcomeRoute
+  '/api/stripe-webhook': typeof ApiStripeWebhookRoute
   '/app/blueprint': typeof AppBlueprintRoute
   '/app/dashboard': typeof AppDashboardRoute
   '/app/founder-dna': typeof AppFounderDnaRoute
@@ -74,6 +81,7 @@ export interface FileRoutesByTo {
   '/app': typeof AppRouteWithChildren
   '/pricing': typeof PricingRoute
   '/welcome': typeof WelcomeRoute
+  '/api/stripe-webhook': typeof ApiStripeWebhookRoute
   '/app/blueprint': typeof AppBlueprintRoute
   '/app/dashboard': typeof AppDashboardRoute
   '/app/founder-dna': typeof AppFounderDnaRoute
@@ -85,6 +93,7 @@ export interface FileRoutesById {
   '/app': typeof AppRouteWithChildren
   '/pricing': typeof PricingRoute
   '/welcome': typeof WelcomeRoute
+  '/api/stripe-webhook': typeof ApiStripeWebhookRoute
   '/app/blueprint': typeof AppBlueprintRoute
   '/app/dashboard': typeof AppDashboardRoute
   '/app/founder-dna': typeof AppFounderDnaRoute
@@ -97,6 +106,7 @@ export interface FileRouteTypes {
     | '/app'
     | '/pricing'
     | '/welcome'
+    | '/api/stripe-webhook'
     | '/app/blueprint'
     | '/app/dashboard'
     | '/app/founder-dna'
@@ -107,6 +117,7 @@ export interface FileRouteTypes {
     | '/app'
     | '/pricing'
     | '/welcome'
+    | '/api/stripe-webhook'
     | '/app/blueprint'
     | '/app/dashboard'
     | '/app/founder-dna'
@@ -117,6 +128,7 @@ export interface FileRouteTypes {
     | '/app'
     | '/pricing'
     | '/welcome'
+    | '/api/stripe-webhook'
     | '/app/blueprint'
     | '/app/dashboard'
     | '/app/founder-dna'
@@ -128,6 +140,7 @@ export interface RootRouteChildren {
   AppRoute: typeof AppRouteWithChildren
   PricingRoute: typeof PricingRoute
   WelcomeRoute: typeof WelcomeRoute
+  ApiStripeWebhookRoute: typeof ApiStripeWebhookRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -188,6 +201,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppBlueprintRouteImport
       parentRoute: typeof AppRoute
     }
+    '/api/stripe-webhook': {
+      id: '/api/stripe-webhook'
+      path: '/api/stripe-webhook'
+      fullPath: '/api/stripe-webhook'
+      preLoaderRoute: typeof ApiStripeWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -212,6 +232,7 @@ const rootRouteChildren: RootRouteChildren = {
   AppRoute: AppRouteWithChildren,
   PricingRoute: PricingRoute,
   WelcomeRoute: WelcomeRoute,
+  ApiStripeWebhookRoute: ApiStripeWebhookRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
