@@ -118,14 +118,21 @@ async function persistEvent(db: D1Database, event: Stripe.Event): Promise<void> 
       const priceId = sub.items.data[0]?.price.id ?? null;
       const status =
         event.type === "customer.subscription.deleted" ? "canceled" : sub.status;
+      // Stripe checkout passes subscription_data.metadata.clerk_user_id through
+      // to the Subscription object, so every lifecycle event carries the user
+      // binding (not just checkout.session.completed).
+      const clerkUserId =
+        (sub.metadata && (sub.metadata as Record<string, string>).clerk_user_id) ||
+        null;
       await db
         .prepare(
           `INSERT INTO subscriptions
-             (stripe_subscription_id, stripe_customer_id, status, price_id,
+             (stripe_subscription_id, stripe_customer_id, clerk_user_id, status, price_id,
               current_period_end, cancel_at_period_end, updated_at)
-           VALUES (?, ?, ?, ?, ?, ?, unixepoch())
+           VALUES (?, ?, ?, ?, ?, ?, ?, unixepoch())
            ON CONFLICT(stripe_subscription_id) DO UPDATE SET
              stripe_customer_id    = excluded.stripe_customer_id,
+             clerk_user_id         = COALESCE(excluded.clerk_user_id, subscriptions.clerk_user_id),
              status                = excluded.status,
              price_id              = excluded.price_id,
              current_period_end    = excluded.current_period_end,
@@ -135,30 +142,50 @@ async function persistEvent(db: D1Database, event: Stripe.Event): Promise<void> 
         .bind(
           sub.id,
           String(sub.customer),
+          clerkUserId,
           status,
           priceId,
           sub.current_period_end ?? null,
           sub.cancel_at_period_end ? 1 : 0,
         )
         .run();
-      console.log("[stripe-webhook] upserted subscription", sub.id, status);
+      console.log(
+        "[stripe-webhook] upserted subscription",
+        sub.id,
+        status,
+        "clerk_user_id:",
+        clerkUserId,
+      );
       break;
     }
     case "checkout.session.completed": {
-      // We can't bind a Clerk user yet (Pass 2B), but we can attach the
-      // email collected at checkout to the subscription row so we have
-      // *something* identifying who paid.
+      // Stripe Checkout passes client_reference_id straight through — this is
+      // the most reliable place to link a Clerk user to a Stripe subscription.
       const session = event.data.object as Stripe.Checkout.Session;
       const subscriptionId =
         typeof session.subscription === "string" ? session.subscription : null;
+      const clerkUserId = session.client_reference_id ?? null;
       const email =
         session.customer_email ?? session.customer_details?.email ?? null;
-      if (subscriptionId && email) {
+      if (subscriptionId) {
         await db
-          .prepare(`UPDATE subscriptions SET email = ?, updated_at = unixepoch() WHERE stripe_subscription_id = ?`)
-          .bind(email, subscriptionId)
+          .prepare(
+            `UPDATE subscriptions
+               SET clerk_user_id = COALESCE(?, clerk_user_id),
+                   email         = COALESCE(?, email),
+                   updated_at    = unixepoch()
+             WHERE stripe_subscription_id = ?`,
+          )
+          .bind(clerkUserId, email, subscriptionId)
           .run();
-        console.log("[stripe-webhook] linked email to subscription", subscriptionId, email);
+        console.log(
+          "[stripe-webhook] linked subscription",
+          subscriptionId,
+          "→ clerk_user_id:",
+          clerkUserId,
+          "email:",
+          email,
+        );
       }
       break;
     }

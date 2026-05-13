@@ -1,4 +1,5 @@
 import { createStart, createMiddleware } from "@tanstack/react-start";
+import { clerkMiddleware } from "@clerk/tanstack-react-start/server";
 
 import { renderErrorPage } from "./lib/error-page";
 
@@ -18,5 +19,8 @@ const errorMiddleware = createMiddleware().server(async ({ next }) => {
 });
 
 export const startInstance = createStart(() => ({
-  requestMiddleware: [errorMiddleware],
+  // Order matters: errorMiddleware (outer) wraps everything; clerkMiddleware
+  // (inner) attaches Clerk auth state to the request so server fns and
+  // route loaders can call `auth()` / `clerkClient()`.
+  requestMiddleware: [errorMiddleware, clerkMiddleware()],
 }));

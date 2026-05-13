@@ -7,8 +7,13 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
+import { ClerkProvider } from "@clerk/tanstack-react-start";
 
 import appCss from "../styles.css?url";
+
+const CLERK_PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY as
+  | string
+  | undefined;
 
 function NotFoundComponent() {
   return (
@@ -112,8 +117,24 @@ function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <Outlet />
-    </QueryClientProvider>
+    <ClerkProvider
+      publishableKey={CLERK_PUBLISHABLE_KEY}
+      appearance={{
+        // Match the rest of the site (warm-dark + gold accents).
+        variables: {
+          colorPrimary: "oklch(0.84 0.16 86)",
+          colorBackground: "oklch(0.16 0.012 70)",
+          colorText: "oklch(0.97 0.005 80)",
+          colorInputBackground: "oklch(0.20 0.014 70)",
+          colorInputText: "oklch(0.97 0.005 80)",
+          colorTextSecondary: "oklch(0.70 0.012 80)",
+          borderRadius: "0.75rem",
+        },
+      }}
+    >
+      <QueryClientProvider client={queryClient}>
+        <Outlet />
+      </QueryClientProvider>
+    </ClerkProvider>
   );
 }

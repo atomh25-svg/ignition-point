@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
+import { Show, SignInButton } from "@clerk/tanstack-react-start";
 import { Navbar } from "@/components/launchfly/Navbar";
 import { CheckCircle2, ArrowRight, Rocket, Loader2 } from "lucide-react";
 import { createCheckoutSession } from "@/lib/stripe-checkout";
@@ -89,24 +90,40 @@ function Pricing() {
                 ))}
               </ul>
 
-              <button
-                type="button"
-                onClick={handleCommit}
-                disabled={loading}
-                className="mt-10 inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-gold px-6 py-3 text-base font-medium text-gold-foreground shadow-gold transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-70 sm:w-auto"
-              >
-                {loading ? (
-                  <>
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                    Redirecting to checkout…
-                  </>
-                ) : (
-                  <>
-                    Commit &amp; Begin
+              <Show when="signed-in">
+                <button
+                  type="button"
+                  onClick={handleCommit}
+                  disabled={loading}
+                  className="mt-10 inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-gold px-6 py-3 text-base font-medium text-gold-foreground shadow-gold transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-70 sm:w-auto"
+                >
+                  {loading ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      Redirecting to checkout…
+                    </>
+                  ) : (
+                    <>
+                      Commit &amp; Begin
+                      <ArrowRight className="h-4 w-4" />
+                    </>
+                  )}
+                </button>
+              </Show>
+              <Show when="signed-out">
+                <SignInButton mode="modal">
+                  <button
+                    type="button"
+                    className="mt-10 inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-gold px-6 py-3 text-base font-medium text-gold-foreground shadow-gold transition hover:opacity-90 sm:w-auto"
+                  >
+                    Sign in to commit
                     <ArrowRight className="h-4 w-4" />
-                  </>
-                )}
-              </button>
+                  </button>
+                </SignInButton>
+                <p className="mt-3 text-xs text-muted-foreground">
+                  We need an account so your subscription stays attached to you across devices.
+                </p>
+              </Show>
               {error && (
                 <p className="mt-3 text-sm text-destructive">{error}</p>
               )}

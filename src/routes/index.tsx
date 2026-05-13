@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { Show, SignInButton, UserButton } from "@clerk/tanstack-react-start";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Footer } from "@/components/launchfly/Footer";
@@ -60,15 +61,29 @@ function Nav() {
             <a href="#how" className="transition hover:text-foreground">How It Works</a>
             <a href="#features" className="transition hover:text-foreground">Features</a>
             <Link to="/pricing" className="transition hover:text-foreground">Pricing</Link>
-            <Link to="/app/dashboard" className="transition hover:text-foreground">Sign In</Link>
+            <Show when="signed-out">
+              <SignInButton mode="modal">
+                <button className="transition hover:text-foreground">Sign In</button>
+              </SignInButton>
+            </Show>
+            <Show when="signed-in">
+              <Link to="/app/dashboard" className="transition hover:text-foreground">Dashboard</Link>
+            </Show>
           </nav>
-          <Link
-            to="/pricing"
-            className="inline-flex items-center gap-2 rounded-full bg-gradient-gold px-4 py-2 text-sm font-medium text-gold-foreground shadow-gold transition hover:opacity-90"
-          >
-            Start Your Launch
-            <ArrowRight className="h-4 w-4" />
-          </Link>
+          <div className="flex items-center gap-3">
+            <Show when="signed-in">
+              <UserButton afterSignOutUrl="/" />
+            </Show>
+            <Show when="signed-out">
+              <Link
+                to="/pricing"
+                className="inline-flex items-center gap-2 rounded-full bg-gradient-gold px-4 py-2 text-sm font-medium text-gold-foreground shadow-gold transition hover:opacity-90"
+              >
+                Start Your Launch
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </Show>
+          </div>
         </div>
       </div>
     </header>
