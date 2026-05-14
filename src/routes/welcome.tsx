@@ -32,7 +32,7 @@ function Welcome() {
               src={launchflyMark}
               alt=""
               aria-hidden
-              className="h-[77px] w-[77px] object-contain brightness-110 drop-shadow-[0_8px_30px_oklch(0.84_0.16_86/0.5)]"
+              className="h-[69px] w-[69px] object-contain brightness-110 drop-shadow-[0_8px_30px_oklch(0.84_0.16_86/0.5)]"
               draggable={false}
             />
           </div>
