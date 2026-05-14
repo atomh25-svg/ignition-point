@@ -204,6 +204,14 @@
   .bg-warm-glow { background: var(--gradient-warm-glow); }
   .shadow-gold { box-shadow: var(--shadow-gold); }
   .shadow-card-soft { box-shadow: var(--shadow-card); }
+  /* Warm radial glow that hugs the rounded-tile alpha of the logo. Two
+     drop-shadows stack a tight inner halo with a softer outer bloom so
+     the mark feels lit-from-behind without a hard rectangle behind it. */
+  .logo-glow {
+    filter:
+      drop-shadow(0 0 6px oklch(0.86 0.17 88 / 0.55))
+      drop-shadow(0 0 14px oklch(0.78 0.18 70 / 0.35));
+  }
   .glass-nav {
     background: oklch(0.16 0.012 70 / 0.55);
     backdrop-filter: blur(14px);
