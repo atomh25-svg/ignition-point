@@ -50,7 +50,7 @@ function Nav() {
               src={launchflyMark}
               alt=""
               aria-hidden
-              className="h-[25px] w-[25px] object-contain shrink-0 brightness-110 logo-glow"
+              className="h-[30px] w-[30px] object-contain shrink-0 brightness-110 logo-glow"
               draggable={false}
             />
             <span className="text-lg font-semibold tracking-tight">
@@ -123,7 +123,7 @@ function Banner() {
               src={launchflyMark}
               alt=""
               aria-hidden
-              className="h-[31px] w-[31px] object-contain shrink-0 brightness-110 logo-glow"
+              className="h-[37px] w-[37px] object-contain shrink-0 brightness-110 logo-glow"
               draggable={false}
             />
             <span className="text-lg font-semibold tracking-tight">
