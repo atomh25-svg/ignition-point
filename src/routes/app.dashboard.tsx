@@ -137,6 +137,15 @@ function Dashboard() {
   const todaysStep = stripDayPrefix(blueprint.seven_day_plan[dayIndex0] ?? "");
   const nextMilestone =
     blueprint.seven_day_plan[Math.min(total - 1, dayIndex0 + 1)] ?? null;
+  const productName = ideaName ?? blueprint.headline;
+  const isFinalDay = dayIndex0 + 1 >= total;
+  // Today-specific copy that references the actual product and what
+  // unlocks tomorrow, instead of the generic "this is from the Blueprint".
+  const todaysContext = isFinalDay
+    ? `Last day of the launch sprint for ${productName}. Ship today and you've gone from idea to live product in seven days.`
+    : today === 1
+      ? `Day 1 for ${productName}. Today is the move that turns this from a Blueprint into a real thing in the world. Tomorrow: ${stripDayPrefix(nextMilestone ?? "")}.`
+      : `Today's move for ${productName}. Land this and tomorrow you're on to: ${stripDayPrefix(nextMilestone ?? "")}.`;
 
   return (
     <div className="p-8 max-w-7xl mx-auto w-full">
@@ -173,8 +182,7 @@ function Dashboard() {
               <span className="text-gradient-gold">{todaysStep}</span>
             </h2>
             <p className="mt-3 text-muted-foreground max-w-xl text-sm">
-              From your Blueprint's 7-day plan. The Blueprint is the source
-              of truth — pop it open if you want the full context.
+              {todaysContext}
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
               <Button asChild variant="hero">
@@ -301,18 +309,25 @@ function Dashboard() {
           </div>
         </Card>
 
-        {/* Build modules — 2/3 width */}
+        {/* Lift phase preview — what your subscription unlocks once the
+            7-day launch sprint is done. Framed as anticipation, not a
+            broken "Coming soon" wall. */}
         <Card className="lg:col-span-2 glass bg-gradient-card rounded-2xl p-6 border-border/50">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="font-semibold">Build modules</h3>
-            <span className="text-xs text-muted-foreground">Coming soon</span>
+          <div className="flex items-center justify-between mb-1">
+            <h3 className="font-semibold">Lift phase · after Day 7</h3>
+            <span className="text-[10px] uppercase tracking-[0.2em] text-amber-glow">
+              Unlocks next
+            </span>
           </div>
+          <p className="text-xs text-muted-foreground mb-4">
+            Once your launch ships, the dashboard pivots from "what to build"
+            to "how to grow." Here's what your subscription unlocks next.
+          </p>
           <div className="grid sm:grid-cols-2 gap-3">
             {modules.map((m) => (
-              <button
+              <div
                 key={m.title}
-                disabled
-                className="text-left rounded-xl border border-border/50 bg-secondary/20 p-4 flex items-start gap-3 opacity-70 cursor-not-allowed"
+                className="text-left rounded-xl border border-border/50 bg-secondary/20 p-4 flex items-start gap-3"
               >
                 <div className="w-9 h-9 rounded-lg bg-gradient-gold flex items-center justify-center shrink-0">
                   <m.icon className="w-4 h-4 text-gold-foreground" />
@@ -321,8 +336,7 @@ function Dashboard() {
                   <p className="font-semibold text-sm">{m.title}</p>
                   <p className="mt-0.5 text-xs text-muted-foreground">{m.desc}</p>
                 </div>
-                <ArrowRight className="w-3.5 h-3.5 text-muted-foreground mt-2" />
-              </button>
+              </div>
             ))}
           </div>
         </Card>
