@@ -515,7 +515,10 @@ function Dashboard() {
                         </div>
                       )}
                     </div>
-                    <ArrowRight className="w-4 h-4 text-muted-foreground/50 mt-1 opacity-0 group-hover:opacity-100 transition" />
+                    <span className="flex items-center gap-1 shrink-0 self-center text-[10px] uppercase tracking-[0.18em] text-muted-foreground group-hover:text-amber-glow transition">
+                      More info
+                      <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />
+                    </span>
                   </button>
                 </li>
               ))}
