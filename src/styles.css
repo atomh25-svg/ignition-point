@@ -197,9 +197,9 @@
   .text-gradient-gold-fade {
     background: linear-gradient(
       90deg,
-      oklch(0.76 0.16 62) 0%,
-      oklch(0.84 0.13 76) 32%,
-      oklch(0.93 0.04 85) 95%
+      oklch(0.72 0.18 56) 0%,
+      oklch(0.81 0.16 72) 32%,
+      oklch(0.95 0.02 88) 95%
     );
     -webkit-background-clip: text;
     background-clip: text;
