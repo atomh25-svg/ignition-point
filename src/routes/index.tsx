@@ -109,10 +109,14 @@ function Banner() {
           </span>
         </div>
         <h2 className="mt-[29px] text-[1.2rem] font-semibold leading-tight text-foreground sm:text-[1.33rem] md:text-[1.63rem]">
-          For the <span className="text-gradient-gold">vision inside of you.</span>
+          <span className="text-gradient-gold">You are perfect.</span>
         </h2>
       </div>
 
+      {/* Banner bottom-row: "Welcome to the launch," + logo/wordmark.
+          Kept commented out so we can drop it back in unchanged if we
+          decide we want the framing again. */}
+      {/*
       <div className="absolute inset-x-0 bottom-[313px] z-10 mx-auto max-w-7xl px-6">
         <div className="flex items-end justify-between gap-4">
           <p className="text-[1rem] uppercase tracking-[0.25em] text-gold/90">
@@ -132,6 +136,7 @@ function Banner() {
           </div>
         </div>
       </div>
+      */}
     </section>
   );
 }
