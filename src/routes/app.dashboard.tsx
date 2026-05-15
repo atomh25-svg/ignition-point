@@ -315,7 +315,7 @@ function Dashboard() {
     .reduce((acc, ch) => acc + ch.charCodeAt(0), 0) + today;
   const heroImageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(
     heroPrompt,
-  )}?width=640&height=640&nologo=true&seed=${heroSeed}&model=flux`;
+  )}?width=640&height=576&nologo=true&seed=${heroSeed}&model=flux`;
 
   return (
     <div className="p-8 max-w-7xl mx-auto w-full">
@@ -414,7 +414,7 @@ function Dashboard() {
                 stays stable per day and per idea. ml-auto pushes the
                 smaller image flush to the right edge of the column. */}
             <div className="hidden md:block w-full">
-              <div className="aspect-square w-[260px] ml-auto rounded-2xl overflow-hidden border border-gold/20 bg-secondary/30 relative">
+              <div className="aspect-[10/9] w-[260px] ml-auto rounded-2xl overflow-hidden border border-gold/20 bg-secondary/30 relative">
                 <img
                   src={heroImageUrl}
                   alt=""
