@@ -183,7 +183,7 @@ function ProblemCard({ icon: Icon, title, body }: { icon: any; title: string; bo
 
 function Problem() {
   return (
-    <section className="px-6 pt-16 pb-28">
+    <section className="px-6 pt-16 pb-16">
       <div className="mx-auto max-w-6xl">
         <div className="mx-auto max-w-3xl text-center">
           <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
@@ -221,7 +221,7 @@ function HowItWorks() {
     { n: "04", icon: Rocket, title: "Follow the path", text: "Get a simple plan, checklist, and daily next steps." },
   ];
   return (
-    <section id="how" className="relative py-24">
+    <section id="how" className="relative pt-12 pb-16">
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-16">
           <p className="text-xs uppercase tracking-[0.25em] text-gold mb-3">How It Works</p>
@@ -257,7 +257,7 @@ function Features() {
     { icon: Users, title: "First Customer Plan", text: "Outreach scripts and a strategy to land your very first user." },
   ];
   return (
-    <section id="features" className="relative py-24">
+    <section id="features" className="relative py-16">
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-16">
           <p className="text-xs uppercase tracking-[0.25em] text-gold mb-3">Features</p>
@@ -281,7 +281,7 @@ function Features() {
 
 function DashboardPreview() {
   return (
-    <section className="relative py-24">
+    <section className="relative py-16">
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-12">
           <p className="text-xs uppercase tracking-[0.25em] text-gold mb-3">The App</p>
@@ -361,7 +361,7 @@ function Pricing() {
     "Cancel anytime",
   ];
   return (
-    <section id="pricing" className="relative py-24">
+    <section id="pricing" className="relative py-16">
       <div className="max-w-3xl mx-auto px-6">
         <div className="text-center mb-12">
           <p className="text-xs uppercase tracking-[0.25em] text-gold mb-3">Pricing</p>
@@ -398,7 +398,7 @@ function Pricing() {
 
 function FinalCTA() {
   return (
-    <section className="relative py-32 overflow-hidden">
+    <section className="relative py-20 overflow-hidden">
       <div className="pointer-events-none absolute inset-0 bg-warm-glow" />
       <div className="relative max-w-3xl mx-auto px-6 text-center">
         <h2 className="text-5xl md:text-6xl font-semibold tracking-tight">
