@@ -9,6 +9,9 @@ import {
   Rocket,
   Wrench,
   Lightbulb,
+  ChevronDown,
+  ChevronUp,
+  X,
 } from "lucide-react";
 import { GeneratingScreen } from "@/components/launchfly/GeneratingScreen";
 import { getBlueprint, getDailyBreakdown } from "@/lib/require-subscription";
@@ -40,6 +43,90 @@ function stripDayPrefix(line: string): string {
   return line.replace(/^Day\s+\d+\s*[—\-:]\s*/, "").trim();
 }
 
+/**
+ * Map common AI/dev tool names to a simple-icons slug + optional
+ * brand color (used for the chip ring tint). Anything missing falls
+ * back to a generic wrench icon + plain text — no broken images.
+ */
+const TOOL_ICON_MAP: Record<string, { slug: string; color?: string }> = {
+  claude: { slug: "claude", color: "C15F3C" },
+  anthropic: { slug: "anthropic", color: "C15F3C" },
+  openai: { slug: "openai", color: "10A37F" },
+  "chatgpt": { slug: "openai", color: "10A37F" },
+  "gpt-4": { slug: "openai", color: "10A37F" },
+  "gpt-4 vision": { slug: "openai", color: "10A37F" },
+  cursor: { slug: "cursor", color: "FFFFFF" },
+  lovable: { slug: "lovable", color: "FF9000" },
+  "v0.dev": { slug: "vercel" },
+  v0: { slug: "vercel" },
+  vercel: { slug: "vercel" },
+  stripe: { slug: "stripe", color: "635BFF" },
+  resend: { slug: "resend" },
+  posthog: { slug: "posthog", color: "1D4AFF" },
+  github: { slug: "github" },
+  namecheap: { slug: "namecheap", color: "DE3910" },
+  notion: { slug: "notion" },
+  figma: { slug: "figma", color: "F24E1E" },
+  supabase: { slug: "supabase", color: "3ECF8E" },
+  cloudflare: { slug: "cloudflare", color: "F38020" },
+  upstash: { slug: "upstash", color: "00E9A3" },
+  redis: { slug: "redis", color: "DC382D" },
+  "next.js": { slug: "nextdotjs", color: "FFFFFF" },
+  nextjs: { slug: "nextdotjs", color: "FFFFFF" },
+  reddit: { slug: "reddit", color: "FF4500" },
+  twitter: { slug: "x", color: "FFFFFF" },
+  x: { slug: "x", color: "FFFFFF" },
+  producthunt: { slug: "producthunt", color: "DA552F" },
+  "product hunt": { slug: "producthunt", color: "DA552F" },
+  hackernews: { slug: "ycombinator", color: "FF6600" },
+  "hacker news": { slug: "ycombinator", color: "FF6600" },
+  "google sheets": { slug: "googlesheets", color: "34A853" },
+  "google docs": { slug: "googledocs", color: "4285F4" },
+  zapier: { slug: "zapier", color: "FF4F00" },
+};
+
+function toolIcon(name: string): { src: string; color?: string } | null {
+  const entry = TOOL_ICON_MAP[name.toLowerCase().trim()];
+  if (!entry) return null;
+  // simple-icons CDN: white glyph by default; use brand color when set.
+  const color = entry.color ?? "FFFFFF";
+  return {
+    src: `https://cdn.simpleicons.org/${entry.slug}/${color}`,
+    color,
+  };
+}
+
+/**
+ * Small "logo + name" pill. Uses simple-icons CDN for the glyph; on
+ * load error the <img> hides itself so the chip degrades gracefully
+ * to text + wrench icon.
+ */
+function ToolChip({ name, size = "sm" }: { name: string; size?: "sm" | "md" }) {
+  const icon = toolIcon(name);
+  const dim = size === "md" ? "w-4 h-4" : "w-3 h-3";
+  return (
+    <span
+      className={`inline-flex items-center gap-1.5 rounded-full border border-amber-glow/30 bg-amber-glow/5 ${
+        size === "md" ? "px-3 py-1 text-xs" : "px-2 py-0.5 text-[10px]"
+      } uppercase tracking-wider text-amber-glow`}
+    >
+      {icon ? (
+        <img
+          src={icon.src}
+          alt=""
+          className={dim}
+          onError={(e) => {
+            (e.target as HTMLImageElement).style.display = "none";
+          }}
+        />
+      ) : (
+        <Wrench className={dim} />
+      )}
+      {name}
+    </span>
+  );
+}
+
 function Dashboard() {
   const { launchStartedAt, selectedIdeaId } = Route.useRouteContext();
   const [blueprint, setBlueprint] = useState<Blueprint | null>(null);
@@ -48,6 +135,10 @@ function Dashboard() {
   const [breakdownLoading, setBreakdownLoading] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  // UI: tap a substep to open a modal with deeper context.
+  const [activeStep, setActiveStep] = useState<number | null>(null);
+  // UI: keep the full 30-day plan collapsed by default — it's a lot.
+  const [planExpanded, setPlanExpanded] = useState(false);
 
   useEffect(() => {
     if (!selectedIdeaId) return;
@@ -340,24 +431,46 @@ function Dashboard() {
             The concrete moves to land today's step. Tool chips show which
             AI tool is the right one for that line.
           </p>
+          {breakdown && breakdown.substeps.some((s) => s.tool) && (
+            <div className="mb-5 pb-5 border-b border-border/50">
+              <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground mb-2">
+                Tools you'll use today
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {Array.from(
+                  new Set(
+                    breakdown.substeps
+                      .map((s) => s.tool)
+                      .filter((t): t is string => !!t),
+                  ),
+                ).map((tool) => (
+                  <ToolChip key={tool} name={tool} size="md" />
+                ))}
+              </div>
+            </div>
+          )}
           {breakdown ? (
             <ol className="space-y-3">
               {breakdown.substeps.map((step, i) => (
-                <li
-                  key={i}
-                  className="flex items-start gap-3 rounded-xl border border-border/50 bg-secondary/20 p-4"
-                >
-                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-gold/40 bg-gold/10 text-xs font-semibold text-gold">
-                    {i + 1}
-                  </span>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm leading-snug">{step.action}</p>
-                    {step.tool && (
-                      <span className="mt-1.5 inline-flex items-center gap-1 rounded-full border border-amber-glow/30 bg-amber-glow/5 px-2 py-0.5 text-[10px] uppercase tracking-wider text-amber-glow">
-                        <Wrench className="w-3 h-3" /> {step.tool}
-                      </span>
-                    )}
-                  </div>
+                <li key={i}>
+                  <button
+                    type="button"
+                    onClick={() => setActiveStep(i)}
+                    className="group w-full text-left flex items-start gap-3 rounded-xl border border-border/50 bg-secondary/20 p-4 transition hover:border-gold/40 hover:bg-secondary/40"
+                  >
+                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-gold/40 bg-gold/10 text-xs font-semibold text-gold">
+                      {i + 1}
+                    </span>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm leading-snug">{step.action}</p>
+                      {step.tool && (
+                        <div className="mt-1.5">
+                          <ToolChip name={step.tool} />
+                        </div>
+                      )}
+                    </div>
+                    <ArrowRight className="w-4 h-4 text-muted-foreground/50 mt-1 opacity-0 group-hover:opacity-100 transition" />
+                  </button>
                 </li>
               ))}
             </ol>
@@ -380,14 +493,38 @@ function Dashboard() {
           )}
         </Card>
 
-        {/* Full plan timeline */}
+        {/* Full plan timeline — collapsed by default to today's row.
+            Hit the chevron to peek the whole 30-day arc. */}
         <Card className="glass bg-gradient-card rounded-2xl p-6 border-border/50">
-          <h3 className="font-semibold mb-4">Full plan</h3>
+          <button
+            type="button"
+            onClick={() => setPlanExpanded((v) => !v)}
+            className="w-full flex items-center justify-between mb-4 group"
+          >
+            <div className="text-left">
+              <h3 className="font-semibold">Full plan</h3>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                {planExpanded
+                  ? `Showing all ${total} days`
+                  : `Showing today + nearby days · click to see all ${total}`}
+              </p>
+            </div>
+            {planExpanded ? (
+              <ChevronUp className="w-5 h-5 text-muted-foreground group-hover:text-foreground" />
+            ) : (
+              <ChevronDown className="w-5 h-5 text-muted-foreground group-hover:text-foreground" />
+            )}
+          </button>
           <ul className="space-y-3 text-sm">
             {blueprint.seven_day_plan.map((line, i) => {
               const dayNum = i + 1;
               const isPast = dayNum < today;
               const isToday = dayNum === today;
+              // Collapsed view: show only today and the one before/after
+              // it, so the user can place themselves but isn't drowning
+              // in 30 line items.
+              const nearby = Math.abs(dayNum - today) <= 1;
+              if (!planExpanded && !nearby) return null;
               return (
                 <li key={i} className="flex items-start gap-3">
                   <span
@@ -456,6 +593,101 @@ function Dashboard() {
           <ArrowRight className="w-5 h-5" />
         </Link>
       </div>
+
+      {/* Substep modal — opens when a checklist row is clicked. Shows
+          the action in full, the optional tool with its logo, and the
+          day-level context (summary + outcome + stuck hint) so the user
+          can dig in without leaving the dashboard. */}
+      {breakdown && activeStep !== null && breakdown.substeps[activeStep] && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
+          onClick={() => setActiveStep(null)}
+        >
+          <div
+            className="glass bg-gradient-card rounded-2xl p-8 max-w-2xl w-full border border-gold/30 relative max-h-[90vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              type="button"
+              onClick={() => setActiveStep(null)}
+              className="absolute top-4 right-4 p-1.5 rounded-lg hover:bg-secondary/50 transition"
+              aria-label="Close"
+            >
+              <X className="w-4 h-4" />
+            </button>
+            <p className="text-xs uppercase tracking-[0.2em] text-amber-glow">
+              Step {activeStep + 1} of {breakdown.substeps.length}
+              {" · "}Day {today} · {todaysStep}
+            </p>
+            <h2 className="mt-3 text-xl font-semibold leading-snug">
+              {breakdown.substeps[activeStep].action}
+            </h2>
+            {breakdown.substeps[activeStep].tool && (
+              <div className="mt-4">
+                <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground mb-2">
+                  Tool for this step
+                </p>
+                <ToolChip name={breakdown.substeps[activeStep].tool!} size="md" />
+              </div>
+            )}
+
+            <div className="mt-6 pt-6 border-t border-border/50 space-y-4">
+              <div>
+                <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground mb-1.5">
+                  Today's goal
+                </p>
+                <p className="text-sm text-foreground/90 leading-relaxed">
+                  {breakdown.outcome}
+                </p>
+              </div>
+              <div>
+                <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground mb-1.5">
+                  Where this fits
+                </p>
+                <p className="text-sm text-foreground/90 leading-relaxed">
+                  {breakdown.summary}
+                </p>
+              </div>
+              <div className="rounded-xl border border-border/50 bg-card/40 p-4 flex items-start gap-3">
+                <Lightbulb className="w-4 h-4 text-amber-glow shrink-0 mt-0.5" />
+                <div className="text-sm">
+                  <span className="font-semibold text-amber-glow">
+                    If you get stuck:{" "}
+                  </span>
+                  <span className="text-foreground/90">{breakdown.stuck_hint}</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-6 flex justify-between gap-3 pt-4 border-t border-border/50">
+              <button
+                type="button"
+                onClick={() =>
+                  setActiveStep((s) =>
+                    s !== null && s > 0 ? s - 1 : s,
+                  )
+                }
+                disabled={activeStep === 0}
+                className="text-xs text-muted-foreground hover:text-foreground disabled:opacity-30 disabled:cursor-not-allowed"
+              >
+                ← Previous step
+              </button>
+              <button
+                type="button"
+                onClick={() =>
+                  setActiveStep((s) =>
+                    s !== null && s < breakdown.substeps.length - 1 ? s + 1 : s,
+                  )
+                }
+                disabled={activeStep >= breakdown.substeps.length - 1}
+                className="text-xs text-muted-foreground hover:text-foreground disabled:opacity-30 disabled:cursor-not-allowed"
+              >
+                Next step →
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

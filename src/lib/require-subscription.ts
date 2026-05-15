@@ -282,15 +282,24 @@ export const selectIdea = createServerFn({ method: "POST" })
       .first<{ id: string }>();
     if (!owned) return { ok: false as const, reason: "not-your-idea" as const };
 
+    // If we're switching ideas (not just re-confirming the same one),
+    // reset the launch anchor so Day 1 starts fresh when they click
+    // "Start Day 1" again on the new Blueprint. Otherwise the new idea
+    // inherits the previous idea's clock and the dashboard shows the
+    // wrong day.
     await db
       .prepare(
         `UPDATE subscriptions
-            SET selected_idea_id = ?,
-                updated_at       = unixepoch()
+            SET selected_idea_id   = ?,
+                launch_started_at  = CASE
+                  WHEN selected_idea_id IS NOT ? THEN NULL
+                  ELSE launch_started_at
+                END,
+                updated_at         = unixepoch()
           WHERE clerk_user_id = ?
             AND status IN ('active','trialing','past_due')`,
       )
-      .bind(data.ideaId, userId)
+      .bind(data.ideaId, data.ideaId, userId)
       .run();
 
     return { ok: true as const };
