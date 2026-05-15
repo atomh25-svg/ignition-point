@@ -1,23 +1,18 @@
 import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
   ArrowRight,
-  Sparkles,
-  FileText,
-  MessageSquare,
-  PenLine,
-  Brain,
   Check,
   Target,
   TrendingUp,
   Rocket,
-  Loader2,
+  Wrench,
+  Lightbulb,
 } from "lucide-react";
 import { GeneratingScreen } from "@/components/launchfly/GeneratingScreen";
-import { getBlueprint } from "@/lib/require-subscription";
-import type { Blueprint } from "@/lib/ideas-generator";
+import { getBlueprint, getDailyBreakdown } from "@/lib/require-subscription";
+import type { Blueprint, DailyBreakdown } from "@/lib/ideas-generator";
 
 export const Route = createFileRoute("/app/dashboard")({
   head: () => ({ meta: [{ title: "Dashboard — LaunchFly.io" }] }),
@@ -37,14 +32,6 @@ export const Route = createFileRoute("/app/dashboard")({
   component: Dashboard,
 });
 
-const modules = [
-  { icon: Sparkles, title: "MVP prompt", desc: "Generate the first build prompt." },
-  { icon: FileText, title: "Landing copy", desc: "Hero, subhead, CTA for your waitlist." },
-  { icon: MessageSquare, title: "Outreach scripts", desc: "DM & email templates." },
-  { icon: PenLine, title: "Content ideas", desc: "Posts that turn build → distribution." },
-  { icon: Brain, title: "AI coach", desc: "Always answers: what's next." },
-];
-
 /**
  * "Day N — " prefix isn't useful when the line is already labeled by
  * position; strip it for display.
@@ -57,6 +44,8 @@ function Dashboard() {
   const { launchStartedAt, selectedIdeaId } = Route.useRouteContext();
   const [blueprint, setBlueprint] = useState<Blueprint | null>(null);
   const [ideaName, setIdeaName] = useState<string | null>(null);
+  const [breakdown, setBreakdown] = useState<DailyBreakdown | null>(null);
+  const [breakdownLoading, setBreakdownLoading] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -88,6 +77,45 @@ function Dashboard() {
       cancelled = true;
     };
   }, [selectedIdeaId]);
+
+  // Per-day breakdown: Claude-generated 5-8 sub-steps + AI-tool hints
+  // for whatever Day N maps to in the plan. Refetches when the day
+  // rolls over (or when the user switches ideas).
+  const computedDayIndex = (() => {
+    if (!blueprint || !launchStartedAt) return 0;
+    const planLen = blueprint.seven_day_plan.length || 30;
+    return Math.min(
+      planLen - 1,
+      Math.max(
+        0,
+        Math.floor((Date.now() / 1000 - launchStartedAt) / 86_400),
+      ),
+    );
+  })();
+  useEffect(() => {
+    if (!selectedIdeaId || !blueprint) return;
+    let cancelled = false;
+    setBreakdownLoading(true);
+    setBreakdown(null);
+    (async () => {
+      try {
+        const result = await getDailyBreakdown({
+          data: { ideaId: selectedIdeaId, dayNumber: computedDayIndex + 1 },
+        });
+        if (cancelled) return;
+        if (result.ok) setBreakdown(result.breakdown);
+        // Soft-fail: if the breakdown call errors we still render the
+        // dashboard, just without the per-day detail card.
+      } catch (err) {
+        console.error("[dashboard] daily breakdown failed:", err);
+      } finally {
+        if (!cancelled) setBreakdownLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [selectedIdeaId, blueprint, computedDayIndex]);
 
   if (loading) {
     return (
@@ -138,14 +166,6 @@ function Dashboard() {
   const nextMilestone =
     blueprint.seven_day_plan[Math.min(total - 1, dayIndex0 + 1)] ?? null;
   const productName = ideaName ?? blueprint.headline;
-  const isFinalDay = dayIndex0 + 1 >= total;
-  // Today-specific copy that references the actual product and what
-  // unlocks tomorrow, instead of the generic "this is from the Blueprint".
-  const todaysContext = isFinalDay
-    ? `Last day of the launch sprint for ${productName}. Ship today and you've gone from idea to live product in seven days.`
-    : today === 1
-      ? `Day 1 for ${productName}. Today is the move that turns this from a Blueprint into a real thing in the world. Tomorrow: ${stripDayPrefix(nextMilestone ?? "")}.`
-      : `Today's move for ${productName}. Land this and tomorrow you're on to: ${stripDayPrefix(nextMilestone ?? "")}.`;
 
   return (
     <div className="p-8 max-w-7xl mx-auto w-full">
@@ -171,29 +191,39 @@ function Dashboard() {
       </div>
 
       <div className="mt-6 grid lg:grid-cols-3 gap-5">
-        {/* Today's step card */}
+        {/* Today's step card — title + Claude-generated summary + outcome */}
         <Card className="lg:col-span-3 glass bg-gradient-card rounded-3xl p-8 relative overflow-hidden border-gold/30">
           <div className="absolute -top-32 -right-16 w-80 h-80 rounded-full bg-gradient-gold blur-3xl opacity-30" />
           <div className="relative">
             <span className="text-xs uppercase tracking-[0.25em] text-amber-glow">
-              Today's step · Day {today}
+              Today's step · Day {today} of {total}
             </span>
             <h2 className="mt-3 text-2xl md:text-3xl font-semibold leading-tight">
               <span className="text-gradient-gold">{todaysStep}</span>
             </h2>
-            <p className="mt-3 text-muted-foreground max-w-xl text-sm">
-              {todaysContext}
-            </p>
-            <div className="mt-6 flex flex-wrap gap-3">
-              <Button asChild variant="hero">
-                <Link to="/app/blueprint">
-                  Open Blueprint <ArrowRight className="w-4 h-4" />
-                </Link>
-              </Button>
-            </div>
+            {breakdown ? (
+              <>
+                <p className="mt-4 text-foreground/90 max-w-3xl leading-relaxed">
+                  {breakdown.summary}
+                </p>
+                <div className="mt-5 inline-flex items-start gap-3 rounded-xl border border-emerald-400/30 bg-emerald-500/5 px-4 py-3">
+                  <Target className="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" />
+                  <p className="text-sm text-foreground/90">
+                    <span className="font-semibold text-emerald-400">Goal: </span>
+                    {breakdown.outcome}
+                  </p>
+                </div>
+              </>
+            ) : (
+              <p className="mt-4 text-muted-foreground max-w-xl text-sm">
+                {breakdownLoading
+                  ? "Generating today's breakdown…"
+                  : `Today's move for ${productName}.`}
+              </p>
+            )}
 
-            {/* Inline stats */}
-            <div className="mt-8 pt-6 border-t border-border/50 grid grid-cols-1 sm:grid-cols-3 gap-6">
+            {/* Inline stats — slimmed to just days complete + next */}
+            <div className="mt-7 pt-6 border-t border-border/50 grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-lg bg-emerald-500/15 border border-emerald-400/40 flex items-center justify-center shrink-0">
                   <Check className="w-4 h-4 text-emerald-400" strokeWidth={3} />
@@ -209,28 +239,12 @@ function Dashboard() {
                 </div>
               </div>
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-amber-glow/15 border border-amber-glow/40 flex items-center justify-center shrink-0">
-                  <Target className="w-4 h-4 text-amber-glow" />
-                </div>
-                <div className="min-w-0">
-                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground">
-                    Current focus
-                  </p>
-                  <p
-                    className="font-semibold mt-0.5 leading-snug truncate"
-                    title={todaysStep}
-                  >
-                    {todaysStep}
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-lg bg-gold/15 border border-gold/40 flex items-center justify-center shrink-0">
                   <TrendingUp className="w-4 h-4 text-gold" />
                 </div>
                 <div className="min-w-0">
                   <p className="text-[10px] uppercase tracking-wider text-muted-foreground">
-                    Next milestone
+                    Tomorrow
                   </p>
                   <p
                     className="font-semibold mt-0.5 leading-snug truncate"
@@ -269,7 +283,7 @@ function Dashboard() {
             </div>
           </div>
           <div
-            className="grid gap-1.5"
+            className="grid gap-1"
             style={{
               gridTemplateColumns: `repeat(${total}, minmax(0, 1fr))`,
             }}
@@ -282,7 +296,7 @@ function Dashboard() {
                 <div
                   key={d}
                   title={dayLine ?? `Day ${d}`}
-                  className={`aspect-square rounded-md border flex items-center justify-center text-[10px] font-semibold ${
+                  className={`aspect-square rounded-md border flex items-center justify-center text-[9px] font-semibold ${
                     isDone
                       ? "border-emerald-400/60 bg-emerald-500/15 text-emerald-400"
                       : isToday
@@ -291,9 +305,9 @@ function Dashboard() {
                   }`}
                 >
                   {isDone ? (
-                    <Check className="w-4 h-4" strokeWidth={3.5} />
+                    <Check className="w-3 h-3" strokeWidth={3.5} />
                   ) : isToday ? (
-                    <Rocket className="w-3 h-3" />
+                    <Rocket className="w-2.5 h-2.5" />
                   ) : (
                     d
                   )}
@@ -309,36 +323,61 @@ function Dashboard() {
           </div>
         </Card>
 
-        {/* Lift phase preview — what your subscription unlocks once the
-            7-day launch sprint is done. Framed as anticipation, not a
-            broken "Coming soon" wall. */}
+        {/* Today's checklist — the AI-generated sub-steps to actually
+            execute today's step, plus a "stuck?" escape hatch. */}
         <Card className="lg:col-span-2 glass bg-gradient-card rounded-2xl p-6 border-border/50">
           <div className="flex items-center justify-between mb-1">
-            <h3 className="font-semibold">Lift phase · after Day 7</h3>
+            <h3 className="font-semibold">Today's checklist</h3>
             <span className="text-[10px] uppercase tracking-[0.2em] text-amber-glow">
-              Unlocks next
+              {breakdown
+                ? `${breakdown.substeps.length} sub-steps`
+                : breakdownLoading
+                  ? "Generating…"
+                  : "—"}
             </span>
           </div>
           <p className="text-xs text-muted-foreground mb-4">
-            Once your launch ships, the dashboard pivots from "what to build"
-            to "how to grow." Here's what your subscription unlocks next.
+            The concrete moves to land today's step. Tool chips show which
+            AI tool is the right one for that line.
           </p>
-          <div className="grid sm:grid-cols-2 gap-3">
-            {modules.map((m) => (
-              <div
-                key={m.title}
-                className="text-left rounded-xl border border-border/50 bg-secondary/20 p-4 flex items-start gap-3"
-              >
-                <div className="w-9 h-9 rounded-lg bg-gradient-gold flex items-center justify-center shrink-0">
-                  <m.icon className="w-4 h-4 text-gold-foreground" />
-                </div>
-                <div className="flex-1">
-                  <p className="font-semibold text-sm">{m.title}</p>
-                  <p className="mt-0.5 text-xs text-muted-foreground">{m.desc}</p>
-                </div>
+          {breakdown ? (
+            <ol className="space-y-3">
+              {breakdown.substeps.map((step, i) => (
+                <li
+                  key={i}
+                  className="flex items-start gap-3 rounded-xl border border-border/50 bg-secondary/20 p-4"
+                >
+                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-gold/40 bg-gold/10 text-xs font-semibold text-gold">
+                    {i + 1}
+                  </span>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm leading-snug">{step.action}</p>
+                    {step.tool && (
+                      <span className="mt-1.5 inline-flex items-center gap-1 rounded-full border border-amber-glow/30 bg-amber-glow/5 px-2 py-0.5 text-[10px] uppercase tracking-wider text-amber-glow">
+                        <Wrench className="w-3 h-3" /> {step.tool}
+                      </span>
+                    )}
+                  </div>
+                </li>
+              ))}
+            </ol>
+          ) : (
+            <div className="rounded-xl border border-border/50 bg-secondary/10 p-6 text-center text-sm text-muted-foreground">
+              {breakdownLoading
+                ? "Generating today's breakdown…"
+                : "Couldn't load today's breakdown — refresh to retry."}
+            </div>
+          )}
+
+          {breakdown && (
+            <div className="mt-5 flex items-start gap-3 rounded-xl border border-border/50 bg-card/40 p-4">
+              <Lightbulb className="w-4 h-4 text-amber-glow shrink-0 mt-0.5" />
+              <div className="text-sm">
+                <span className="font-semibold text-amber-glow">If you get stuck: </span>
+                <span className="text-foreground/90">{breakdown.stuck_hint}</span>
               </div>
-            ))}
-          </div>
+            </div>
+          )}
         </Card>
 
         {/* Full plan timeline */}

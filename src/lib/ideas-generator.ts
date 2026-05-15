@@ -242,15 +242,24 @@ function parseAndValidate(rawText: string): GeneratedIdea[] {
 /*  Blueprint generator                                                       */
 /* -------------------------------------------------------------------------- */
 
-const BLUEPRINT_SYSTEM_PROMPT = `You are a startup advisor turning a founder's chosen idea into a concrete 7-day launch blueprint.
+const BLUEPRINT_SYSTEM_PROMPT = `You are a startup advisor turning a founder's chosen idea into a concrete 30-day launch blueprint.
 
 Hard rules:
 - Output ONLY a single JSON object. No prose before or after. No markdown code fences.
 - Be specific. Name real tools (Stripe, Resend, Lovable, Vercel, OpenAI, etc.). Name real communities (specific subreddits, specific X/Twitter circles, specific Slack/Discord groups). Real numbers — "$9/mo", "5 DMs", "Day 3".
 - No generic marketing-speak ("leverage", "synergy", "engage your audience"). Write like an experienced founder talking to a first-timer.
-- The 7-day plan must respect the founder's weekly hours: if they said 2-5 hours/week, each day's task fits in ~30 min. If they said 10+ hours/week, fill the day.
+- The 30-day plan must respect the founder's weekly hours: each day's task fits comfortably inside the time available. If they said 2-5 hours/week, each day's task should fit in 30-45 min.
 - "what_to_skip" must list 3-5 specific features/temptations this founder will want to build but doesn't need on day one. Bullet style — separate items with a newline.
 - Every field must be populated with substantive content. Never leave a field blank or write "TBD" or "—". If you don't have enough information, write your best honest guess.
+
+The 30-day plan ARCS like this — don't deviate from the shape, just adapt content to the idea:
+- Days 1-3: Validate (landing page, talk to potential users, get pre-signups).
+- Days 4-10: Build the MVP end-to-end (the smallest thing that solves the problem).
+- Days 11-15: Ship to first 5-10 real users, fix what's broken, add Stripe.
+- Days 16-22: Distribution — Reddit/X/HN posts, cold DMs, content, ProductHunt.
+- Days 23-28: Iterate based on usage. Add the 1-2 features paying users keep asking for. Tighten the funnel.
+- Day 29: Pricing / retention experiment.
+- Day 30: Plan the next 30 days from real data, not vibes.
 
 Schema (every field is REQUIRED and every string must be non-empty):
 {
@@ -269,8 +278,8 @@ Schema (every field is REQUIRED and every string must be non-empty):
     "tools_youll_use": string,             // comma-separated list of real tools by name
     "how_to_get_first_users": string       // 2-3 sentences naming specific communities + the exact ask
   },
-  "seven_day_plan": [string, string, string, string, string, string, string]
-  // EXACTLY 7 items, each starting with "Day N — " (em dash, not hyphen).
+  "seven_day_plan": [string × 30]
+  // EXACTLY 30 items, each starting with "Day N — " (em dash, not hyphen).
   // Each item must be CONCISE — under 80 characters total, max ~10 words after the "Day N —". No time estimates ("Time: 75 min"). No multi-sentence explanations. Just the headline action. Example: "Day 1 — Build the landing page with email capture in Lovable".
 }`;
 
@@ -385,7 +394,7 @@ function parseBlueprint(rawText: string, idea: GeneratedIdea): Blueprint {
   if (!stats || Object.keys(stats).length === 0) missing.push("stats");
   if (!pillars || Object.keys(pillars).length === 0) missing.push("pillars");
   if (ipeRaw.length < 3) missing.push(`in_plain_english(${ipeRaw.length})`);
-  if (planRaw.length < 7) missing.push(`seven_day_plan(${planRaw.length})`);
+  if (planRaw.length < 30) missing.push(`seven_day_plan(${planRaw.length})`);
   if (missing.length > 0) {
     console.warn("[blueprint] partial output — padding:", missing.join(", "));
   }
@@ -410,16 +419,8 @@ function parseBlueprint(rawText: string, idea: GeneratedIdea): Blueprint {
   }
 
   const plan: string[] = [];
-  const defaultPlan = [
-    "Day 1 — Set up a landing page with email capture",
-    "Day 2 — Build the MVP with Lovable or Cursor",
-    "Day 3 — Write the first-customer outreach copy",
-    "Day 4 — Post in 2 communities + DM 5 friends",
-    "Day 5 — Onboard 5 testers, take notes",
-    "Day 6 — Add Stripe Checkout, ship the paid plan",
-    "Day 7 — Convert your first paying customer 🚀",
-  ];
-  for (let i = 0; i < 7; i++) {
+  const defaultPlan = buildDefaultPlan();
+  for (let i = 0; i < 30; i++) {
     plan.push(trim(str(planRaw[i], defaultPlan[i]), 100));
   }
 
@@ -475,19 +476,247 @@ function mockBlueprint(idea: GeneratedIdea): Blueprint {
     ],
     pillars: {
       what_youre_building: idea.concept,
-      what_to_skip: "Anything not on the 7-day plan.",
+      what_to_skip: "Anything not on the 30-day plan.",
       tools_youll_use: "Lovable, Stripe, Resend, OpenAI API.",
       how_to_get_first_users: idea.first_step,
     },
-    seven_day_plan: [
-      "Day 1 — Set up landing page with email capture",
-      "Day 2 — Build the MVP",
-      "Day 3 — Write outreach copy",
-      "Day 4 — Post in 2 communities + share with friends",
-      "Day 5 — Onboard 5 testers, collect feedback",
-      "Day 6 — Add Stripe, ship paid plan",
-      "Day 7 — Convert first paying customer 🚀",
+    seven_day_plan: buildDefaultPlan(),
+  };
+}
+
+/**
+ * Fallback 30-day plan used when Claude returns fewer entries than
+ * requested, or when there's no API key. Each entry is generic enough
+ * to feel like a real plan; the real magic comes from the per-day
+ * breakdown that pulls in actual idea context.
+ */
+function buildDefaultPlan(): string[] {
+  return [
+    "Day 1 — Set up landing page with email capture",
+    "Day 2 — Talk to 5 potential users about their problem",
+    "Day 3 — Tighten landing copy based on Day 2 feedback",
+    "Day 4 — Scaffold the MVP shell in Lovable or Cursor",
+    "Day 5 — Build the core user-facing flow end-to-end",
+    "Day 6 — Wire the AI / backend logic to the UI",
+    "Day 7 — Get it on a real domain via Vercel",
+    "Day 8 — Add basic auth (Clerk magic-link)",
+    "Day 9 — Onboard 5 testers, take notes on every snag",
+    "Day 10 — Fix the top 3 issues testers hit",
+    "Day 11 — Add Stripe Checkout for the paid plan",
+    "Day 12 — Write confirmation + drip emails via Resend",
+    "Day 13 — Smoke-test the full paid flow end-to-end",
+    "Day 14 — Convert your first paying customer 🚀",
+    "Day 15 — Write a launch post and 5 cold-DM scripts",
+    "Day 16 — Post in 2 niche subreddits with real value first",
+    "Day 17 — DM 10 founders in your target audience on X",
+    "Day 18 — Submit to ProductHunt and IndieHackers",
+    "Day 19 — Write your first piece of content (long-form post)",
+    "Day 20 — Ship 1 quality-of-life feature paying users asked for",
+    "Day 21 — Set up basic analytics (Posthog free tier)",
+    "Day 22 — Audit the signup → paid funnel for drop-off",
+    "Day 23 — Run a pricing experiment (annual plan or higher tier)",
+    "Day 24 — Add the next paid-only feature",
+    "Day 25 — Re-engage day-1 churned trial users via email",
+    "Day 26 — Ship 1 retention feature (e.g. weekly digest)",
+    "Day 27 — Write a 'how I built this' post for distribution",
+    "Day 28 — Reach out to 5 podcasts in your niche",
+    "Day 29 — Decide pricing for the next 30 days based on real usage",
+    "Day 30 — Plan the next 30 days from data, not vibes",
+  ];
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Daily breakdown generator — per-day sub-tasks + AI tool hints             */
+/* -------------------------------------------------------------------------- */
+
+export type DailyBreakdownStep = {
+  action: string;
+  tool?: string;
+};
+
+export type DailyBreakdown = {
+  day_number: number;
+  day_title: string;
+  summary: string;
+  outcome: string;
+  substeps: DailyBreakdownStep[];
+  stuck_hint: string;
+};
+
+const DAILY_BREAKDOWN_SYSTEM_PROMPT = `You turn ONE day of a 30-day launch arc into a detailed, executable breakdown for a first-time founder.
+
+Hard rules:
+- Output ONLY a single JSON object. No prose. No markdown fences.
+- Be specific. Name real tools/services. Reference real numbers when relevant.
+- 5-8 substeps, each ONE concrete action sentence the user can actually do today.
+- Suggest AI tools where they're the right tool — Claude (writing/coding help), Cursor (in-editor pair), Lovable (full-stack scaffolding), v0.dev (UI components), Resend (email), Stripe (billing), Vercel (deploys), Posthog (analytics). Set "tool" to the tool name only when it's genuinely helpful for that substep. Leave undefined otherwise.
+- "stuck_hint" gives a concrete escape hatch if today's task hits a wall — "paste the error into Claude with this template: ...", "ask in r/SaaS with this question: ...", etc.
+- Reference what came before (yesterday) and what comes next (tomorrow) in the summary so today feels like part of an arc, not an isolated chore.
+- Never generic. If you can't make a substep specific, drop it.
+
+Schema (every field REQUIRED, every string non-empty):
+{
+  "summary": string,        // 2 sentences. What this day is about, in the context of the 30-day arc.
+  "outcome": string,        // 1 sentence: "By end of day, you should have X."
+  "substeps": [
+    { "action": string, "tool"?: string }   // 5-8 items
+  ],
+  "stuck_hint": string      // 1-2 sentences. A concrete escape hatch when stuck.
+}`;
+
+export async function generateDailyBreakdownFor(
+  idea: GeneratedIdea,
+  blueprint: Blueprint,
+  dayNumber: number,
+): Promise<DailyBreakdown> {
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  const plan = blueprint.seven_day_plan;
+  const idx = Math.max(0, Math.min(plan.length - 1, dayNumber - 1));
+  const dayTitle = stripDayPrefix(plan[idx] ?? `Day ${dayNumber}`);
+  const yesterday = idx > 0 ? stripDayPrefix(plan[idx - 1]) : null;
+  const tomorrow = idx < plan.length - 1 ? stripDayPrefix(plan[idx + 1]) : null;
+
+  if (!apiKey) {
+    console.warn("[daily-breakdown] no ANTHROPIC_API_KEY, using mock");
+    return mockDailyBreakdown(dayNumber, dayTitle, idea);
+  }
+  try {
+    return await generateDailyBreakdownWithClaude(
+      idea,
+      blueprint,
+      dayNumber,
+      dayTitle,
+      yesterday,
+      tomorrow,
+      apiKey,
+    );
+  } catch (err) {
+    console.error("[daily-breakdown] Claude call failed:", err);
+    return mockDailyBreakdown(dayNumber, dayTitle, idea);
+  }
+}
+
+function stripDayPrefix(line: string): string {
+  return line.replace(/^Day\s+\d+\s*[—\-:]\s*/, "").trim();
+}
+
+async function generateDailyBreakdownWithClaude(
+  idea: GeneratedIdea,
+  blueprint: Blueprint,
+  dayNumber: number,
+  dayTitle: string,
+  yesterday: string | null,
+  tomorrow: string | null,
+  apiKey: string,
+): Promise<DailyBreakdown> {
+  const userMessage = `Idea: ${idea.name} — ${idea.concept}
+Audience: ${idea.audience}
+Stack hints from the Blueprint: ${blueprint.pillars.tools_youll_use}
+What they're building: ${blueprint.pillars.what_youre_building}
+
+Today is Day ${dayNumber} of 30. Today's headline task:
+${dayTitle}
+
+Yesterday (Day ${dayNumber - 1}): ${yesterday ?? "(this is Day 1)"}
+Tomorrow (Day ${dayNumber + 1}): ${tomorrow ?? "(no tomorrow — this is Day 30)"}
+
+Write today's executable breakdown as JSON only.`;
+
+  const response = await fetch(CLAUDE_ENDPOINT, {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      "x-api-key": apiKey,
+      "anthropic-version": "2023-06-01",
+    },
+    body: JSON.stringify({
+      model: CLAUDE_MODEL,
+      max_tokens: 1024,
+      system: [
+        {
+          type: "text",
+          text: DAILY_BREAKDOWN_SYSTEM_PROMPT,
+          cache_control: { type: "ephemeral" },
+        },
+      ],
+      messages: [{ role: "user", content: userMessage }],
+    }),
+  });
+  if (!response.ok) {
+    throw new Error(`Anthropic API ${response.status}: ${await response.text()}`);
+  }
+  const json = (await response.json()) as {
+    content?: Array<{ type: string; text?: string }>;
+  };
+  const text = (json.content ?? []).map((c) => c.text ?? "").join("");
+
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(text);
+  } catch {
+    const match = text.match(/\{[\s\S]*\}/);
+    if (!match) throw new Error("No JSON in daily-breakdown response");
+    parsed = JSON.parse(match[0]);
+  }
+  if (!parsed || typeof parsed !== "object") {
+    throw new Error("Daily-breakdown output not a JSON object");
+  }
+  const o = parsed as Record<string, unknown>;
+  const stepsRaw = Array.isArray(o.substeps) ? o.substeps : [];
+  const substeps: DailyBreakdownStep[] = [];
+  for (const item of stepsRaw) {
+    if (!item || typeof item !== "object") continue;
+    const r = item as Record<string, unknown>;
+    const action = typeof r.action === "string" ? r.action.trim() : "";
+    if (!action) continue;
+    const tool = typeof r.tool === "string" && r.tool.trim() ? r.tool.trim() : undefined;
+    substeps.push({ action: trim(action, 200), tool });
+  }
+  if (substeps.length === 0) {
+    return mockDailyBreakdown(dayNumber, dayTitle, idea);
+  }
+
+  const summary =
+    typeof o.summary === "string" && o.summary.trim()
+      ? trim(o.summary.trim(), 360)
+      : `Day ${dayNumber} of the 30-day arc for ${idea.name}: ${dayTitle.toLowerCase()}.`;
+  const outcome =
+    typeof o.outcome === "string" && o.outcome.trim()
+      ? trim(o.outcome.trim(), 240)
+      : `By end of day, the work for "${dayTitle}" should be done and visible.`;
+  const stuckHint =
+    typeof o.stuck_hint === "string" && o.stuck_hint.trim()
+      ? trim(o.stuck_hint.trim(), 280)
+      : "Paste the exact error or sticking point into Claude with the day's context — it's faster than Googling for an hour.";
+
+  return {
+    day_number: dayNumber,
+    day_title: dayTitle,
+    summary,
+    outcome,
+    substeps,
+    stuck_hint: stuckHint,
+  };
+}
+
+function mockDailyBreakdown(
+  dayNumber: number,
+  dayTitle: string,
+  idea: GeneratedIdea,
+): DailyBreakdown {
+  return {
+    day_number: dayNumber,
+    day_title: dayTitle,
+    summary: `(No API key — placeholder breakdown.) Day ${dayNumber} for ${idea.name}: ${dayTitle.toLowerCase()}.`,
+    outcome: `By end of day, the work for "${dayTitle}" should be done.`,
+    substeps: [
+      { action: "Re-read the Blueprint section for this day for context." },
+      { action: `Break "${dayTitle}" into 3 sub-tasks you can finish before bed.` },
+      { action: "Pick the first sub-task and start a 25-minute timer." },
+      { action: "Ship something visible — a deploy, an email sent, a screenshot.", tool: "Vercel" },
     ],
+    stuck_hint:
+      "Paste exactly what you're trying to do plus the error into Claude. It's faster than Googling.",
   };
 }
 

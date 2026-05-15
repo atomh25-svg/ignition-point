@@ -4,8 +4,10 @@ import { auth } from "@clerk/tanstack-react-start/server";
 import { env } from "cloudflare:workers";
 import {
   generateBlueprintFor,
+  generateDailyBreakdownFor,
   generateIdeasFor,
   type Blueprint,
+  type DailyBreakdown,
   type GeneratedIdea,
   type SurveyAnswers,
 } from "./ideas-generator";
@@ -450,5 +452,120 @@ export const generateBlueprint = createServerFn({ method: "POST" })
       .bind(userId, idea.id, JSON.stringify(blueprint))
       .run();
 
+    // Invalidate any cached daily breakdowns — they refer to the
+    // previous version of the plan.
+    await db
+      .prepare(`DELETE FROM daily_breakdowns WHERE clerk_user_id = ? AND idea_id = ?`)
+      .bind(userId, idea.id)
+      .run();
+
     return { ok: true as const, blueprint };
   });
+
+/**
+ * Per-day breakdown for the dashboard. Returns the cached payload if
+ * we've already generated it for this (user, idea, day); otherwise
+ * calls Claude, stores the result, and returns it.
+ */
+export const getDailyBreakdown = createServerFn({ method: "POST" })
+  .inputValidator((data: { ideaId: string; dayNumber: number }) => {
+    if (!data || typeof data.ideaId !== "string" || !data.ideaId) {
+      throw new Error("ideaId required");
+    }
+    if (
+      typeof data.dayNumber !== "number" ||
+      !Number.isFinite(data.dayNumber) ||
+      data.dayNumber < 1 ||
+      data.dayNumber > 60
+    ) {
+      throw new Error("dayNumber must be 1-60");
+    }
+    return data;
+  })
+  .handler(
+    async ({
+      data,
+    }): Promise<
+      | { ok: true; breakdown: DailyBreakdown }
+      | { ok: false; reason: string }
+    > => {
+      const { userId } = await auth();
+      if (!userId) return { ok: false, reason: "unauthenticated" };
+      const db = (env as unknown as Env).DB;
+      if (!db) return { ok: false, reason: "no-db" };
+
+      // 1. Cache hit?
+      const cached = await db
+        .prepare(
+          `SELECT payload_json FROM daily_breakdowns
+             WHERE clerk_user_id = ? AND idea_id = ? AND day_number = ?`,
+        )
+        .bind(userId, data.ideaId, data.dayNumber)
+        .first<{ payload_json: string }>();
+      if (cached) {
+        try {
+          return { ok: true, breakdown: JSON.parse(cached.payload_json) };
+        } catch {
+          /* fall through to regenerate */
+        }
+      }
+
+      // 2. Need idea + blueprint to generate.
+      const idea = await db
+        .prepare(
+          `SELECT id, name, concept, audience, fit, difficulty, speed, first_step
+             FROM generated_ideas WHERE id = ? AND clerk_user_id = ?`,
+        )
+        .bind(data.ideaId, userId)
+        .first<{
+          id: string;
+          name: string;
+          concept: string;
+          audience: string;
+          fit: number;
+          difficulty: string;
+          speed: string;
+          first_step: string;
+        }>();
+      if (!idea) return { ok: false, reason: "not-your-idea" };
+
+      const bpRow = await db
+        .prepare(
+          `SELECT payload_json FROM blueprints
+             WHERE clerk_user_id = ? AND idea_id = ?`,
+        )
+        .bind(userId, data.ideaId)
+        .first<{ payload_json: string }>();
+      if (!bpRow) return { ok: false, reason: "no-blueprint" };
+
+      const blueprint = JSON.parse(bpRow.payload_json) as Blueprint;
+
+      const breakdown = await generateDailyBreakdownFor(
+        {
+          name: idea.name,
+          concept: idea.concept,
+          audience: idea.audience,
+          fit: idea.fit,
+          difficulty: idea.difficulty as GeneratedIdea["difficulty"],
+          speed: idea.speed,
+          first_step: idea.first_step,
+        },
+        blueprint,
+        data.dayNumber,
+      );
+
+      await db
+        .prepare(
+          `INSERT INTO daily_breakdowns
+             (clerk_user_id, idea_id, day_number, payload_json, generated_at)
+           VALUES (?, ?, ?, ?, unixepoch())
+           ON CONFLICT(clerk_user_id, idea_id, day_number) DO UPDATE SET
+             payload_json = excluded.payload_json,
+             generated_at = unixepoch()`,
+        )
+        .bind(userId, data.ideaId, data.dayNumber, JSON.stringify(breakdown))
+        .run();
+
+      return { ok: true, breakdown };
+    },
+  );
