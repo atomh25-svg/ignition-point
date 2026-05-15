@@ -306,9 +306,10 @@ function Dashboard() {
 
   // Topical illustration for today's step via pollinations.ai (free,
   // no API key, deterministic seed = stable per (day, idea), and
-  // generated on first hit then cached on their CDN). We give it a
-  // consistent style suffix so every day's image fits the brand.
-  const heroPrompt = `${todaysStep} for ${productName}, isometric minimalist illustration, deep navy and gold palette, glowing accents, clean composition, no text`;
+  // generated on first hit then cached on their CDN). Anchored to a
+  // person-at-laptop scene with photoreal styling so the result reads
+  // as a real candid photo, not a chrome-y AI illustration.
+  const heroPrompt = `An indie founder at a laptop in a cozy modern home office, working on ${todaysStep.toLowerCase()}, candid cinematic photograph, soft warm window light, shallow depth of field, 35mm film, photorealistic, no text, no logos, no UI screens`;
   const heroSeed = (selectedIdeaId ?? "x")
     .split("")
     .reduce((acc, ch) => acc + ch.charCodeAt(0), 0) + today;
