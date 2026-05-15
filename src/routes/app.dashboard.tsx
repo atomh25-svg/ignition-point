@@ -566,12 +566,14 @@ function Dashboard() {
               const dayNum = i + 1;
               const isPast = dayNum < today;
               const isToday = dayNum === today;
-              // Collapsed view: show a 7-day window centered on today
-              // (today plus 3 before and 3 after). Wide enough to give
-              // context, narrow enough that the 30-day list doesn't
-              // drown the column.
-              const nearby = Math.abs(dayNum - today) <= 3;
-              if (!planExpanded && !nearby) return null;
+              // Collapsed view: a 7-day window that ALWAYS shows 7
+              // days, centered on today when possible but clamped at
+              // the edges of the plan so Day 1 still shows 7 forward
+              // and Day 30 still shows 7 backward.
+              const winStart = Math.max(1, Math.min(today - 3, total - 6));
+              const winEnd = winStart + 6;
+              const inWindow = dayNum >= winStart && dayNum <= winEnd;
+              if (!planExpanded && !inWindow) return null;
               return (
                 <li key={i} className="flex items-start gap-3">
                   <span

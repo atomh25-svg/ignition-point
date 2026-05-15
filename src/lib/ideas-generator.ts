@@ -543,13 +543,12 @@ export type DailyBreakdown = {
   stuck_hint: string;
 };
 
-const DAILY_BREAKDOWN_SYSTEM_PROMPT = `You turn ONE day of a 30-day launch arc into a detailed, executable breakdown for a first-time founder.
+const DAILY_BREAKDOWN_SYSTEM_PROMPT = `You turn ONE day of a 30-day launch arc into an executable breakdown for a first-time founder.
 
 Hard rules:
 - Output ONLY a single JSON object. No prose. No markdown fences.
-- Be specific. Name real tools/services. Reference real numbers when relevant.
-- 5-8 substeps, each ONE concrete action sentence the user can actually do today.
-- Suggest AI tools where they're the right tool — Claude (writing/coding help), Cursor (in-editor pair), Lovable (full-stack scaffolding), v0.dev (UI components), Resend (email), Stripe (billing), Vercel (deploys), Posthog (analytics). Set "tool" to the tool name only when it's genuinely helpful for that substep. Leave undefined otherwise.
+- 5-8 substeps. Each "action" is a SHORT HEADLINE: imperative, 6-12 words, under 80 characters. Examples: "Scaffold the landing page in Lovable", "Wire the email form to Google Sheets", "Buy a $12/yr .dev domain on Namecheap". Do NOT pack details, prompts, file paths, or example JSON into the action — those belong in the per-substep deep-dive, not here. Just the headline of what gets done.
+- Suggest AI tools where they're the right tool — Claude (writing/coding help), Cursor (in-editor pair), Lovable (full-stack scaffolding), v0.dev (UI components), Resend (email), Stripe (billing), Vercel (deploys), Posthog (analytics). Set "tool" to the tool name only when it's genuinely the right tool for that substep. Leave undefined otherwise.
 - "stuck_hint" gives a concrete escape hatch if today's task hits a wall — "paste the error into Claude with this template: ...", "ask in r/SaaS with this question: ...", etc.
 - Reference what came before (yesterday) and what comes next (tomorrow) in the summary so today feels like part of an arc, not an isolated chore.
 - Never generic. If you can't make a substep specific, drop it.
@@ -559,7 +558,7 @@ Schema (every field REQUIRED, every string non-empty):
   "summary": string,        // 2 sentences. What this day is about, in the context of the 30-day arc.
   "outcome": string,        // 1 sentence: "By end of day, you should have X."
   "substeps": [
-    { "action": string, "tool"?: string }   // 5-8 items
+    { "action": string, "tool"?: string }   // 5-8 items. Headlines only — 6-12 words, under 80 chars.
   ],
   "stuck_hint": string      // 1-2 sentences. A concrete escape hatch when stuck.
 }`;
@@ -678,7 +677,7 @@ Write today's executable breakdown as JSON only.`;
     const action = typeof r.action === "string" ? r.action.trim() : "";
     if (!action) continue;
     const tool = typeof r.tool === "string" && r.tool.trim() ? r.tool.trim() : undefined;
-    substeps.push({ action: trim(action, 200), tool });
+    substeps.push({ action: trim(action, 90), tool });
   }
   if (substeps.length === 0) {
     return mockDailyBreakdown(dayNumber, dayTitle, idea);
