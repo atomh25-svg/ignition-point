@@ -707,6 +707,174 @@ Write today's executable breakdown as JSON only.`;
   };
 }
 
+/* -------------------------------------------------------------------------- */
+/*  Substep deep-dive — 3-4 micro-steps that zoom into ONE substep            */
+/* -------------------------------------------------------------------------- */
+
+export type SubstepMicroStep = {
+  action: string;
+  tool?: string;
+};
+
+export type SubstepDive = {
+  day_number: number;
+  substep_index: number;
+  micro_steps: SubstepMicroStep[];
+};
+
+export type GeneratedSubstepDive = SubstepDive & { isMock: boolean };
+
+const SUBSTEP_DIVE_SYSTEM_PROMPT = `You're zooming into ONE substep of a 30-day launch arc and breaking it into ultra-granular micro-steps a first-time founder can execute one-by-one.
+
+Hard rules:
+- Output ONLY a JSON object. No prose. No fences.
+- Return EXACTLY 3-4 micro-steps.
+- Each micro-step is ONE sentence covering ~5-15 minutes of work the user can actually do at their keyboard.
+- Be specific. Reference exact button labels, file paths, copy-pasteable prompts, real URLs, real numbers.
+- Suggest a tool when one is clearly the right one (Claude, Cursor, Lovable, v0.dev, Vercel, Stripe, Resend, Posthog, GitHub, etc). Omit the "tool" field otherwise — don't force-fit.
+- Don't restate the substep. Don't summarize. Don't add general advice. Just the discrete actions to land it.
+
+Schema:
+{
+  "micro_steps": [
+    { "action": string, "tool"?: string }   // 3-4 items
+  ]
+}`;
+
+export async function generateSubstepDiveFor(
+  idea: GeneratedIdea,
+  blueprint: Blueprint,
+  dayNumber: number,
+  breakdown: DailyBreakdown,
+  substepIndex: number,
+): Promise<GeneratedSubstepDive> {
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  const substep = breakdown.substeps[substepIndex];
+  if (!substep) {
+    throw new Error(`substep ${substepIndex} out of range`);
+  }
+  if (!apiKey) {
+    console.warn("[substep-dive] no ANTHROPIC_API_KEY, using mock");
+    return {
+      ...mockSubstepDive(dayNumber, substepIndex, substep),
+      isMock: true,
+    };
+  }
+  try {
+    const real = await generateSubstepDiveWithClaude(
+      idea,
+      blueprint,
+      dayNumber,
+      breakdown,
+      substepIndex,
+      apiKey,
+    );
+    return { ...real, isMock: false };
+  } catch (err) {
+    console.error("[substep-dive] Claude call failed:", err);
+    return {
+      ...mockSubstepDive(dayNumber, substepIndex, substep),
+      isMock: true,
+    };
+  }
+}
+
+async function generateSubstepDiveWithClaude(
+  idea: GeneratedIdea,
+  blueprint: Blueprint,
+  dayNumber: number,
+  breakdown: DailyBreakdown,
+  substepIndex: number,
+  apiKey: string,
+): Promise<SubstepDive> {
+  const substep = breakdown.substeps[substepIndex];
+  const userMessage = `Idea: ${idea.name} — ${idea.concept}
+Audience: ${idea.audience}
+Tools they're using: ${blueprint.pillars.tools_youll_use}
+
+Day ${dayNumber} headline: ${breakdown.day_title}
+Today's outcome: ${breakdown.outcome}
+
+The substep to zoom into:
+"${substep.action}"
+${substep.tool ? `Tool hint for this substep: ${substep.tool}` : ""}
+
+Return ONLY the JSON object with 3-4 micro-steps that land this substep.`;
+
+  const response = await fetch(CLAUDE_ENDPOINT, {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      "x-api-key": apiKey,
+      "anthropic-version": "2023-06-01",
+    },
+    body: JSON.stringify({
+      model: CLAUDE_MODEL,
+      max_tokens: 512,
+      system: [
+        {
+          type: "text",
+          text: SUBSTEP_DIVE_SYSTEM_PROMPT,
+          cache_control: { type: "ephemeral" },
+        },
+      ],
+      messages: [{ role: "user", content: userMessage }],
+    }),
+  });
+  if (!response.ok) {
+    throw new Error(`Anthropic API ${response.status}: ${await response.text()}`);
+  }
+  const json = (await response.json()) as {
+    content?: Array<{ type: string; text?: string }>;
+  };
+  const text = (json.content ?? []).map((c) => c.text ?? "").join("");
+
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(text);
+  } catch {
+    const match = text.match(/\{[\s\S]*\}/);
+    if (!match) throw new Error("No JSON in substep-dive response");
+    parsed = JSON.parse(match[0]);
+  }
+  if (!parsed || typeof parsed !== "object") {
+    throw new Error("Substep-dive output not a JSON object");
+  }
+  const o = parsed as Record<string, unknown>;
+  const rawSteps = Array.isArray(o.micro_steps) ? o.micro_steps : [];
+  const micro_steps: SubstepMicroStep[] = [];
+  for (const item of rawSteps) {
+    if (!item || typeof item !== "object") continue;
+    const r = item as Record<string, unknown>;
+    const action = typeof r.action === "string" ? r.action.trim() : "";
+    if (!action) continue;
+    const tool =
+      typeof r.tool === "string" && r.tool.trim() ? r.tool.trim() : undefined;
+    micro_steps.push({ action: trim(action, 240), tool });
+  }
+  if (micro_steps.length === 0) {
+    return mockSubstepDive(dayNumber, substepIndex, breakdown.substeps[substepIndex]);
+  }
+  return { day_number: dayNumber, substep_index: substepIndex, micro_steps };
+}
+
+function mockSubstepDive(
+  dayNumber: number,
+  substepIndex: number,
+  substep: DailyBreakdownStep,
+): SubstepDive {
+  return {
+    day_number: dayNumber,
+    substep_index: substepIndex,
+    micro_steps: [
+      { action: `Read the full substep again: "${substep.action}"` },
+      { action: "Open the tool you need and have it ready before starting." },
+      { action: "Set a 15-minute timer and start the first action you see." },
+      { action: "Take a screenshot of the result before moving on.", tool: "Notion" },
+    ],
+  };
+}
+
 function mockDailyBreakdown(
   dayNumber: number,
   dayTitle: string,

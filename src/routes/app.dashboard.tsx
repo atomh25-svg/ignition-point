@@ -14,8 +14,16 @@ import {
   X,
 } from "lucide-react";
 import { GeneratingScreen } from "@/components/launchfly/GeneratingScreen";
-import { getBlueprint, getDailyBreakdown } from "@/lib/require-subscription";
-import type { Blueprint, DailyBreakdown } from "@/lib/ideas-generator";
+import {
+  getBlueprint,
+  getDailyBreakdown,
+  getSubstepDive,
+} from "@/lib/require-subscription";
+import type {
+  Blueprint,
+  DailyBreakdown,
+  SubstepDive,
+} from "@/lib/ideas-generator";
 
 export const Route = createFileRoute("/app/dashboard")({
   head: () => ({ meta: [{ title: "Dashboard — LaunchFly.io" }] }),
@@ -137,6 +145,11 @@ function Dashboard() {
   const [error, setError] = useState<string | null>(null);
   // UI: tap a substep to open a modal with deeper context.
   const [activeStep, setActiveStep] = useState<number | null>(null);
+  // Per-substep deep-dive (3-4 micro-steps), lazy-loaded when the
+  // modal opens. Keyed by substep index so we don't re-fetch when
+  // the user paginates back to a step they already viewed.
+  const [dives, setDives] = useState<Record<number, SubstepDive>>({});
+  const [diveLoadingIdx, setDiveLoadingIdx] = useState<number | null>(null);
   // UI: keep the full 30-day plan collapsed by default — it's a lot.
   const [planExpanded, setPlanExpanded] = useState(false);
 
@@ -188,6 +201,7 @@ function Dashboard() {
     let cancelled = false;
     setBreakdownLoading(true);
     setBreakdown(null);
+    setDives({});
     (async () => {
       try {
         const result = await getDailyBreakdown({
@@ -207,6 +221,38 @@ function Dashboard() {
       cancelled = true;
     };
   }, [selectedIdeaId, blueprint, computedDayIndex]);
+
+  // Lazy-fetch the substep deep-dive when the user opens the modal.
+  // Re-used from cache on subsequent opens of the same step.
+  useEffect(() => {
+    if (activeStep === null) return;
+    if (!selectedIdeaId || !breakdown) return;
+    if (dives[activeStep]) return; // already loaded
+    let cancelled = false;
+    setDiveLoadingIdx(activeStep);
+    (async () => {
+      try {
+        const result = await getSubstepDive({
+          data: {
+            ideaId: selectedIdeaId,
+            dayNumber: computedDayIndex + 1,
+            substepIndex: activeStep,
+          },
+        });
+        if (cancelled) return;
+        if (result.ok) {
+          setDives((prev) => ({ ...prev, [activeStep]: result.dive }));
+        }
+      } catch (err) {
+        console.error("[dashboard] substep dive failed:", err);
+      } finally {
+        if (!cancelled) setDiveLoadingIdx(null);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [activeStep, selectedIdeaId, breakdown, computedDayIndex, dives]);
 
   if (loading) {
     return (
@@ -520,10 +566,11 @@ function Dashboard() {
               const dayNum = i + 1;
               const isPast = dayNum < today;
               const isToday = dayNum === today;
-              // Collapsed view: show only today and the one before/after
-              // it, so the user can place themselves but isn't drowning
-              // in 30 line items.
-              const nearby = Math.abs(dayNum - today) <= 1;
+              // Collapsed view: show a 7-day window centered on today
+              // (today plus 3 before and 3 after). Wide enough to give
+              // context, narrow enough that the 30-day list doesn't
+              // drown the column.
+              const nearby = Math.abs(dayNum - today) <= 3;
               if (!planExpanded && !nearby) return null;
               return (
                 <li key={i} className="flex items-start gap-3">
@@ -631,32 +678,40 @@ function Dashboard() {
               </div>
             )}
 
-            <div className="mt-6 pt-6 border-t border-border/50 space-y-4">
-              <div>
-                <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground mb-1.5">
-                  Today's goal
-                </p>
-                <p className="text-sm text-foreground/90 leading-relaxed">
-                  {breakdown.outcome}
-                </p>
-              </div>
-              <div>
-                <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground mb-1.5">
-                  Where this fits
-                </p>
-                <p className="text-sm text-foreground/90 leading-relaxed">
-                  {breakdown.summary}
-                </p>
-              </div>
-              <div className="rounded-xl border border-border/50 bg-card/40 p-4 flex items-start gap-3">
-                <Lightbulb className="w-4 h-4 text-amber-glow shrink-0 mt-0.5" />
-                <div className="text-sm">
-                  <span className="font-semibold text-amber-glow">
-                    If you get stuck:{" "}
-                  </span>
-                  <span className="text-foreground/90">{breakdown.stuck_hint}</span>
+            <div className="mt-6 pt-6 border-t border-border/50">
+              <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground mb-3">
+                How to do it
+              </p>
+              {dives[activeStep] ? (
+                <ol className="space-y-2.5">
+                  {dives[activeStep].micro_steps.map((m, i) => (
+                    <li
+                      key={i}
+                      className="flex items-start gap-3 rounded-xl border border-border/50 bg-secondary/15 p-3.5"
+                    >
+                      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-amber-glow/40 bg-amber-glow/10 text-[11px] font-semibold text-amber-glow">
+                        {i + 1}
+                      </span>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm leading-snug text-foreground/95">
+                          {m.action}
+                        </p>
+                        {m.tool && (
+                          <div className="mt-1.5">
+                            <ToolChip name={m.tool} />
+                          </div>
+                        )}
+                      </div>
+                    </li>
+                  ))}
+                </ol>
+              ) : (
+                <div className="rounded-xl border border-border/50 bg-secondary/10 p-6 text-center text-sm text-muted-foreground">
+                  {diveLoadingIdx === activeStep
+                    ? "Generating step-by-step…"
+                    : "Couldn't load the breakdown — close and reopen to retry."}
                 </div>
-              </div>
+              )}
             </div>
 
             <div className="mt-6 flex justify-between gap-3 pt-4 border-t border-border/50">

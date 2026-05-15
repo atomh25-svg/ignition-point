@@ -6,9 +6,11 @@ import {
   generateBlueprintFor,
   generateDailyBreakdownFor,
   generateIdeasFor,
+  generateSubstepDiveFor,
   type Blueprint,
   type DailyBreakdown,
   type GeneratedIdea,
+  type SubstepDive,
   type SurveyAnswers,
 } from "./ideas-generator";
 
@@ -583,5 +585,147 @@ export const getDailyBreakdown = createServerFn({ method: "POST" })
       }
 
       return { ok: true, breakdown };
+    },
+  );
+
+/**
+ * Deep-dive for a single substep on a single day. Returns 3-4
+ * micro-steps that zoom into how to execute that one substep.
+ *
+ * Cached inside the parent breakdown's payload_json under
+ * `substep_dives: { [idx]: SubstepDive }` so we keep one row per day
+ * (no extra table).
+ */
+type BreakdownWithDives = DailyBreakdown & {
+  substep_dives?: Record<string, SubstepDive>;
+};
+
+export const getSubstepDive = createServerFn({ method: "POST" })
+  .inputValidator(
+    (data: { ideaId: string; dayNumber: number; substepIndex: number }) => {
+      if (!data || typeof data.ideaId !== "string" || !data.ideaId) {
+        throw new Error("ideaId required");
+      }
+      if (
+        typeof data.dayNumber !== "number" ||
+        data.dayNumber < 1 ||
+        data.dayNumber > 60
+      ) {
+        throw new Error("dayNumber must be 1-60");
+      }
+      if (
+        typeof data.substepIndex !== "number" ||
+        data.substepIndex < 0 ||
+        data.substepIndex > 30
+      ) {
+        throw new Error("substepIndex must be 0-30");
+      }
+      return data;
+    },
+  )
+  .handler(
+    async ({
+      data,
+    }): Promise<
+      | { ok: true; dive: SubstepDive }
+      | { ok: false; reason: string }
+    > => {
+      const { userId } = await auth();
+      if (!userId) return { ok: false, reason: "unauthenticated" };
+      const db = (env as unknown as Env).DB;
+      if (!db) return { ok: false, reason: "no-db" };
+
+      const row = await db
+        .prepare(
+          `SELECT payload_json FROM daily_breakdowns
+             WHERE clerk_user_id = ? AND idea_id = ? AND day_number = ?`,
+        )
+        .bind(userId, data.ideaId, data.dayNumber)
+        .first<{ payload_json: string }>();
+      if (!row) return { ok: false, reason: "no-breakdown" };
+
+      let breakdown: BreakdownWithDives;
+      try {
+        breakdown = JSON.parse(row.payload_json) as BreakdownWithDives;
+      } catch {
+        return { ok: false, reason: "corrupt-breakdown" };
+      }
+
+      // Cache hit?
+      const cached = breakdown.substep_dives?.[String(data.substepIndex)];
+      if (cached) {
+        return { ok: true, dive: cached };
+      }
+
+      // Need the idea to give Claude full context.
+      const idea = await db
+        .prepare(
+          `SELECT id, name, concept, audience, fit, difficulty, speed, first_step
+             FROM generated_ideas WHERE id = ? AND clerk_user_id = ?`,
+        )
+        .bind(data.ideaId, userId)
+        .first<{
+          id: string;
+          name: string;
+          concept: string;
+          audience: string;
+          fit: number;
+          difficulty: string;
+          speed: string;
+          first_step: string;
+        }>();
+      if (!idea) return { ok: false, reason: "not-your-idea" };
+
+      const bpRow = await db
+        .prepare(
+          `SELECT payload_json FROM blueprints
+             WHERE clerk_user_id = ? AND idea_id = ?`,
+        )
+        .bind(userId, data.ideaId)
+        .first<{ payload_json: string }>();
+      if (!bpRow) return { ok: false, reason: "no-blueprint" };
+      const blueprint = JSON.parse(bpRow.payload_json) as Blueprint;
+
+      const generated = await generateSubstepDiveFor(
+        {
+          name: idea.name,
+          concept: idea.concept,
+          audience: idea.audience,
+          fit: idea.fit,
+          difficulty: idea.difficulty as GeneratedIdea["difficulty"],
+          speed: idea.speed,
+          first_step: idea.first_step,
+        },
+        blueprint,
+        data.dayNumber,
+        breakdown,
+        data.substepIndex,
+      );
+      const { isMock, ...dive } = generated;
+
+      // Only persist real dives — never freeze a mock.
+      if (!isMock) {
+        const dives = { ...(breakdown.substep_dives ?? {}) };
+        dives[String(data.substepIndex)] = dive;
+        const updated: BreakdownWithDives = {
+          ...breakdown,
+          substep_dives: dives,
+        };
+        await db
+          .prepare(
+            `UPDATE daily_breakdowns
+                SET payload_json = ?
+              WHERE clerk_user_id = ? AND idea_id = ? AND day_number = ?`,
+          )
+          .bind(
+            JSON.stringify(updated),
+            userId,
+            data.ideaId,
+            data.dayNumber,
+          )
+          .run();
+      }
+
+      return { ok: true, dive };
     },
   );
