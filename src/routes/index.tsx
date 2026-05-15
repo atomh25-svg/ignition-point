@@ -109,7 +109,7 @@ function Banner() {
           </span>
         </div>
         <h2 className="mt-[29px] text-[1.2rem] font-semibold leading-tight text-foreground sm:text-[1.33rem] md:text-[1.63rem]">
-          <span className="text-gradient-gold">You are perfect.</span>
+          You are <span className="text-gradient-gold">perfect.</span>
         </h2>
       </div>
 
