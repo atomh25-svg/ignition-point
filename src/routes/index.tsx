@@ -113,14 +113,10 @@ function Banner() {
         </h2>
       </div>
 
-      {/* Banner bottom-row: "Welcome to the launch," + logo/wordmark.
-          Kept commented out so we can drop it back in unchanged if we
-          decide we want the framing again. */}
-      {/*
       <div className="absolute inset-x-0 bottom-[313px] z-10 mx-auto max-w-7xl px-6">
         <div className="flex items-end justify-between gap-4">
           <p className="text-[1rem] uppercase tracking-[0.25em] text-gold/90">
-            Welcome to the launch,
+            Start your own business?
           </p>
           <div className="flex items-center gap-2">
             <img
@@ -136,7 +132,6 @@ function Banner() {
           </div>
         </div>
       </div>
-      */}
     </section>
   );
 }
@@ -145,8 +140,8 @@ function Hero() {
   return (
     <section className="relative -mt-[307px] px-6">
       <div className="mx-auto max-w-5xl text-center">
-        <h1 className="mt-16 whitespace-nowrap text-[5rem] font-semibold leading-[1] tracking-tight sm:text-[8rem] md:text-[10.5rem]">
-          <span className="text-gradient-gold-fade">Start</span> Here.
+        <h1 className="mt-16 whitespace-nowrap text-[3rem] font-semibold leading-[1.05] tracking-tight sm:text-[4.5rem] md:text-[5.5rem]">
+          This is How to <span className="text-gradient-gold-fade">Start</span>
         </h1>
 
         <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground">
