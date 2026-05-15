@@ -306,10 +306,10 @@ function Dashboard() {
 
   // Topical illustration for today's step via pollinations.ai (free,
   // no API key, deterministic seed = stable per (day, idea), and
-  // generated on first hit then cached on their CDN). Anchored to a
-  // person-at-laptop scene with photoreal styling so the result reads
-  // as a real candid photo, not a chrome-y AI illustration.
-  const heroPrompt = `An indie founder at a laptop in a cozy modern home office, working on ${todaysStep.toLowerCase()}, candid cinematic photograph, soft warm window light, shallow depth of field, 35mm film, photorealistic, no text, no logos, no UI screens`;
+  // generated on first hit then cached on their CDN). Corporate
+  // Memphis style — flat geometric shapes, simplified human figures,
+  // tilted toward the brand's warm-amber palette.
+  const heroPrompt = `Corporate Memphis style flat vector illustration, a person working on a laptop, ${todaysStep.toLowerCase()}, geometric flat shapes, simplified character design with long limbs, warm amber and deep navy palette with cream accents, soft pastel highlights, no shading, no gradients, clean minimal composition, no text, no logos, no UI screens`;
   const heroSeed = (selectedIdeaId ?? "x")
     .split("")
     .reduce((acc, ch) => acc + ch.charCodeAt(0), 0) + today;
