@@ -140,8 +140,8 @@ function Hero() {
   return (
     <section className="relative -mt-[307px] px-6">
       <div className="mx-auto max-w-5xl text-center">
-        <h1 className="mt-16 whitespace-nowrap text-[2.97rem] font-semibold leading-[1.05] tracking-tight sm:text-[3.77rem] md:text-[4.57rem]">
-          <span className="text-gradient-gold">Start</span> with The First Move.
+        <h1 className="mt-16 whitespace-nowrap text-[4rem] font-semibold leading-[1.02] tracking-tight sm:text-[6rem] md:text-[8rem]">
+          <span className="text-gradient-gold">Start</span> Here.
         </h1>
 
         <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground">
