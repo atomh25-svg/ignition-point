@@ -515,8 +515,8 @@ function Dashboard() {
                         </div>
                       )}
                     </div>
-                    <span className="flex items-center gap-1 shrink-0 self-center text-[10px] uppercase tracking-[0.18em] text-muted-foreground group-hover:text-amber-glow transition">
-                      More info
+                    <span className="flex items-center gap-1 shrink-0 self-center text-xs font-medium text-muted-foreground group-hover:text-amber-glow transition">
+                      More Info
                       <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />
                     </span>
                   </button>
