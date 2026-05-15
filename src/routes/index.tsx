@@ -141,8 +141,7 @@ function Hero() {
     <section className="relative -mt-[307px] px-6">
       <div className="mx-auto max-w-5xl text-center">
         <h1 className="mt-16 whitespace-nowrap text-[3rem] font-semibold leading-[1.05] tracking-tight sm:text-[4.5rem] md:text-[5.5rem]">
-          <span className="text-gradient-gold">This</span> is How to{" "}
-          <span className="text-gradient-gold-fade">Start.</span>
+          <span className="text-gradient-gold">This</span> is How to Start.
         </h1>
 
         <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground">
@@ -184,7 +183,7 @@ function ProblemCard({ icon: Icon, title, body }: { icon: any; title: string; bo
 
 function Problem() {
   return (
-    <section className="px-6 py-28">
+    <section className="px-6 pt-16 pb-28">
       <div className="mx-auto max-w-6xl">
         <div className="mx-auto max-w-3xl text-center">
           <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
