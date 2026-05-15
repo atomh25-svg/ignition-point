@@ -8,7 +8,7 @@ import launchflyMark from "@/assets/launchfly-mark.png";
 import {
   Sparkles, Compass, Rocket, Code2, Users,
   Brain, Zap, CheckCircle2, ArrowRight, Calendar,
-  Lightbulb, Map as MapIcon, PlayCircle,
+  Lightbulb, Map as MapIcon, PlayCircle, ChevronDown,
 } from "lucide-react";
 
 export const Route = createFileRoute("/")({
@@ -72,7 +72,12 @@ function Nav() {
           </nav>
           <div className="flex items-center gap-3">
             <Show when="signed-in">
-              <UserButton afterSignOutUrl="/" />
+              {/* Chevron next to the avatar so the dropdown affordance
+                  is visible without hovering. */}
+              <div className="flex items-center gap-1 rounded-full border border-border/40 bg-card/40 pl-1 pr-2 py-1 hover:bg-card/60 transition">
+                <UserButton afterSignOutUrl="/" />
+                <ChevronDown className="h-3.5 w-3.5 text-muted-foreground pointer-events-none" />
+              </div>
             </Show>
             <Show when="signed-out">
               <Link

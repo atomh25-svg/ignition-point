@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ChevronDown } from "lucide-react";
 import { Show, SignInButton, UserButton } from "@clerk/tanstack-react-start";
 import launchflyMark from "@/assets/launchfly-mark.png";
 
@@ -35,7 +35,14 @@ export function Navbar() {
           </nav>
           <div className="flex items-center gap-3">
             <Show when="signed-in">
-              <UserButton afterSignOutUrl="/" />
+              {/* Wrap the UserButton with a chevron so the avatar reads
+                  as a "click for menu" affordance. The chevron is
+                  pointer-events-none so the UserButton itself still
+                  catches the click. */}
+              <div className="flex items-center gap-1 rounded-full border border-border/40 bg-card/40 pl-1 pr-2 py-1 hover:bg-card/60 transition">
+                <UserButton afterSignOutUrl="/" />
+                <ChevronDown className="h-3.5 w-3.5 text-muted-foreground pointer-events-none" />
+              </div>
             </Show>
             <Show when="signed-out">
               <Link
