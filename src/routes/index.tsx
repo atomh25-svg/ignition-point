@@ -105,7 +105,7 @@ function Banner() {
       <div className="absolute inset-x-0 top-[85px] z-10 mx-auto max-w-7xl px-6">
         <div className="text-center">
           <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-3 py-1 text-xs text-muted-foreground backdrop-blur">
-            <Sparkles className="h-3.5 w-3.5 text-gold" /> The launch OS for first-time builders
+            <Sparkles className="h-3.5 w-3.5 text-gold" /> How to Start your own Business
           </span>
         </div>
         <h2 className="mt-[29px] text-[1.2rem] font-semibold leading-tight text-foreground sm:text-[1.33rem] md:text-[1.63rem]">
