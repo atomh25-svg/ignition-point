@@ -598,7 +598,14 @@ export async function generateDailyBreakdownFor(
     );
     return { ...real, isMock: false };
   } catch (err) {
-    console.error("[daily-breakdown] Claude call failed:", err);
+    console.error(
+      "[daily-breakdown] Claude call failed for day",
+      dayNumber,
+      "title:",
+      dayTitle,
+      "error:",
+      err instanceof Error ? `${err.message}\n${err.stack}` : String(err),
+    );
     return { ...mockDailyBreakdown(dayNumber, dayTitle, idea), isMock: true };
   }
 }
@@ -638,7 +645,7 @@ Write today's executable breakdown as JSON only.`;
     },
     body: JSON.stringify({
       model: CLAUDE_MODEL,
-      max_tokens: 1024,
+      max_tokens: 2048,
       system: [
         {
           type: "text",
@@ -654,6 +661,7 @@ Write today's executable breakdown as JSON only.`;
   }
   const json = (await response.json()) as {
     content?: Array<{ type: string; text?: string }>;
+    stop_reason?: string;
   };
   const text = (json.content ?? []).map((c) => c.text ?? "").join("");
 
@@ -661,25 +669,63 @@ Write today's executable breakdown as JSON only.`;
   try {
     parsed = JSON.parse(text);
   } catch {
-    const match = text.match(/\{[\s\S]*\}/);
-    if (!match) throw new Error("No JSON in daily-breakdown response");
-    parsed = JSON.parse(match[0]);
+    // Strip ```json fences if present, then extract the outermost {...}.
+    const stripped = text
+      .replace(/^```(?:json)?\s*/, "")
+      .replace(/```\s*$/, "")
+      .trim();
+    try {
+      parsed = JSON.parse(stripped);
+    } catch {
+      const match = text.match(/\{[\s\S]*\}/);
+      if (!match) {
+        console.error(
+          "[daily-breakdown] no JSON in response; stop_reason:",
+          json.stop_reason,
+          "text:",
+          text.slice(0, 500),
+        );
+        throw new Error("No JSON in daily-breakdown response");
+      }
+      parsed = JSON.parse(match[0]);
+    }
   }
   if (!parsed || typeof parsed !== "object") {
     throw new Error("Daily-breakdown output not a JSON object");
   }
   const o = parsed as Record<string, unknown>;
-  const stepsRaw = Array.isArray(o.substeps) ? o.substeps : [];
+  // Accept "substeps" (the documented field) and a few common variants
+  // that Claude occasionally drifts to when prompts are dense.
+  const stepsRaw =
+    (Array.isArray(o.substeps) && o.substeps) ||
+    (Array.isArray(o.steps) && o.steps) ||
+    (Array.isArray(o.tasks) && o.tasks) ||
+    [];
   const substeps: DailyBreakdownStep[] = [];
   for (const item of stepsRaw) {
-    if (!item || typeof item !== "object") continue;
+    if (!item) continue;
+    if (typeof item === "string") {
+      substeps.push({ action: trim(item, 90) });
+      continue;
+    }
+    if (typeof item !== "object") continue;
     const r = item as Record<string, unknown>;
-    const action = typeof r.action === "string" ? r.action.trim() : "";
+    const rawAction =
+      (typeof r.action === "string" && r.action) ||
+      (typeof r.name === "string" && r.name) ||
+      (typeof r.task === "string" && r.task) ||
+      (typeof r.step === "string" && r.step) ||
+      "";
+    const action = rawAction.trim();
     if (!action) continue;
     const tool = typeof r.tool === "string" && r.tool.trim() ? r.tool.trim() : undefined;
     substeps.push({ action: trim(action, 90), tool });
   }
   if (substeps.length === 0) {
+    console.error(
+      "[daily-breakdown] parsed but no substeps extracted; raw text:",
+      text.slice(0, 500),
+    );
     return mockDailyBreakdown(dayNumber, dayTitle, idea);
   }
 
