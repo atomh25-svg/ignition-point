@@ -411,9 +411,10 @@ function Dashboard() {
 
             {/* Topical illustration. Pollinations generates on first
                 hit and caches by (prompt, seed) thereafter, so this
-                stays stable per day and per idea. */}
-            <div className="hidden md:block">
-              <div className="aspect-[4/3] rounded-2xl overflow-hidden border border-gold/20 bg-secondary/30 relative">
+                stays stable per day and per idea. ml-auto pushes the
+                smaller image flush to the right edge of the column. */}
+            <div className="hidden md:block w-full">
+              <div className="aspect-[4/3] w-[220px] ml-auto rounded-2xl overflow-hidden border border-gold/20 bg-secondary/30 relative">
                 <img
                   src={heroImageUrl}
                   alt=""
