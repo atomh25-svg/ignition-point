@@ -304,6 +304,18 @@ function Dashboard() {
     blueprint.seven_day_plan[Math.min(total - 1, dayIndex0 + 1)] ?? null;
   const productName = ideaName ?? blueprint.headline;
 
+  // Topical illustration for today's step via pollinations.ai (free,
+  // no API key, deterministic seed = stable per (day, idea), and
+  // generated on first hit then cached on their CDN). We give it a
+  // consistent style suffix so every day's image fits the brand.
+  const heroPrompt = `${todaysStep} for ${productName}, isometric minimalist illustration, deep navy and gold palette, glowing accents, clean composition, no text`;
+  const heroSeed = (selectedIdeaId ?? "x")
+    .split("")
+    .reduce((acc, ch) => acc + ch.charCodeAt(0), 0) + today;
+  const heroImageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(
+    heroPrompt,
+  )}?width=640&height=480&nologo=true&seed=${heroSeed}&model=flux`;
+
   return (
     <div className="p-8 max-w-7xl mx-auto w-full">
       {/* Top bar */}
@@ -328,68 +340,93 @@ function Dashboard() {
       </div>
 
       <div className="mt-6 grid lg:grid-cols-3 gap-5">
-        {/* Today's step card — title + Claude-generated summary + outcome */}
+        {/* Today's step card — title + Claude-generated summary +
+            outcome, paired with a topical illustration for the day. */}
         <Card className="lg:col-span-3 glass bg-gradient-card rounded-3xl p-8 relative overflow-hidden border-gold/30">
-          <div className="absolute -top-32 -right-16 w-80 h-80 rounded-full bg-gradient-gold blur-3xl opacity-30" />
-          <div className="relative">
-            <span className="text-xs uppercase tracking-[0.25em] text-amber-glow">
-              Today's step · Day {today} of {total}
-            </span>
-            <h2 className="mt-3 text-2xl md:text-3xl font-semibold leading-tight">
-              <span className="text-gradient-gold">{todaysStep}</span>
-            </h2>
-            {breakdown ? (
-              <>
-                <p className="mt-4 text-foreground/90 max-w-3xl leading-relaxed">
-                  {breakdown.summary}
+          <div className="absolute -top-32 -right-16 w-80 h-80 rounded-full bg-gradient-gold blur-3xl opacity-20 pointer-events-none" />
+          <div className="relative grid md:grid-cols-[1fr_280px] gap-6 items-start">
+            <div>
+              <span className="text-xs uppercase tracking-[0.25em] text-amber-glow">
+                Today's step · Day {today} of {total}
+              </span>
+              <h2 className="mt-3 text-2xl md:text-3xl font-semibold leading-tight">
+                <span className="text-gradient-gold">{todaysStep}</span>
+              </h2>
+              {breakdown ? (
+                <>
+                  <p className="mt-4 text-foreground/90 max-w-3xl leading-relaxed">
+                    {breakdown.summary}
+                  </p>
+                  <div className="mt-5 inline-flex items-start gap-3 rounded-xl border border-emerald-400/30 bg-emerald-500/5 px-4 py-3">
+                    <Target className="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" />
+                    <p className="text-sm text-foreground/90">
+                      <span className="font-semibold text-emerald-400">Goal: </span>
+                      {breakdown.outcome}
+                    </p>
+                  </div>
+                </>
+              ) : (
+                <p className="mt-4 text-muted-foreground max-w-xl text-sm">
+                  {breakdownLoading
+                    ? "Generating today's breakdown…"
+                    : `Today's move for ${productName}.`}
                 </p>
-                <div className="mt-5 inline-flex items-start gap-3 rounded-xl border border-emerald-400/30 bg-emerald-500/5 px-4 py-3">
-                  <Target className="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" />
-                  <p className="text-sm text-foreground/90">
-                    <span className="font-semibold text-emerald-400">Goal: </span>
-                    {breakdown.outcome}
-                  </p>
-                </div>
-              </>
-            ) : (
-              <p className="mt-4 text-muted-foreground max-w-xl text-sm">
-                {breakdownLoading
-                  ? "Generating today's breakdown…"
-                  : `Today's move for ${productName}.`}
-              </p>
-            )}
+              )}
 
-            {/* Inline stats — slimmed to just days complete + next */}
-            <div className="mt-7 pt-6 border-t border-border/50 grid grid-cols-1 sm:grid-cols-2 gap-6">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-emerald-500/15 border border-emerald-400/40 flex items-center justify-center shrink-0">
-                  <Check className="w-4 h-4 text-emerald-400" strokeWidth={3} />
+              {/* Inline stats — slimmed to just days complete + next */}
+              <div className="mt-7 pt-6 border-t border-border/50 grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-lg bg-emerald-500/15 border border-emerald-400/40 flex items-center justify-center shrink-0">
+                    <Check className="w-4 h-4 text-emerald-400" strokeWidth={3} />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-[10px] uppercase tracking-wider text-muted-foreground">
+                      Days complete
+                    </p>
+                    <p className="font-semibold text-xl mt-0.5">
+                      {completed}
+                      <span className="text-sm text-muted-foreground"> / {total}</span>
+                    </p>
+                  </div>
                 </div>
-                <div className="min-w-0">
-                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground">
-                    Days complete
-                  </p>
-                  <p className="font-semibold text-xl mt-0.5">
-                    {completed}
-                    <span className="text-sm text-muted-foreground"> / {total}</span>
-                  </p>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-lg bg-gold/15 border border-gold/40 flex items-center justify-center shrink-0">
+                    <TrendingUp className="w-4 h-4 text-gold" />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-[10px] uppercase tracking-wider text-muted-foreground">
+                      Tomorrow
+                    </p>
+                    <p
+                      className="font-semibold mt-0.5 leading-snug truncate"
+                      title={nextMilestone ?? ""}
+                    >
+                      {nextMilestone ? stripDayPrefix(nextMilestone) : "—"}
+                    </p>
+                  </div>
                 </div>
               </div>
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-gold/15 border border-gold/40 flex items-center justify-center shrink-0">
-                  <TrendingUp className="w-4 h-4 text-gold" />
-                </div>
-                <div className="min-w-0">
-                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground">
-                    Tomorrow
-                  </p>
-                  <p
-                    className="font-semibold mt-0.5 leading-snug truncate"
-                    title={nextMilestone ?? ""}
-                  >
-                    {nextMilestone ? stripDayPrefix(nextMilestone) : "—"}
-                  </p>
-                </div>
+            </div>
+
+            {/* Topical illustration. Pollinations generates on first
+                hit and caches by (prompt, seed) thereafter, so this
+                stays stable per day and per idea. */}
+            <div className="hidden md:block">
+              <div className="aspect-[4/3] rounded-2xl overflow-hidden border border-gold/20 bg-secondary/30 relative">
+                <img
+                  src={heroImageUrl}
+                  alt=""
+                  loading="lazy"
+                  className="absolute inset-0 w-full h-full object-cover transition-opacity duration-700"
+                  onLoad={(e) => {
+                    (e.currentTarget as HTMLImageElement).style.opacity = "1";
+                  }}
+                  onError={(e) => {
+                    (e.currentTarget as HTMLImageElement).style.display = "none";
+                  }}
+                  style={{ opacity: 0 }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-tr from-background/40 via-transparent to-transparent pointer-events-none" />
               </div>
             </div>
           </div>
