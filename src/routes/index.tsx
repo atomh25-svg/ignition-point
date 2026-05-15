@@ -113,9 +113,9 @@ function Banner() {
         </h2>
       </div>
 
-      <div className="absolute inset-x-0 bottom-[313px] z-10 mx-auto max-w-7xl px-6">
+      <div className="absolute inset-x-0 bottom-[304px] z-10 mx-auto max-w-7xl px-6">
         <div className="flex items-end justify-between gap-4">
-          <p className="text-[1rem] uppercase tracking-[0.25em] text-gold/90">
+          <p className="text-[1rem] uppercase tracking-[0.2em] text-gold/90">
             Start your own business?
           </p>
           <div className="flex items-center gap-2">
