@@ -414,7 +414,7 @@ function Dashboard() {
                 stays stable per day and per idea. ml-auto pushes the
                 smaller image flush to the right edge of the column. */}
             <div className="hidden md:block w-full">
-              <div className="aspect-[10/9] w-[260px] ml-auto rounded-2xl overflow-hidden border border-gold/20 bg-secondary/30 relative">
+              <div className="aspect-[10/9] w-[260px] ml-auto mt-6 rounded-2xl overflow-hidden border border-gold/20 bg-secondary/30 relative">
                 <img
                   src={heroImageUrl}
                   alt=""
