@@ -190,6 +190,20 @@
     background-clip: text;
     color: transparent;
   }
+  /* Gold for the leading glyphs ("St"), then bleeds into white through
+     the rest of the word. The first stop holds the gold tone steady
+     until ~40% of the text width before fading. */
+  .text-gradient-gold-fade {
+    background: linear-gradient(
+      90deg,
+      oklch(0.86 0.17 88) 0%,
+      oklch(0.84 0.16 86) 38%,
+      oklch(0.97 0.01 90) 95%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
   /* Subtle orange gradient — same hue as oklch(0.74 0.17 60), just a
      small lightness sweep so the word reads as one orange tone with
      a touch of depth. */
