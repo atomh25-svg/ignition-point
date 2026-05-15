@@ -345,7 +345,7 @@ function Dashboard() {
             outcome, paired with a topical illustration for the day. */}
         <Card className="lg:col-span-3 glass bg-gradient-card rounded-3xl p-8 relative overflow-hidden border-gold/30">
           <div className="absolute -top-32 -right-16 w-80 h-80 rounded-full bg-gradient-gold blur-3xl opacity-20 pointer-events-none" />
-          <div className="relative grid md:grid-cols-[1fr_280px] gap-6 items-start">
+          <div className="relative grid md:grid-cols-[1fr_280px] gap-6 items-center">
             <div>
               <span className="text-xs uppercase tracking-[0.25em] text-amber-glow">
                 Today's step · Day {today} of {total}
