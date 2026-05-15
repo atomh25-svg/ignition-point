@@ -564,11 +564,18 @@ Schema (every field REQUIRED, every string non-empty):
   "stuck_hint": string      // 1-2 sentences. A concrete escape hatch when stuck.
 }`;
 
+/**
+ * The result is tagged with `isMock` so the caller can decide whether
+ * to cache it. We never persist a mock — that would freeze a broken
+ * day forever once any transient env hiccup happens.
+ */
+export type GeneratedDailyBreakdown = DailyBreakdown & { isMock: boolean };
+
 export async function generateDailyBreakdownFor(
   idea: GeneratedIdea,
   blueprint: Blueprint,
   dayNumber: number,
-): Promise<DailyBreakdown> {
+): Promise<GeneratedDailyBreakdown> {
   const apiKey = process.env.ANTHROPIC_API_KEY;
   const plan = blueprint.seven_day_plan;
   const idx = Math.max(0, Math.min(plan.length - 1, dayNumber - 1));
@@ -578,10 +585,10 @@ export async function generateDailyBreakdownFor(
 
   if (!apiKey) {
     console.warn("[daily-breakdown] no ANTHROPIC_API_KEY, using mock");
-    return mockDailyBreakdown(dayNumber, dayTitle, idea);
+    return { ...mockDailyBreakdown(dayNumber, dayTitle, idea), isMock: true };
   }
   try {
-    return await generateDailyBreakdownWithClaude(
+    const real = await generateDailyBreakdownWithClaude(
       idea,
       blueprint,
       dayNumber,
@@ -590,9 +597,10 @@ export async function generateDailyBreakdownFor(
       tomorrow,
       apiKey,
     );
+    return { ...real, isMock: false };
   } catch (err) {
     console.error("[daily-breakdown] Claude call failed:", err);
-    return mockDailyBreakdown(dayNumber, dayTitle, idea);
+    return { ...mockDailyBreakdown(dayNumber, dayTitle, idea), isMock: true };
   }
 }
 
@@ -707,7 +715,7 @@ function mockDailyBreakdown(
   return {
     day_number: dayNumber,
     day_title: dayTitle,
-    summary: `(No API key — placeholder breakdown.) Day ${dayNumber} for ${idea.name}: ${dayTitle.toLowerCase()}.`,
+    summary: `Day ${dayNumber} of the 30-day arc for ${idea.name}: ${dayTitle.toLowerCase()}. (Reload in a few seconds — the detailed breakdown is still generating.)`,
     outcome: `By end of day, the work for "${dayTitle}" should be done.`,
     substeps: [
       { action: "Re-read the Blueprint section for this day for context." },

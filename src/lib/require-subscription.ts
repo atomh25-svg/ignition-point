@@ -540,7 +540,7 @@ export const getDailyBreakdown = createServerFn({ method: "POST" })
 
       const blueprint = JSON.parse(bpRow.payload_json) as Blueprint;
 
-      const breakdown = await generateDailyBreakdownFor(
+      const generated = await generateDailyBreakdownFor(
         {
           name: idea.name,
           concept: idea.concept,
@@ -554,17 +554,24 @@ export const getDailyBreakdown = createServerFn({ method: "POST" })
         data.dayNumber,
       );
 
-      await db
-        .prepare(
-          `INSERT INTO daily_breakdowns
-             (clerk_user_id, idea_id, day_number, payload_json, generated_at)
-           VALUES (?, ?, ?, ?, unixepoch())
-           ON CONFLICT(clerk_user_id, idea_id, day_number) DO UPDATE SET
-             payload_json = excluded.payload_json,
-             generated_at = unixepoch()`,
-        )
-        .bind(userId, data.ideaId, data.dayNumber, JSON.stringify(breakdown))
-        .run();
+      const { isMock, ...breakdown } = generated;
+
+      // Never persist a mock — if Claude was unreachable for one
+      // request we still want the next view to retry and store a
+      // real breakdown. Caching a mock once would freeze it forever.
+      if (!isMock) {
+        await db
+          .prepare(
+            `INSERT INTO daily_breakdowns
+               (clerk_user_id, idea_id, day_number, payload_json, generated_at)
+             VALUES (?, ?, ?, ?, unixepoch())
+             ON CONFLICT(clerk_user_id, idea_id, day_number) DO UPDATE SET
+               payload_json = excluded.payload_json,
+               generated_at = unixepoch()`,
+          )
+          .bind(userId, data.ideaId, data.dayNumber, JSON.stringify(breakdown))
+          .run();
+      }
 
       return { ok: true, breakdown };
     },
