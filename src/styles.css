@@ -199,8 +199,8 @@
     background: linear-gradient(
       90deg,
       oklch(0.86 0.17 88) 0%,
-      oklch(0.86 0.17 88) 38%,
-      oklch(0.96 0.02 88) 95%
+      oklch(0.86 0.17 88) 42%,
+      oklch(0.96 0.02 88) 70%
     );
     -webkit-background-clip: text;
     background-clip: text;
