@@ -1,3 +1,4 @@
+import type { SVGProps } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Show, SignInButton, UserButton } from "@clerk/tanstack-react-start";
 import { Button } from "@/components/ui/button";
@@ -8,8 +9,17 @@ import launchflyMark from "@/assets/launchfly-mark.png";
 import {
   Sparkles, Compass, Rocket, Code2, Users,
   Brain, Zap, CheckCircle2, ArrowRight, Calendar,
-  Lightbulb, Map as MapIcon, PlayCircle, ChevronDown,
+  Lightbulb, Map as MapIcon, PlayCircle,
 } from "lucide-react";
+
+/** Small filled-triangle caret for dropdown affordances. */
+function CaretDown(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 8 5" fill="currentColor" {...props}>
+      <path d="M0 0h8L4 5z" />
+    </svg>
+  );
+}
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -74,9 +84,9 @@ function Nav() {
             <Show when="signed-in">
               {/* Chevron next to the avatar so the dropdown affordance
                   is visible without hovering. */}
-              <div className="flex items-center gap-1 rounded-full border border-border/40 bg-card/40 pl-1 pr-2 py-1 hover:bg-card/60 transition">
+              <div className="flex items-center gap-1.5 rounded-full border border-border/40 bg-card/40 pl-1 pr-2.5 py-1 hover:bg-card/60 transition">
                 <UserButton afterSignOutUrl="/" />
-                <ChevronDown className="h-3.5 w-3.5 text-muted-foreground pointer-events-none" />
+                <CaretDown className="h-2 w-2 text-muted-foreground pointer-events-none" />
               </div>
             </Show>
             <Show when="signed-out">

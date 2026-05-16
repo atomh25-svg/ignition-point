@@ -1,7 +1,17 @@
+import type { SVGProps } from "react";
 import { Link } from "@tanstack/react-router";
-import { ArrowRight, ChevronDown } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Show, SignInButton, UserButton } from "@clerk/tanstack-react-start";
 import launchflyMark from "@/assets/launchfly-mark.png";
+
+/** Small filled-triangle caret for dropdown affordances. */
+function CaretDown(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 8 5" fill="currentColor" {...props}>
+      <path d="M0 0h8L4 5z" />
+    </svg>
+  );
+}
 
 export function Navbar() {
   return (
@@ -39,9 +49,9 @@ export function Navbar() {
                   as a "click for menu" affordance. The chevron is
                   pointer-events-none so the UserButton itself still
                   catches the click. */}
-              <div className="flex items-center gap-1 rounded-full border border-border/40 bg-card/40 pl-1 pr-2 py-1 hover:bg-card/60 transition">
+              <div className="flex items-center gap-1.5 rounded-full border border-border/40 bg-card/40 pl-1 pr-2.5 py-1 hover:bg-card/60 transition">
                 <UserButton afterSignOutUrl="/" />
-                <ChevronDown className="h-3.5 w-3.5 text-muted-foreground pointer-events-none" />
+                <CaretDown className="h-2 w-2 text-muted-foreground pointer-events-none" />
               </div>
             </Show>
             <Show when="signed-out">
