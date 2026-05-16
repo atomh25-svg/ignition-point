@@ -190,15 +190,15 @@
     background-clip: text;
     color: transparent;
   }
-  /* Rich orange across the leading glyphs ("St"), then bleeds into
-     white through the rest of the word. Starts at a deeper amber tone
-     (lower lightness, higher chroma, hue pulled toward orange) before
-     warming up and dissolving. */
+  /* Gold across the leading glyphs, then bleeds into near-white.
+     First two stops mirror --gradient-gold (the tones used on "This"
+     in the hero headline) so the gold portion reads as the same brand
+     color; the third stop fades to off-white. */
   .text-gradient-gold-fade {
     background: linear-gradient(
       90deg,
-      oklch(0.72 0.18 56) 0%,
-      oklch(0.81 0.16 72) 32%,
+      oklch(0.86 0.17 88) 0%,
+      oklch(0.74 0.17 60) 45%,
       oklch(0.95 0.02 88) 95%
     );
     -webkit-background-clip: text;
