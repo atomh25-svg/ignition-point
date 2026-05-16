@@ -120,7 +120,7 @@ function Banner() {
           z-[5] puts it above the banner image but below the eyebrow
           and bottom row; pointer-events-none keeps it from intercepting
           clicks. */}
-      <div className="pointer-events-none absolute inset-x-0 top-1/2 z-[5] -translate-y-1/2 px-6 text-center">
+      <div className="pointer-events-none absolute inset-x-0 top-1/2 z-[5] -translate-y-[calc(50%+85px)] px-6 text-center">
         <h2 className="font-semibold tracking-tight leading-none text-[5rem] sm:text-[8rem] md:text-[11rem]">
           <span className="text-gradient-gold-fade">Launch</span>
           <span className="text-foreground/90">Fly</span>
@@ -166,7 +166,7 @@ function Banner() {
 
 function Hero() {
   return (
-    <section className="relative -mt-[307px] px-6">
+    <section className="relative -mt-[392px] px-6">
       <div className="mx-auto max-w-5xl text-center">
         <h1 className="mt-16 whitespace-nowrap text-[4rem] font-semibold leading-[1.02] tracking-tight sm:text-[6rem] md:text-[7.5rem]">
           <span className="text-gradient-gold">This</span> is How to Start.
