@@ -136,11 +136,18 @@ function Banner() {
             <Sparkles className="h-3.5 w-3.5 text-gold" /> How to start your own business
           </span>
         </div>
-        {/* Subhead + LaunchFly mark on the same horizontal line. */}
-        <div className="mt-[29px] flex items-end justify-between gap-4">
-          <h2 className="text-[1.2rem] font-semibold leading-tight text-foreground sm:text-[1.33rem] md:text-[1.63rem]">
-            Want to be a <span className="text-gradient-gold">founder?</span>
-          </h2>
+        {/* Subhead column on the left ("Want to be a founder?" with the
+            "Start your own business?" tagline tucked beneath it) and the
+            LaunchFly mark on the right, top-aligned. */}
+        <div className="mt-[29px] flex items-start justify-between gap-4">
+          <div>
+            <h2 className="text-[1.2rem] font-semibold leading-tight text-foreground sm:text-[1.33rem] md:text-[1.63rem]">
+              Want to be a <span className="text-gradient-gold">founder?</span>
+            </h2>
+            <p className="mt-3 text-[1rem] uppercase tracking-[0.2em] text-gold/90">
+              Start your own business?
+            </p>
+          </div>
           <div className="flex items-center gap-2">
             <img
               src={launchflyMark}
@@ -154,12 +161,6 @@ function Banner() {
             </span>
           </div>
         </div>
-      </div>
-
-      <div className="absolute inset-x-0 bottom-[304px] z-10 mx-auto max-w-7xl px-6 -translate-x-4">
-        <p className="text-[1rem] uppercase tracking-[0.2em] text-gold/90">
-          Start your own business?
-        </p>
       </div>
     </section>
   );
