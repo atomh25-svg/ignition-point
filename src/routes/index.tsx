@@ -157,7 +157,7 @@ function Hero() {
   return (
     <section className="relative -mt-[307px] px-6">
       <div className="mx-auto max-w-5xl text-center">
-        <h1 className="mt-16 whitespace-nowrap text-[3rem] font-semibold leading-[1.05] tracking-tight sm:text-[4.5rem] md:text-[5.5rem]">
+        <h1 className="mt-16 whitespace-nowrap text-[4rem] font-semibold leading-[1.02] tracking-tight sm:text-[6rem] md:text-[7.5rem]">
           <span className="text-gradient-gold">This</span> is How to Start.
         </h1>
 
