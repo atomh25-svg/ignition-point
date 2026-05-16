@@ -116,6 +116,17 @@ function Banner() {
       <div className="absolute inset-0 bg-banner-overlay" />
       <div className="pointer-events-none absolute inset-0 bg-warm-glow" />
 
+      {/* Giant "LaunchFly" wordmark centered behind the overlay text.
+          z-[5] puts it above the banner image but below the eyebrow
+          and bottom row; pointer-events-none keeps it from intercepting
+          clicks. */}
+      <div className="pointer-events-none absolute inset-x-0 top-1/2 z-[5] -translate-y-1/2 px-6 text-center">
+        <h2 className="font-semibold tracking-tight leading-none text-[5rem] sm:text-[8rem] md:text-[11rem]">
+          <span className="text-gradient-gold-fade">Launch</span>
+          <span className="text-foreground/90">Fly</span>
+        </h2>
+      </div>
+
       {/* Banner overlay content — slight leftward nudge so the eyebrow/
           subhead and the bottom logo row don't sit dead-center over the
           background subject. */}
