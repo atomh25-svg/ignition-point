@@ -190,14 +190,11 @@
     background-clip: text;
     color: transparent;
   }
-  /* Fraunces — display serif loaded from Google Fonts in __root.tsx.
-     Optical sizing is on by default; we crank to 144 (the maximum
-     opsz axis) for hero-scale headlines so the letterforms are
-     tuned for big display use. */
+  /* Finlandica — display sans loaded from Google Fonts in
+     __root.tsx. Variable weight 400–700; per-instance weight is
+     still controlled by Tailwind's font-* utilities. */
   .font-display {
-    font-family: "Fraunces", ui-serif, Georgia, serif;
-    font-optical-sizing: auto;
-    font-variation-settings: "opsz" 144;
+    font-family: "Finlandica", ui-sans-serif, system-ui, sans-serif;
   }
   /* Light brand gold across the leading glyphs, holding flat through
      the first ~38% of the word (covers "Lau" of "Launch" / "St" of

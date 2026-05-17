@@ -91,9 +91,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: appCss,
       },
-      // Fraunces — display serif for the hero headline + giant
-      // LaunchFly wordmark. Uses optical sizing so it looks right at
-      // both small and very large sizes.
+      // Finlandica — display sans for the hero headline + giant
+      // LaunchFly wordmark. Variable font with weights 400–700.
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       {
         rel: "preconnect",
@@ -102,7 +101,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700;9..144,800&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Finlandica:ital,wght@0,400..700;1,400..700&display=swap",
       },
     ],
   }),
