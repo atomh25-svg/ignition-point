@@ -4,7 +4,6 @@ import { Show, SignInButton, UserButton } from "@clerk/tanstack-react-start";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Footer } from "@/components/launchfly/Footer";
-import { landingContent as L } from "@/lib/landing-content";
 import bannerImg from "@/assets/banner-takeoff.png";
 import launchflyMark from "@/assets/launchfly-mark.png";
 import {
@@ -123,8 +122,8 @@ function Banner() {
           clicks. */}
       <div className="pointer-events-none absolute inset-x-0 top-1/2 z-[5] -translate-y-[calc(50%+66px)] px-6 text-center">
         <h2 className="font-display font-semibold tracking-tight leading-none text-[5rem] sm:text-[8rem] md:text-[11rem]">
-          <span className="text-gradient-gold-fade">{L.banner.wordmark.lead}</span>
-          <span className="text-foreground/90">{L.banner.wordmark.tail}</span>
+          <span className="text-gradient-gold-fade">Launch</span>
+          <span className="text-foreground/90">Fly</span>
         </h2>
       </div>
 
@@ -134,7 +133,7 @@ function Banner() {
       <div className="absolute inset-x-0 top-[85px] z-10 mx-auto max-w-7xl px-6 -translate-x-4">
         <div className="text-center">
           <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-3 py-1 text-xs text-muted-foreground backdrop-blur">
-            <Sparkles className="h-3.5 w-3.5 text-gold" /> {L.banner.eyebrow}
+            <Sparkles className="h-3.5 w-3.5 text-gold" /> How to start your own business
           </span>
         </div>
         {/* Subhead column on the left ("Want to be a founder?" with the
@@ -143,11 +142,10 @@ function Banner() {
         <div className="mt-[29px] flex items-start justify-between gap-4">
           <div>
             <h2 className="font-display text-[1.2rem] font-semibold leading-tight text-foreground sm:text-[1.33rem] md:text-[1.63rem]">
-              {L.banner.subhead.lead}{" "}
-              <span className="text-gradient-gold">{L.banner.subhead.accent}</span>
+              Want to be a <span className="text-gradient-gold">founder?</span>
             </h2>
             <p className="mt-3 text-[1rem] font-bold uppercase tracking-[0.2em] text-gold/90">
-              {L.banner.tagline}
+              Start your own business?
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -173,19 +171,19 @@ function Hero() {
     <section className="relative -mt-[392px] px-6">
       <div className="mx-auto max-w-5xl text-center">
         <h1 className="font-display mt-16 whitespace-nowrap text-[4rem] font-semibold leading-[1.02] tracking-tight sm:text-[6rem] md:text-[7.5rem]">
-          <span className="text-gradient-gold">{L.hero.headline.lead}</span>
-          {L.hero.headline.tail}
+          <span className="text-gradient-gold">This</span> is How to Start.
         </h1>
 
         <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground">
-          {L.hero.subhead}
+          LaunchFly helps you go from "I want to start something" to knowing exactly what
+          to build, how to start, and what to do next.
         </p>
         <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
           <Link
             to="/pricing"
             className="inline-flex items-center gap-2 rounded-full bg-gradient-gold px-6 py-3 text-base font-medium text-gold-foreground shadow-gold transition hover:opacity-90"
           >
-            {L.hero.primaryCta}
+            Start Your Launch — $19/month
             <ArrowRight className="h-4 w-4" />
           </Link>
           <a
@@ -193,7 +191,7 @@ function Hero() {
             className="inline-flex items-center gap-2 rounded-full border border-border bg-card/40 px-6 py-3 text-base font-medium text-foreground backdrop-blur transition hover:bg-card"
           >
             <PlayCircle className="h-4 w-4 text-gold" />
-            {L.hero.secondaryCta}
+            See How It Works
           </a>
         </div>
       </div>
