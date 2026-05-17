@@ -190,11 +190,12 @@
     background-clip: text;
     color: transparent;
   }
-  /* Finlandica — display sans loaded from Google Fonts in
-     __root.tsx. Variable weight 400–700; per-instance weight is
-     still controlled by Tailwind's font-* utilities. */
+  /* Zen Dots — chunky display font loaded from Google Fonts in
+     __root.tsx. Single weight (400); the chunky letterforms read as
+     bold inherently. */
   .font-display {
-    font-family: "Finlandica", ui-sans-serif, system-ui, sans-serif;
+    font-family: "Zen Dots", ui-sans-serif, system-ui, sans-serif;
+    font-weight: 400;
   }
   /* Light brand gold across the leading glyphs, holding flat through
      the first ~38% of the word (covers "Lau" of "Launch" / "St" of

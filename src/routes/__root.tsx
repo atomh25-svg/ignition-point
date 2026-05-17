@@ -91,8 +91,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: appCss,
       },
-      // Finlandica — display sans for the hero headline + giant
-      // LaunchFly wordmark. Variable font with weights 400–700.
+      // Zen Dots — chunky display font for the hero headline + giant
+      // LaunchFly wordmark. Single weight (400).
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       {
         rel: "preconnect",
@@ -101,7 +101,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Finlandica:ital,wght@0,400..700;1,400..700&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Zen+Dots&display=swap",
       },
     ],
   }),
