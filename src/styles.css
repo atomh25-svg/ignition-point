@@ -190,6 +190,15 @@
     background-clip: text;
     color: transparent;
   }
+  /* Fraunces — display serif loaded from Google Fonts in __root.tsx.
+     Optical sizing is on by default; we crank to 144 (the maximum
+     opsz axis) for hero-scale headlines so the letterforms are
+     tuned for big display use. */
+  .font-display {
+    font-family: "Fraunces", ui-serif, Georgia, serif;
+    font-optical-sizing: auto;
+    font-variation-settings: "opsz" 144;
+  }
   /* Light brand gold across the leading glyphs, holding flat through
      the first ~38% of the word (covers "Lau" of "Launch" / "St" of
      "Start"), then dissolves to off-white. Deliberately skips the
