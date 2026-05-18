@@ -120,7 +120,7 @@ function Banner() {
           z-[5] puts it above the banner image but below the eyebrow
           and bottom row; pointer-events-none keeps it from intercepting
           clicks. */}
-      <div className="pointer-events-none absolute inset-x-0 top-1/2 z-[5] -translate-y-[calc(50%+46px)] px-6 text-center">
+      <div className="pointer-events-none absolute inset-x-0 top-1/2 z-[5] -translate-y-[calc(50%+30px)] px-6 text-center">
         <h2
           className="font-semibold tracking-tight leading-none"
           style={{ fontSize: "clamp(4.5rem, 12.5vw, 10rem)" }}
@@ -171,7 +171,7 @@ function Banner() {
 
 function Hero() {
   return (
-    <section className="relative -mt-[332px] px-6">
+    <section className="relative -mt-[290px] px-6">
       <div className="mx-auto max-w-5xl text-center">
         <h1
           className="mt-16 whitespace-nowrap font-semibold leading-[1.02] tracking-tight"
