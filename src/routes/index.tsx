@@ -126,7 +126,7 @@ function Banner() {
           style={{ fontSize: "clamp(4.5rem, 12.5vw, 10rem)" }}
         >
           <span className="text-gradient-gold-fade">Launch</span>
-          <span className="text-foreground/90">Fly</span>
+          <span className="text-foreground">Fly</span>
         </h2>
       </div>
 
