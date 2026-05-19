@@ -190,6 +190,13 @@
     background-clip: text;
     color: transparent;
   }
+  /* Bree Serif — display serif loaded from Google Fonts in
+     __root.tsx. Single weight (400). The slab letterforms read as
+     confident at display size without needing a heavier weight. */
+  .font-display {
+    font-family: "Bree Serif", ui-serif, Georgia, serif;
+    font-weight: 400;
+  }
   /* Light brand gold across the leading glyphs, holding flat through
      the first ~38% of the word (covers "Lau" of "Launch" / "St" of
      "Start"), then dissolves to off-white. Deliberately skips the

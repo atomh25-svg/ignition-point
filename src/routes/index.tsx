@@ -122,7 +122,7 @@ function Banner() {
           clicks. */}
       <div className="pointer-events-none absolute inset-x-0 top-1/2 z-[5] -translate-y-[calc(50%+15px)] px-6 text-center">
         <h2
-          className="font-semibold tracking-tight leading-none"
+          className="font-display tracking-tight leading-none"
           style={{ fontSize: "clamp(4.5rem, 12.5vw, 10rem)" }}
         >
           <span className="text-gradient-gold-fade">Launch</span>
@@ -174,7 +174,7 @@ function Hero() {
     <section className="relative -mt-[290px] px-6">
       <div className="mx-auto max-w-5xl text-center">
         <h1
-          className="mt-16 whitespace-nowrap font-semibold leading-[1.02] tracking-tight"
+          className="font-display mt-16 whitespace-nowrap leading-[1.02] tracking-tight"
           style={{ fontSize: "clamp(4rem, 9.4vw, 7.5rem)" }}
         >
           <span className="text-gradient-gold">This</span> is How to Start.
