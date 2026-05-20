@@ -125,8 +125,8 @@ function Banner() {
           className="font-display tracking-tight leading-none"
           style={{ fontSize: "clamp(4.5rem, 12.5vw, 10rem)" }}
         >
-          <span className="text-gradient-gold-fade">Launch</span>
-          <span className="text-foreground">Fly</span>
+          <span className="text-gradient-gold-fade">Lau</span>
+          <span className="text-foreground">nchFly</span>
         </h2>
       </div>
 
