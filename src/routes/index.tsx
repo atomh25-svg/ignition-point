@@ -154,7 +154,7 @@ function Banner() {
             "Start your own business?" tagline tucked beneath it) and the
             LaunchFly mark on the right, top-aligned. */}
         <div className="mt-[29px] flex items-start justify-between gap-4">
-          <div className="translate-x-[2px] translate-y-[8px]">
+          <div className="translate-x-[2px] translate-y-[13px]">
             <h2
               className="text-[1.11rem] font-[780] uppercase tracking-[0.08em] [word-spacing:-0.12em] text-foreground origin-left"
               style={{
@@ -162,7 +162,7 @@ function Banner() {
                 textShadow: "0 0 14px oklch(0.78 0.16 70 / 0.45)",
               }}
             >
-              <span className="bg-black">Want</span> to be a founder?
+              <span className="bg-black py-[1px]">Want</span> to be a founder?
             </h2>
             <p
               className="mt-[11px] text-[1.11rem] font-[780] uppercase tracking-[0.08em] [word-spacing:-0.12em] text-foreground origin-left"
@@ -171,7 +171,7 @@ function Banner() {
                 textShadow: "0 0 14px oklch(0.78 0.16 70 / 0.45)",
               }}
             >
-              <span className="bg-black">Start</span> your own business?
+              <span className="bg-black py-[1px]">Start</span> your own business?
             </p>
           </div>
           <div className="flex items-center gap-2.5 translate-y-[24px] -translate-x-[40px]">
