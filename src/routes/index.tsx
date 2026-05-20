@@ -131,7 +131,7 @@ function Banner() {
           }}
         >
           <span className="text-gradient-gold-fade">Lau</span>
-          <span className="text-foreground">nchFly</span>
+          <span className="text-foreground">nchFly.</span>
         </h2>
       </div>
 
