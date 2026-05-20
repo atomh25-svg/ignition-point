@@ -156,15 +156,15 @@ function Banner() {
               Start your own business?
             </p>
           </div>
-          <div className="flex items-center gap-2.5 translate-y-[7px] -translate-x-[6px]">
+          <div className="flex items-center gap-2.5 translate-y-[17px] -translate-x-[16px]">
             <img
               src={launchflyMark}
               alt=""
               aria-hidden
-              className="h-[42px] w-[42px] object-contain shrink-0 brightness-110 logo-glow"
+              className="h-[38px] w-[38px] object-contain shrink-0 brightness-110 logo-glow"
               draggable={false}
             />
-            <span className="text-xl font-semibold tracking-tight">
+            <span className="text-[1.375rem] font-semibold tracking-tight">
               LaunchFly<span className="text-gold">.io</span>
             </span>
           </div>
