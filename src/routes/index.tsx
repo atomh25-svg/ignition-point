@@ -176,7 +176,7 @@ function Banner() {
 
 function Hero() {
   return (
-    <section className="relative -mt-[230px] px-6">
+    <section className="relative -mt-[220px] px-6">
       <div className="mx-auto max-w-5xl text-center">
         <h1
           className="font-display mt-16 whitespace-nowrap leading-[1.02] tracking-tight -translate-x-[11px]"
