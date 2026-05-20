@@ -152,7 +152,7 @@ function Banner() {
             <h2 className="text-[1.11rem] font-[780] uppercase tracking-[0.08em] [word-spacing:-0.12em] text-foreground">
               Want to be a founder?
             </h2>
-            <p className="mt-1 text-[1.11rem] font-[780] uppercase tracking-[0.08em] [word-spacing:-0.12em] text-foreground">
+            <p className="mt-[7px] text-[1.11rem] font-[780] uppercase tracking-[0.08em] [word-spacing:-0.12em] text-foreground">
               Start your own business?
             </p>
           </div>
