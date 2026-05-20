@@ -174,7 +174,7 @@ function Hero() {
     <section className="relative -mt-[290px] px-6">
       <div className="mx-auto max-w-5xl text-center">
         <h1
-          className="font-display mt-16 whitespace-nowrap leading-[1.02] tracking-tight"
+          className="font-display mt-16 whitespace-nowrap leading-[1.02] tracking-tight -translate-x-4"
           style={{ fontSize: "clamp(4rem, 9.4vw, 7.5rem)" }}
         >
           <span className="text-gradient-gold">This</span> is How to Start.
