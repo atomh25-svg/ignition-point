@@ -91,7 +91,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: appCss,
       },
-      // Sarpanch — chunky geometric display family (weights 400-900)
+      // Geist — Vercel's geometric sans (variable weight 100-900)
       // for the hero headline + giant LaunchFly wordmark.
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       {
@@ -101,7 +101,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Sarpanch:wght@500;600;700;800;900&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Geist:wght@400..900&display=swap",
       },
     ],
   }),

@@ -190,12 +190,12 @@
     background-clip: text;
     color: transparent;
   }
-  /* Sarpanch — chunky geometric display, loaded from Google Fonts
-     in __root.tsx. Use the heavy 800 weight for hero-scale type;
-     the squared letterforms give the wordmark its blocky feel. */
+  /* Geist — Vercel's geometric sans (variable weight). Loaded from
+     Google Fonts in __root.tsx. Use weight 700 by default for the
+     hero-scale type. */
   .font-display {
-    font-family: "Sarpanch", ui-sans-serif, system-ui, sans-serif;
-    font-weight: 800;
+    font-family: "Geist", ui-sans-serif, system-ui, sans-serif;
+    font-weight: 700;
   }
   /* Light brand gold across the leading glyphs, holding flat through
      the first ~38% of the word (covers "Lau" of "Launch" / "St" of
@@ -205,8 +205,9 @@
   .text-gradient-gold-fade {
     background: linear-gradient(
       90deg,
-      rgb(239 171 65) 0%,
-      rgb(236 158 61) 100%
+      rgb(245 130 45) 0%,
+      rgb(240 170 70) 45%,
+      rgb(252 248 240) 100%
     );
     -webkit-background-clip: text;
     background-clip: text;
