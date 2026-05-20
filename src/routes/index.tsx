@@ -126,7 +126,7 @@ function Banner() {
           style={{
             fontSize: "clamp(11rem, 20vw, 16.3rem)",
             letterSpacing: "-0.06em",
-            transform: "scale(0.96, 1.02)",
+            transform: "scale(0.93, 1.02)",
             transformOrigin: "center",
           }}
         >
@@ -149,10 +149,10 @@ function Banner() {
             LaunchFly mark on the right, top-aligned. */}
         <div className="mt-[29px] flex items-start justify-between gap-4">
           <div>
-            <h2 className="text-[1.23rem] font-black uppercase tracking-[0.08em] text-foreground">
+            <h2 className="text-[1.23rem] font-extrabold uppercase tracking-[0.08em] text-foreground">
               Want to be a founder?
             </h2>
-            <p className="mt-1 text-[1.23rem] font-black uppercase tracking-[0.08em] text-foreground">
+            <p className="mt-1 text-[1.23rem] font-extrabold uppercase tracking-[0.08em] text-foreground">
               Start your own business?
             </p>
           </div>
