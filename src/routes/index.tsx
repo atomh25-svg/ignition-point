@@ -149,10 +149,10 @@ function Banner() {
             LaunchFly mark on the right, top-aligned. */}
         <div className="mt-[29px] flex items-start justify-between gap-4">
           <div>
-            <h2 className="text-[1.2rem] font-bold uppercase tracking-[0.13em] text-gold/90">
+            <h2 className="text-[1.23rem] font-bold uppercase tracking-[0.08em] text-gold/90">
               Want to be a founder?
             </h2>
-            <p className="mt-3 text-[1.2rem] font-bold uppercase tracking-[0.13em] text-gold/90">
+            <p className="mt-3 text-[1.23rem] font-bold uppercase tracking-[0.08em] text-gold/90">
               Start your own business?
             </p>
           </div>
