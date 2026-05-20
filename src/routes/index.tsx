@@ -133,8 +133,12 @@ function Banner() {
           <span className="text-gradient-gold-fade">Lau</span>
           <span className="text-foreground">nchFly</span>
           <span
-            className="text-foreground"
-            style={{ fontSize: "0.81em", marginLeft: "-3px" }}
+            className="text-foreground inline-block"
+            style={{
+              fontSize: "0.70em",
+              marginLeft: "-6px",
+              transform: "translateY(-2px)",
+            }}
           >
             .
           </span>
