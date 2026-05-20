@@ -111,7 +111,7 @@ function Banner() {
       <img
         src={bannerImg}
         alt="Builder coding late at night, focused on launching their idea"
-        className="absolute -top-[103px] left-0 right-0 h-[calc(100%+103px)] w-full object-cover object-[60%_center] brightness-125"
+        className="absolute -top-[83px] left-0 right-0 h-[calc(100%+83px)] w-full object-cover object-[60%_center] brightness-125"
       />
       <div className="absolute inset-0 bg-banner-overlay" />
       <div className="pointer-events-none absolute inset-0 bg-warm-glow" />
@@ -139,7 +139,7 @@ function Banner() {
           subhead and the bottom row don't sit dead-center over the
           background subject. */}
       <div className="absolute inset-x-0 top-[104px] z-10 mx-auto max-w-7xl px-6 -translate-x-6">
-        <div className="text-center">
+        <div className="text-center -translate-y-[5px]">
           <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-3 py-1 text-xs text-muted-foreground backdrop-blur">
             <Sparkles className="h-3.5 w-3.5 text-gold" /> How to start your own business
           </span>
