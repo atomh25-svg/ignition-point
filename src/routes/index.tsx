@@ -166,7 +166,7 @@ function Banner() {
                 textShadow: "0 0 14px oklch(0.78 0.16 70 / 0.45)",
               }}
             >
-              <span className="bg-[rgb(30,58,0)] pt-0 pb-[2px] pl-[2px] -ml-[2px]">Want</span> to be a founder?
+              <span className="bg-[rgb(36,80,0)] pt-0 pb-[2px] pl-[2px] -ml-[2px]">Want</span> to be a founder?
             </h2>
             <p
               className="mt-[11px] text-[1.17rem] font-[780] uppercase tracking-[0.08em] [word-spacing:-0.12em] text-foreground origin-left underline underline-offset-4"
@@ -175,7 +175,7 @@ function Banner() {
                 textShadow: "0 0 14px oklch(0.78 0.16 70 / 0.45)",
               }}
             >
-              <span className="bg-[rgb(30,58,0)] pt-0 pb-[2px] pl-[2px] -ml-[2px]">Start</span> your own business?
+              <span className="bg-[rgb(36,80,0)] pt-0 pb-[2px] pl-[2px] -ml-[2px]">Start</span> your own business?
             </p>
           </div>
           <div className="flex items-center gap-2.5 translate-y-[24px] -translate-x-[40px]">
