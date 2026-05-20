@@ -176,11 +176,11 @@ function Banner() {
 
 function Hero() {
   return (
-    <section className="relative -mt-[220px] px-6">
+    <section className="relative -mt-[215px] px-6">
       <div className="mx-auto max-w-5xl text-center">
         <h1
           className="font-display mt-16 whitespace-nowrap leading-[1.02] tracking-tight -translate-x-[11px]"
-          style={{ fontSize: "clamp(3.25rem, 8.4vw, 6.75rem)" }}
+          style={{ fontSize: "clamp(1.6rem, 7vw, 5.1rem)" }}
         >
           <span className="text-gradient-gold">This</span> is How to Start.
         </h1>
