@@ -129,7 +129,7 @@
     color: var(--color-foreground);
   }
   body {
-    font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+    font-family: "Geist", ui-sans-serif, system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
     font-feature-settings: "ss01", "cv11";
   }
@@ -205,8 +205,9 @@
   .text-gradient-gold-fade {
     background: linear-gradient(
       90deg,
-      rgb(245 130 45) 0%,
-      rgb(240 170 70) 45%,
+      rgb(218 85 25) 0%,
+      rgb(235 150 35) 35%,
+      rgb(248 215 130) 70%,
       rgb(252 248 240) 100%
     );
     -webkit-background-clip: text;
