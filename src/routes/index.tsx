@@ -162,7 +162,7 @@ function Banner() {
               Start your own business?
             </p>
           </div>
-          <div className="flex items-center gap-2.5 translate-y-[26px] -translate-x-[42px]">
+          <div className="flex items-center gap-2.5 translate-y-[24px] -translate-x-[42px]">
             <img
               src={launchflyMark}
               alt=""
