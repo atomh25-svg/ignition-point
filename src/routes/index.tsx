@@ -111,7 +111,7 @@ function Banner() {
       <img
         src={bannerImg}
         alt="Builder coding late at night, focused on launching their idea"
-        className="absolute -top-[103px] left-0 right-0 h-[calc(100%+103px)] w-full object-cover object-[60%_center]"
+        className="absolute -top-[103px] left-0 right-0 h-[calc(100%+103px)] w-full object-cover object-[60%_center] brightness-125"
       />
       <div className="absolute inset-0 bg-banner-overlay" />
       <div className="pointer-events-none absolute inset-0 bg-warm-glow" />
@@ -123,7 +123,7 @@ function Banner() {
       <div className="pointer-events-none absolute inset-x-0 top-1/2 z-[5] -translate-y-[calc(50%+15px)] px-6 text-center">
         <h2
           className="font-display tracking-tight leading-none"
-          style={{ fontSize: "clamp(4.5rem, 12.5vw, 10rem)" }}
+          style={{ fontSize: "clamp(5.1rem, 13.4vw, 10.65rem)" }}
         >
           <span className="text-gradient-gold-fade">Lau</span>
           <span className="text-foreground">nchFly</span>
@@ -174,7 +174,7 @@ function Hero() {
     <section className="relative -mt-[290px] px-6">
       <div className="mx-auto max-w-5xl text-center">
         <h1
-          className="font-display mt-16 whitespace-nowrap leading-[1.02] tracking-tight -translate-x-4"
+          className="font-display mt-16 whitespace-nowrap leading-[1.02] tracking-tight -translate-x-[11px]"
           style={{ fontSize: "clamp(4rem, 9.4vw, 7.5rem)" }}
         >
           <span className="text-gradient-gold">This</span> is How to Start.
