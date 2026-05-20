@@ -149,22 +149,22 @@ function Banner() {
             LaunchFly mark on the right, top-aligned. */}
         <div className="mt-[29px] flex items-start justify-between gap-4">
           <div>
-            <h2 className="text-[1.23rem] font-bold uppercase tracking-[0.08em] text-gold/90">
+            <h2 className="text-[1.23rem] font-bold uppercase tracking-[0.08em] text-foreground">
               Want to be a founder?
             </h2>
-            <p className="mt-3 text-[1.23rem] font-bold uppercase tracking-[0.08em] text-gold/90">
+            <p className="mt-3 text-[1.23rem] font-bold uppercase tracking-[0.08em] text-foreground">
               Start your own business?
             </p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2.5 translate-y-[7px] -translate-x-[6px]">
             <img
               src={launchflyMark}
               alt=""
               aria-hidden
-              className="h-[33px] w-[33px] object-contain shrink-0 brightness-110 logo-glow"
+              className="h-[42px] w-[42px] object-contain shrink-0 brightness-110 logo-glow"
               draggable={false}
             />
-            <span className="text-lg font-semibold tracking-tight">
+            <span className="text-xl font-semibold tracking-tight">
               LaunchFly<span className="text-gold">.io</span>
             </span>
           </div>
