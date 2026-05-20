@@ -190,12 +190,12 @@
     background-clip: text;
     color: transparent;
   }
-  /* Bree Serif — display serif loaded from Google Fonts in
-     __root.tsx. Single weight (400). The slab letterforms read as
-     confident at display size without needing a heavier weight. */
+  /* Sarpanch — chunky geometric display, loaded from Google Fonts
+     in __root.tsx. Use the heavy 800 weight for hero-scale type;
+     the squared letterforms give the wordmark its blocky feel. */
   .font-display {
-    font-family: "Bree Serif", ui-serif, Georgia, serif;
-    font-weight: 400;
+    font-family: "Sarpanch", ui-sans-serif, system-ui, sans-serif;
+    font-weight: 800;
   }
   /* Light brand gold across the leading glyphs, holding flat through
      the first ~38% of the word (covers "Lau" of "Launch" / "St" of

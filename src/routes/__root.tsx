@@ -91,8 +91,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: appCss,
       },
-      // Bree Serif — display serif for the hero headline + giant
-      // LaunchFly wordmark. Single weight (400).
+      // Sarpanch — chunky geometric display family (weights 400-900)
+      // for the hero headline + giant LaunchFly wordmark.
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       {
         rel: "preconnect",
@@ -101,7 +101,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Bree+Serif&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Sarpanch:wght@500;600;700;800;900&display=swap",
       },
     ],
   }),
