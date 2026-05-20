@@ -123,7 +123,7 @@ function Banner() {
       <div className="pointer-events-none absolute inset-x-0 top-1/2 z-[5] -translate-y-[calc(50%+15px)] px-6 text-center">
         <h2
           className="font-display tracking-tight leading-none"
-          style={{ fontSize: "clamp(6.75rem, 15vw, 12.3rem)" }}
+          style={{ fontSize: "clamp(15rem, 25vw, 20.5rem)" }}
         >
           <span className="text-gradient-gold-fade">Lau</span>
           <span className="text-foreground">nchFly</span>
