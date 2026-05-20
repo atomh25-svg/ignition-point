@@ -131,7 +131,8 @@ function Banner() {
           }}
         >
           <span className="text-gradient-gold-fade">Lau</span>
-          <span className="text-foreground">nchFly.</span>
+          <span className="text-foreground">nchFly</span>
+          <span className="text-foreground" style={{ fontSize: "0.81em" }}>.</span>
         </h2>
       </div>
 
