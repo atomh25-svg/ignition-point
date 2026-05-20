@@ -136,7 +136,7 @@ function Banner() {
             className="text-foreground inline-block"
             style={{
               fontSize: "0.70em",
-              marginLeft: "-6px",
+              marginLeft: "-8.5px",
               transform: "translateY(-4px)",
             }}
           >
