@@ -156,7 +156,7 @@ function Banner() {
         <div className="mt-[29px] flex items-start justify-between gap-4">
           <div className="translate-x-[2px] translate-y-[13px]">
             <h2
-              className="text-[1.11rem] font-[780] uppercase tracking-[0.08em] [word-spacing:-0.12em] text-foreground origin-left"
+              className="text-[1.17rem] font-[780] uppercase tracking-[0.08em] [word-spacing:-0.12em] text-foreground origin-left"
               style={{
                 transform: "scaleY(1.1)",
                 textShadow: "0 0 14px oklch(0.78 0.16 70 / 0.45)",
@@ -165,7 +165,7 @@ function Banner() {
               <span className="bg-black pt-0 pb-[2px] pl-[2px] -ml-[2px]">Want</span> to be a founder?
             </h2>
             <p
-              className="mt-[11px] text-[1.11rem] font-[780] uppercase tracking-[0.08em] [word-spacing:-0.12em] text-foreground origin-left"
+              className="mt-[11px] text-[1.17rem] font-[780] uppercase tracking-[0.08em] [word-spacing:-0.12em] text-foreground origin-left"
               style={{
                 transform: "scaleY(1.1)",
                 textShadow: "0 0 14px oklch(0.78 0.16 70 / 0.45)",
