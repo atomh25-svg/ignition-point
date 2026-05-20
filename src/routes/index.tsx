@@ -156,7 +156,7 @@ function Banner() {
               Want to be a founder?
             </h2>
             <p
-              className="mt-[7px] text-[1.11rem] font-[780] uppercase tracking-[0.08em] [word-spacing:-0.12em] text-foreground origin-left"
+              className="mt-[11px] text-[1.11rem] font-[780] uppercase tracking-[0.08em] [word-spacing:-0.12em] text-foreground origin-left"
               style={{ transform: "scaleY(1.1)" }}
             >
               Start your own business?
