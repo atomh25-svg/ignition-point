@@ -120,7 +120,7 @@ function Banner() {
           z-[5] puts it above the banner image but below the eyebrow
           and bottom row; pointer-events-none keeps it from intercepting
           clicks. */}
-      <div className="pointer-events-none absolute inset-x-0 top-1/2 z-[5] -translate-y-[calc(50%-35px)] -translate-x-[9px] px-6 text-center">
+      <div className="pointer-events-none absolute inset-x-0 top-1/2 z-[5] -translate-y-[calc(50%-54px)] -translate-x-[9px] px-6 text-center">
         <h2
           className="font-display leading-none inline-block"
           style={{
@@ -138,7 +138,7 @@ function Banner() {
       {/* Banner overlay content — slight leftward nudge so the eyebrow/
           subhead and the bottom row don't sit dead-center over the
           background subject. */}
-      <div className="absolute inset-x-0 top-[85px] z-10 mx-auto max-w-7xl px-6 -translate-x-6">
+      <div className="absolute inset-x-0 top-[104px] z-10 mx-auto max-w-7xl px-6 -translate-x-6">
         <div className="text-center">
           <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-3 py-1 text-xs text-muted-foreground backdrop-blur">
             <Sparkles className="h-3.5 w-3.5 text-gold" /> How to start your own business
@@ -176,7 +176,7 @@ function Banner() {
 
 function Hero() {
   return (
-    <section className="relative -mt-[195px] px-6">
+    <section className="relative -mt-[176px] px-6">
       <div className="mx-auto max-w-5xl text-center">
         <h1
           className="font-display mt-16 whitespace-nowrap leading-[1.02] tracking-tight -translate-x-[11px]"
