@@ -132,7 +132,12 @@ function Banner() {
         >
           <span className="text-gradient-gold-fade">Lau</span>
           <span className="text-foreground">nchFly</span>
-          <span className="text-foreground" style={{ fontSize: "0.81em" }}>.</span>
+          <span
+            className="text-foreground"
+            style={{ fontSize: "0.81em", marginLeft: "-3px" }}
+          >
+            .
+          </span>
         </h2>
       </div>
 
@@ -152,13 +157,19 @@ function Banner() {
           <div className="translate-x-[2px] translate-y-[8px]">
             <h2
               className="text-[1.11rem] font-[780] uppercase tracking-[0.08em] [word-spacing:-0.12em] text-foreground origin-left"
-              style={{ transform: "scaleY(1.1)" }}
+              style={{
+                transform: "scaleY(1.1)",
+                textShadow: "0 0 14px oklch(0.78 0.16 70 / 0.45)",
+              }}
             >
               Want to be a founder?
             </h2>
             <p
               className="mt-[11px] text-[1.11rem] font-[780] uppercase tracking-[0.08em] [word-spacing:-0.12em] text-foreground origin-left"
-              style={{ transform: "scaleY(1.1)" }}
+              style={{
+                transform: "scaleY(1.1)",
+                textShadow: "0 0 14px oklch(0.78 0.16 70 / 0.45)",
+              }}
             >
               Start your own business?
             </p>
