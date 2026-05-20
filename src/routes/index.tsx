@@ -137,7 +137,7 @@ function Banner() {
             style={{
               fontSize: "0.70em",
               marginLeft: "-6px",
-              transform: "translateY(-2px)",
+              transform: "translateY(-4px)",
             }}
           >
             .
