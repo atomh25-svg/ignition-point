@@ -148,11 +148,11 @@ function Banner() {
             "Start your own business?" tagline tucked beneath it) and the
             LaunchFly mark on the right, top-aligned. */}
         <div className="mt-[29px] flex items-start justify-between gap-4">
-          <div className="translate-x-[5px] translate-y-[5px]">
-            <h2 className="text-[1.11rem] font-[780] uppercase tracking-[0.08em] text-foreground">
+          <div className="translate-x-[2px] translate-y-[8px]">
+            <h2 className="text-[1.11rem] font-[780] uppercase tracking-[0.05em] text-foreground">
               Want to be a founder?
             </h2>
-            <p className="mt-1 text-[1.11rem] font-[780] uppercase tracking-[0.08em] text-foreground">
+            <p className="mt-1 text-[1.11rem] font-[780] uppercase tracking-[0.05em] text-foreground">
               Start your own business?
             </p>
           </div>
