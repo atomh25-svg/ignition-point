@@ -120,7 +120,7 @@ function Banner() {
           z-[5] puts it above the banner image but below the eyebrow
           and bottom row; pointer-events-none keeps it from intercepting
           clicks. */}
-      <div className="pointer-events-none absolute inset-x-0 top-1/2 z-[5] -translate-y-[calc(50%-54px)] -translate-x-[9px] px-6 text-center">
+      <div className="pointer-events-none absolute inset-x-0 top-1/2 z-[5] -translate-y-[calc(50%-64px)] -translate-x-[9px] px-6 text-center">
         <h2
           className="font-display leading-none inline-block"
           style={{
@@ -149,10 +149,10 @@ function Banner() {
             LaunchFly mark on the right, top-aligned. */}
         <div className="mt-[29px] flex items-start justify-between gap-4">
           <div>
-            <h2 className="text-[1rem] font-bold uppercase tracking-[0.2em] text-gold/90">
+            <h2 className="text-[1.33rem] font-bold uppercase tracking-[0.2em] text-gold/90">
               Want to be a founder?
             </h2>
-            <p className="mt-3 text-[1rem] font-bold uppercase tracking-[0.2em] text-gold/90">
+            <p className="mt-3 text-[1.33rem] font-bold uppercase tracking-[0.2em] text-gold/90">
               Start your own business?
             </p>
           </div>
@@ -176,7 +176,7 @@ function Banner() {
 
 function Hero() {
   return (
-    <section className="relative -mt-[176px] px-6">
+    <section className="relative -mt-[166px] px-6">
       <div className="mx-auto max-w-5xl text-center">
         <h1
           className="font-display mt-16 whitespace-nowrap leading-[1.02] tracking-tight -translate-x-[11px]"
@@ -185,11 +185,11 @@ function Hero() {
           <span className="text-gradient-gold">This</span> is How to Start.
         </h1>
 
-        <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground">
+        <p className="mx-auto mt-3 max-w-2xl text-lg text-muted-foreground">
           LaunchFly helps you go from "I want to start something" to knowing exactly what
           to build, how to start, and what to do next.
         </p>
-        <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
+        <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
           <Link
             to="/pricing"
             className="inline-flex items-center gap-2 rounded-full bg-gradient-gold px-6 py-3 text-base font-medium text-gold-foreground shadow-gold transition hover:opacity-90"
