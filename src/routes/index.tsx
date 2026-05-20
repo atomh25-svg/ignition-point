@@ -123,7 +123,7 @@ function Banner() {
       <div className="pointer-events-none absolute inset-x-0 top-1/2 z-[5] -translate-y-[calc(50%+15px)] px-6 text-center">
         <h2
           className="font-display tracking-tight leading-none"
-          style={{ fontSize: "clamp(5.1rem, 13.4vw, 10.65rem)" }}
+          style={{ fontSize: "clamp(6.75rem, 15vw, 12.3rem)" }}
         >
           <span className="text-gradient-gold-fade">Lau</span>
           <span className="text-foreground">nchFly</span>
@@ -175,7 +175,7 @@ function Hero() {
       <div className="mx-auto max-w-5xl text-center">
         <h1
           className="font-display mt-16 whitespace-nowrap leading-[1.02] tracking-tight -translate-x-[11px]"
-          style={{ fontSize: "clamp(4rem, 9.4vw, 7.5rem)" }}
+          style={{ fontSize: "clamp(3.25rem, 8.4vw, 6.75rem)" }}
         >
           <span className="text-gradient-gold">This</span> is How to Start.
         </h1>
