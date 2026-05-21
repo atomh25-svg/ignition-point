@@ -205,7 +205,7 @@ function Hero() {
           style={{
             fontSize: "clamp(1.6rem, 7vw, 5.1rem)",
             textShadow:
-              "0 -8px 16px oklch(0.78 0.16 70 / 0.35), 0 -18px 30px oklch(0.78 0.16 70 / 0.25)",
+              "0 -8px 16px oklch(0.96 0.04 85 / 0.35), 0 -18px 30px oklch(0.96 0.04 85 / 0.25)",
           }}
         >
           <span className="text-gradient-gold">This</span> is How to Start.
