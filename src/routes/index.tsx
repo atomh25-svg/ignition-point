@@ -133,7 +133,7 @@ function Banner() {
               width: "92%",
               height: "5%",
               background:
-                "linear-gradient(90deg, rgba(26,20,15,0) 0%, rgba(26,20,15,0.9) 12%, rgba(26,20,15,0.95) 50%, rgba(26,20,15,0.9) 88%, rgba(26,20,15,0) 100%)",
+                "linear-gradient(90deg, rgba(10,7,6,0) 0%, rgba(10,7,6,0.9) 12%, rgba(10,7,6,0.95) 50%, rgba(10,7,6,0.9) 88%, rgba(10,7,6,0) 100%)",
               filter: "blur(1.5px)",
             }}
           />
