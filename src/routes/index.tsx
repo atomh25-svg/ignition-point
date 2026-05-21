@@ -130,7 +130,7 @@ function Banner() {
             className="pointer-events-none absolute left-1/2 -translate-x-1/2 -z-10"
             style={{
               bottom: "13px",
-              width: "92%",
+              width: "55%",
               height: "5%",
               background:
                 "linear-gradient(90deg, rgba(10,7,6,0) 0%, rgba(10,7,6,0.9) 12%, rgba(10,7,6,0.95) 50%, rgba(10,7,6,0.9) 88%, rgba(10,7,6,0) 100%)",
