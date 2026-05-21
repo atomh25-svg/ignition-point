@@ -120,7 +120,7 @@ function Banner() {
           z-[5] puts it above the banner image but below the eyebrow
           and bottom row; pointer-events-none keeps it from intercepting
           clicks. */}
-      <div className="pointer-events-none absolute inset-x-0 top-1/2 z-[5] -translate-y-[calc(50%-64px)] -translate-x-[9px] px-6 text-center">
+      <div className="pointer-events-none absolute inset-x-0 top-1/2 z-[5] -translate-y-[calc(50%-74px)] -translate-x-[9px] px-6 text-center">
         <h2
           className="font-display leading-none inline-block"
           style={{
@@ -205,7 +205,7 @@ function Hero() {
           style={{
             fontSize: "clamp(1.6rem, 7vw, 5.1rem)",
             textShadow:
-              "0 -8px 16px oklch(0.78 0.16 70 / 0.5), 0 -18px 30px oklch(0.78 0.16 70 / 0.35)",
+              "0 -8px 16px oklch(0.78 0.16 70 / 0.4), 0 -18px 30px oklch(0.78 0.16 70 / 0.28)",
           }}
         >
           <span className="text-gradient-gold">This</span> is How to Start.
