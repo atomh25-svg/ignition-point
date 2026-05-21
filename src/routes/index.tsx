@@ -120,7 +120,7 @@ function Banner() {
           z-[5] puts it above the banner image but below the eyebrow
           and bottom row; pointer-events-none keeps it from intercepting
           clicks. */}
-      <div className="pointer-events-none absolute inset-x-0 top-1/2 z-[5] -translate-y-[calc(50%-86px)] -translate-x-[9px] px-6 text-center">
+      <div className="pointer-events-none absolute inset-x-0 top-1/2 z-[5] -translate-y-[calc(50%-81px)] -translate-x-[9px] px-6 text-center">
         <div className="relative inline-block">
           {/* Sleek reflective surface beneath the wordmark — thin
               horizontal band that fades at the ends, almost like a
