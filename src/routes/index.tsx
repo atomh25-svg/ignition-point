@@ -148,7 +148,7 @@ function Banner() {
             style={{
               fontSize: "clamp(11rem, 20vw, 16.3rem)",
               letterSpacing: "-0.06em",
-              transform: "scale(0.93, 1.02)",
+              transform: "scale(0.93, 0.97)",
               transformOrigin: "center",
             }}
           >
