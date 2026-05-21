@@ -132,8 +132,14 @@ function Banner() {
               bottom: "13px",
               width: "79%",
               height: "9.4%",
+              // Horizontal gradient = side fades (transparent at both ends).
               background:
-                "linear-gradient(90deg, rgba(10,7,6,0) 0%, rgba(10,7,6,0.9) 12%, rgba(10,7,6,0.95) 50%, rgba(10,7,6,0.9) 88%, rgba(10,7,6,0) 100%)",
+                "linear-gradient(90deg, rgba(10,7,6,0) 0%, rgba(10,7,6,0.95) 12%, rgba(10,7,6,0.95) 50%, rgba(10,7,6,0.95) 88%, rgba(10,7,6,0) 100%)",
+              // Vertical mask = solid at top, fades out toward the bottom.
+              maskImage:
+                "linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0.75) 50%, rgba(0,0,0,0) 100%)",
+              WebkitMaskImage:
+                "linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0.75) 50%, rgba(0,0,0,0) 100%)",
               filter: "blur(1.5px)",
             }}
           />
