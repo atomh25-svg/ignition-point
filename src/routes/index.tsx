@@ -122,19 +122,19 @@ function Banner() {
           clicks. */}
       <div className="pointer-events-none absolute inset-x-0 top-1/2 z-[5] -translate-y-[calc(50%-74px)] -translate-x-[9px] px-6 text-center">
         <div className="relative inline-block">
-          {/* Thin "ground" beneath the wordmark — short elliptical
-              shadow that reads like an underline rather than a
-              spotlight, sitting right under "LaunchFly." */}
+          {/* Sleek reflective surface beneath the wordmark — thin
+              horizontal band that fades at the ends, almost like a
+              glossy floor reflection line under "LaunchFly." */}
           <div
             aria-hidden
             className="pointer-events-none absolute left-1/2 -translate-x-1/2 -z-10"
             style={{
-              bottom: "-2%",
-              width: "102%",
-              height: "7%",
+              bottom: "0%",
+              width: "92%",
+              height: "3.5%",
               background:
-                "radial-gradient(ellipse at center, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.8) 30%, rgba(0,0,0,0.45) 60%, rgba(0,0,0,0) 92%)",
-              filter: "blur(4px)",
+                "linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.9) 12%, rgba(0,0,0,0.95) 50%, rgba(0,0,0,0.9) 88%, rgba(0,0,0,0) 100%)",
+              filter: "blur(1.5px)",
             }}
           />
           <h2
