@@ -129,11 +129,11 @@ function Banner() {
             aria-hidden
             className="pointer-events-none absolute left-1/2 -translate-x-1/2 -z-10"
             style={{
-              bottom: "23px",
+              bottom: "19px",
               width: "92%",
               height: "5%",
               background:
-                "linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.9) 12%, rgba(0,0,0,0.95) 50%, rgba(0,0,0,0.9) 88%, rgba(0,0,0,0) 100%)",
+                "linear-gradient(90deg, rgba(26,20,15,0) 0%, rgba(26,20,15,0.9) 12%, rgba(26,20,15,0.95) 50%, rgba(26,20,15,0.9) 88%, rgba(26,20,15,0) 100%)",
               filter: "blur(1.5px)",
             }}
           />
