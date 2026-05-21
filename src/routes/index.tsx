@@ -129,7 +129,7 @@ function Banner() {
             aria-hidden
             className="pointer-events-none absolute left-1/2 -translate-x-1/2 -z-10"
             style={{
-              bottom: "5px",
+              bottom: "15px",
               width: "92%",
               height: "3.5%",
               background:
