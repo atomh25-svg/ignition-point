@@ -122,20 +122,19 @@ function Banner() {
           clicks. */}
       <div className="pointer-events-none absolute inset-x-0 top-1/2 z-[5] -translate-y-[calc(50%-74px)] -translate-x-[9px] px-6 text-center">
         <div className="relative inline-block">
-          {/* Pixar-style "ground" beneath the wordmark. Now sized
-              and tinted to actually be visible against the warm dark
-              banner — solid black holds across the inner 50% before
-              fading out, with sharper edges (smaller blur). */}
+          {/* Thin "ground" beneath the wordmark — short elliptical
+              shadow that reads like an underline rather than a
+              spotlight, sitting right under "LaunchFly." */}
           <div
             aria-hidden
             className="pointer-events-none absolute left-1/2 -translate-x-1/2 -z-10"
             style={{
-              bottom: "-18%",
-              width: "135%",
-              height: "32%",
+              bottom: "-2%",
+              width: "102%",
+              height: "7%",
               background:
-                "radial-gradient(ellipse at center, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.85) 35%, rgba(0,0,0,0.45) 65%, rgba(0,0,0,0) 95%)",
-              filter: "blur(6px)",
+                "radial-gradient(ellipse at center, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.8) 30%, rgba(0,0,0,0.45) 60%, rgba(0,0,0,0) 92%)",
+              filter: "blur(4px)",
             }}
           />
           <h2
