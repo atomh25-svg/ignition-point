@@ -121,28 +121,46 @@ function Banner() {
           and bottom row; pointer-events-none keeps it from intercepting
           clicks. */}
       <div className="pointer-events-none absolute inset-x-0 top-1/2 z-[5] -translate-y-[calc(50%-74px)] -translate-x-[9px] px-6 text-center">
-        <h2
-          className="font-display leading-none inline-block"
-          style={{
-            fontSize: "clamp(11rem, 20vw, 16.3rem)",
-            letterSpacing: "-0.06em",
-            transform: "scale(0.93, 1.02)",
-            transformOrigin: "center",
-          }}
-        >
-          <span className="text-gradient-gold-fade">Lau</span>
-          <span className="text-foreground">nchFly</span>
-          <span
-            className="text-foreground inline-block"
+        <div className="relative inline-block">
+          {/* "Surface" beneath the wordmark — soft black ground shadow
+              shaped like a Pixar-style flat plane the letters rest on.
+              Sits behind the h2 (negative z-index) so the letters read
+              on top. */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute left-1/2 -translate-x-1/2 -z-10"
             style={{
-              fontSize: "0.70em",
-              marginLeft: "-8.5px",
-              transform: "translateY(-5px)",
+              bottom: "-6%",
+              width: "118%",
+              height: "20%",
+              background:
+                "radial-gradient(ellipse at center, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.55) 35%, rgba(0,0,0,0) 75%)",
+              filter: "blur(12px)",
+            }}
+          />
+          <h2
+            className="font-display leading-none inline-block relative"
+            style={{
+              fontSize: "clamp(11rem, 20vw, 16.3rem)",
+              letterSpacing: "-0.06em",
+              transform: "scale(0.93, 1.02)",
+              transformOrigin: "center",
             }}
           >
-            .
-          </span>
-        </h2>
+            <span className="text-gradient-gold-fade">Lau</span>
+            <span className="text-foreground">nchFly</span>
+            <span
+              className="text-foreground inline-block"
+              style={{
+                fontSize: "0.70em",
+                marginLeft: "-8.5px",
+                transform: "translateY(-5px)",
+              }}
+            >
+              .
+            </span>
+          </h2>
+        </div>
       </div>
 
       {/* Banner overlay content — slight leftward nudge so the eyebrow/
