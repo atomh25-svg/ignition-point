@@ -180,7 +180,7 @@ function Banner() {
             <h2
               className="text-[1.17rem] font-[780] uppercase tracking-[0.08em] [word-spacing:-0.12em] text-foreground origin-left"
               style={{
-                transform: "scaleY(1.13)",
+                transform: "scaleY(1.05)",
                 textShadow: "0 0 14px oklch(0.78 0.16 70 / 0.45)",
               }}
             >
@@ -189,7 +189,7 @@ function Banner() {
             <p
               className="mt-[11px] text-[1.17rem] font-[780] uppercase tracking-[0.08em] [word-spacing:-0.12em] text-foreground origin-left underline underline-offset-4"
               style={{
-                transform: "scaleY(1.13)",
+                transform: "scaleY(1.05)",
                 textShadow: "0 0 14px oklch(0.78 0.16 70 / 0.45)",
               }}
             >
