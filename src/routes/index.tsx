@@ -134,7 +134,7 @@ function Banner() {
               height: "17%",
               // Horizontal gradient = side fades (transparent at both ends).
               background:
-                "linear-gradient(90deg, rgba(10,7,6,0) 0%, rgba(10,7,6,0.95) 12%, rgba(10,7,6,0.95) 50%, rgba(10,7,6,0.95) 88%, rgba(10,7,6,0) 100%)",
+                "linear-gradient(90deg, rgba(4,3,2,0) 0%, rgba(4,3,2,0.97) 12%, rgba(4,3,2,1) 50%, rgba(4,3,2,0.97) 88%, rgba(4,3,2,0) 100%)",
               // Vertical mask = solid at top, fades out toward the bottom.
               maskImage:
                 "linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0.75) 50%, rgba(0,0,0,0) 100%)",
@@ -157,7 +157,7 @@ function Banner() {
             <span
               className="text-foreground inline-block"
               style={{
-                fontSize: "0.70em",
+                fontSize: "0.77em",
                 marginLeft: "-8.5px",
                 transform: "translateY(-5px)",
               }}
