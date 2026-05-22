@@ -174,7 +174,7 @@ function Banner() {
           subhead and the bottom row don't sit dead-center over the
           background subject. */}
       <div className="absolute inset-x-0 top-[102px] z-10 mx-auto max-w-7xl px-6 -translate-x-6">
-        <div className="text-center -translate-y-[5px]">
+        <div className="text-center -translate-y-[9px]">
           <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-3 py-1 text-xs text-muted-foreground backdrop-blur">
             <Sparkles className="h-3.5 w-3.5 text-gold" /> How to start your own business
           </span>
