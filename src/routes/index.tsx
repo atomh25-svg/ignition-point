@@ -275,7 +275,7 @@ function ProblemCard({ icon: Icon, title, body }: { icon: any; title: string; bo
 
 function Problem() {
   return (
-    <section className="px-6 pt-16 pb-16">
+    <section className="px-6 pt-[67px] pb-16">
       <div className="mx-auto max-w-6xl">
         <div className="mx-auto max-w-3xl text-center">
           <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
