@@ -120,7 +120,7 @@ function Banner() {
           z-[5] puts it above the banner image but below the eyebrow
           and bottom row; pointer-events-none keeps it from intercepting
           clicks. */}
-      <div className="pointer-events-none absolute inset-x-0 top-1/2 z-[5] -translate-y-[calc(50%-81.5px)] -translate-x-[9px] px-6 text-center">
+      <div className="pointer-events-none absolute inset-x-0 top-1/2 z-[5] -translate-y-[calc(50%-77.5px)] -translate-x-[9px] px-6 text-center">
         <div className="relative inline-block">
           {/* Sleek reflective surface beneath the wordmark — thin
               horizontal band that fades at the ends, almost like a
@@ -182,7 +182,7 @@ function Banner() {
         {/* Subhead column on the left ("Want to be a founder?" with the
             "Start your own business?" tagline tucked beneath it) and the
             LaunchFly mark on the right, top-aligned. */}
-        <div className="mt-[29px] flex items-start justify-between gap-4">
+        <div className="mt-[25px] flex items-start justify-between gap-4">
           <div className="translate-x-[2px] translate-y-[13px]">
             <h2
               className="text-[1.17rem] font-[780] uppercase tracking-[0.08em] [word-spacing:-0.12em] text-foreground origin-left"
@@ -223,7 +223,7 @@ function Banner() {
 
 function Hero() {
   return (
-    <section className="relative -mt-[168px] px-6">
+    <section className="relative -mt-[172px] px-6">
       <div className="mx-auto max-w-5xl text-center">
         <h1
           className="font-display mt-16 whitespace-nowrap leading-[1.02] tracking-tight -translate-x-[11px]"
