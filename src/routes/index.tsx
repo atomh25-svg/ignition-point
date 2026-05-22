@@ -111,7 +111,7 @@ function Banner() {
       <img
         src={bannerImg}
         alt="Builder coding late at night, focused on launching their idea"
-        className="absolute -top-[68px] left-0 right-0 h-[calc(100%+68px)] w-full object-cover object-[60%_center] brightness-125"
+        className="absolute -top-[70px] left-0 right-0 h-[calc(100%+70px)] w-full object-cover object-[60%_center] brightness-125"
       />
       <div className="absolute inset-0 bg-banner-overlay" />
       <div className="pointer-events-none absolute inset-0 bg-warm-glow" />
@@ -120,7 +120,7 @@ function Banner() {
           z-[5] puts it above the banner image but below the eyebrow
           and bottom row; pointer-events-none keeps it from intercepting
           clicks. */}
-      <div className="pointer-events-none absolute inset-x-0 top-1/2 z-[5] -translate-y-[calc(50%-83.5px)] -translate-x-[9px] px-6 text-center">
+      <div className="pointer-events-none absolute inset-x-0 top-1/2 z-[5] -translate-y-[calc(50%-81.5px)] -translate-x-[9px] px-6 text-center">
         <div className="relative inline-block">
           {/* Sleek reflective surface beneath the wordmark — thin
               horizontal band that fades at the ends, almost like a
@@ -173,7 +173,7 @@ function Banner() {
       {/* Banner overlay content — slight leftward nudge so the eyebrow/
           subhead and the bottom row don't sit dead-center over the
           background subject. */}
-      <div className="absolute inset-x-0 top-[104px] z-10 mx-auto max-w-7xl px-6 -translate-x-6">
+      <div className="absolute inset-x-0 top-[102px] z-10 mx-auto max-w-7xl px-6 -translate-x-6">
         <div className="text-center -translate-y-[5px]">
           <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-3 py-1 text-xs text-muted-foreground backdrop-blur">
             <Sparkles className="h-3.5 w-3.5 text-gold" /> How to start your own business
@@ -223,7 +223,7 @@ function Banner() {
 
 function Hero() {
   return (
-    <section className="relative -mt-[166px] px-6">
+    <section className="relative -mt-[168px] px-6">
       <div className="mx-auto max-w-5xl text-center">
         <h1
           className="font-display mt-16 whitespace-nowrap leading-[1.02] tracking-tight -translate-x-[11px]"
