@@ -129,7 +129,7 @@ function Banner() {
             aria-hidden
             className="pointer-events-none absolute left-1/2 -translate-x-1/2 -z-10"
             style={{
-              bottom: "-7.5px",
+              bottom: "-6.5px",
               width: "79%",
               height: "17%",
               // Horizontal gradient = side fades (transparent at both ends).
@@ -160,6 +160,8 @@ function Banner() {
                 fontSize: "0.77em",
                 marginLeft: "-8.5px",
                 transform: "translateY(-5px)",
+                textShadow:
+                  "0 0 12px oklch(0.78 0.16 70 / 0.6), 0 0 24px oklch(0.78 0.16 70 / 0.35)",
               }}
             >
               .
