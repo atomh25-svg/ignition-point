@@ -111,7 +111,8 @@ function Banner() {
       <img
         src={bannerImg}
         alt="Builder coding late at night, focused on launching their idea"
-        className="absolute -top-[70px] left-0 right-0 h-[calc(100%+70px)] w-full object-cover object-[60%_center] brightness-125"
+        className="absolute -top-[70px] h-[calc(100%+70px)] object-cover object-[60%_center] brightness-125 contrast-[1.1] translate-x-[10px] translate-y-[10px]"
+        style={{ left: "-10px", width: "calc(100% + 10px)" }}
       />
       <div className="absolute inset-0 bg-banner-overlay" />
       <div className="pointer-events-none absolute inset-0 bg-warm-glow" />
@@ -120,7 +121,7 @@ function Banner() {
           z-[5] puts it above the banner image but below the eyebrow
           and bottom row; pointer-events-none keeps it from intercepting
           clicks. */}
-      <div className="pointer-events-none absolute inset-x-0 top-1/2 z-[5] -translate-y-[calc(50%-77.5px)] -translate-x-[9px] px-6 text-center">
+      <div className="pointer-events-none absolute inset-x-0 top-1/2 z-[5] -translate-y-[calc(50%-60.5px)] -translate-x-[9px] px-6 text-center">
         <div className="relative inline-block">
           {/* Sleek reflective surface beneath the wordmark — thin
               horizontal band that fades at the ends, almost like a
@@ -146,14 +147,25 @@ function Banner() {
           <h2
             className="font-display leading-none inline-block relative"
             style={{
-              fontSize: "clamp(11rem, 20vw, 16.3rem)",
+              fontSize: "clamp(12.27rem, 22.31vw, 18.19rem)",
               letterSpacing: "-0.06em",
-              transform: "translateY(0px) scale(0.93, 1.02)",
-              transformOrigin: "center",
+              transform: "translateY(0px) scale(0.93, 1.05)",
+              transformOrigin: "center top",
             }}
           >
-            <span className="text-gradient-gold-fade">Launch</span>
-            <span style={{ color: "rgba(248,246,240,0.92)" }}>Fly</span>
+            <span className="text-gradient-gold-fade">Lau</span>
+            <span className="text-foreground">nchFl</span>
+            <span
+              style={{
+                background:
+                  "linear-gradient(180deg, oklch(0.97 0.005 80) 0%, oklch(0.97 0.005 80) 73%, oklch(0.98 0.03 88) 78%, oklch(0.96 0.05 75) 100%)",
+                WebkitBackgroundClip: "text",
+                backgroundClip: "text",
+                color: "transparent",
+              }}
+            >
+              y
+            </span>
             <span
               className="text-foreground inline-block"
               style={{
@@ -183,25 +195,22 @@ function Banner() {
             "Start your own business?" tagline tucked beneath it) and the
             LaunchFly mark on the right, top-aligned. */}
         <div className="mt-[25px] flex items-start justify-between gap-4">
-          <div className="translate-x-[2px] translate-y-[13px]">
+          <div className="flex-1 translate-x-[70px] translate-y-[64.5px] text-center">
             <h2
-              className="text-[1.17rem] font-[780] uppercase tracking-[0.08em] [word-spacing:-0.12em] text-foreground origin-left"
+              className="text-[2.68rem] font-[800] uppercase tracking-[0.04em] origin-left leading-none"
               style={{
-                transform: "scaleY(1.05)",
-                textShadow: "0 0 14px oklch(0.78 0.16 70 / 0.45)",
+                fontFamily: '"Geist", ui-sans-serif, system-ui, sans-serif',
+                background:
+                  "linear-gradient(180deg, rgb(255, 255, 255) 0%, rgb(255, 252, 235) 100%)",
+                WebkitBackgroundClip: "text",
+                backgroundClip: "text",
+                color: "transparent",
+                filter:
+                  "drop-shadow(0 1px 2px rgba(0, 0, 0, 0.07)) drop-shadow(0 2px 5px rgba(0, 0, 0, 0.06)) drop-shadow(0 0 6px oklch(0.96 0.06 82 / 0.4)) drop-shadow(0 0 14px oklch(0.92 0.08 75 / 0.22)) drop-shadow(0 0 28px oklch(0.90 0.10 72 / 0.12))",
               }}
             >
-              <span className="bg-[rgb(234,118,0)] pt-0 pb-[2px] pl-[2px] -ml-[2px]">Want</span> to be a founder?
+              Want to be a founder?
             </h2>
-            <p
-              className="mt-[11px] text-[1.17rem] font-[780] uppercase tracking-[0.08em] [word-spacing:-0.12em] text-foreground origin-left underline underline-offset-4"
-              style={{
-                transform: "scaleY(1.05)",
-                textShadow: "0 0 14px oklch(0.78 0.16 70 / 0.45)",
-              }}
-            >
-              <span className="bg-[rgb(234,118,0)] pt-0 pb-[2px] pl-[2px] -ml-[2px]">Start</span> your own business?
-            </p>
           </div>
           <div className="flex items-center gap-2.5 translate-y-[24px] -translate-x-[40px]">
             <img
@@ -226,7 +235,7 @@ function Hero() {
     <section className="relative -mt-[172px] px-6">
       <div className="mx-auto max-w-5xl text-center">
         <h1
-          className="font-display mt-16 whitespace-nowrap leading-[1.02] tracking-tight -translate-x-[11px]"
+          className="font-display mt-16 whitespace-nowrap leading-[1.02] tracking-tight -translate-x-[11px] -translate-y-[3px]"
           style={{
             fontSize: "clamp(1.6rem, 7vw, 5.1rem)",
             textShadow:
@@ -236,7 +245,7 @@ function Hero() {
           <span className="text-gradient-gold">This</span> is How to Start.
         </h1>
 
-        <p className="mx-auto mt-[25px] max-w-2xl text-lg text-muted-foreground">
+        <p className="mx-auto mt-[25.5px] max-w-2xl text-lg text-muted-foreground">
           LaunchFly helps you go from "I want to start something" to knowing exactly what
           to build, how to start, and what to do next.
         </p>
