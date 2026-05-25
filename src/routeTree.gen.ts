@@ -10,9 +10,11 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WelcomeRouteImport } from './routes/welcome'
+import { Route as TodoRouteImport } from './routes/todo'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as AppRouteImport } from './routes/app'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as TodoUpgradeRouteImport } from './routes/todo.upgrade'
 import { Route as AppIdeasRouteImport } from './routes/app.ideas'
 import { Route as AppFounderDnaRouteImport } from './routes/app.founder-dna'
 import { Route as AppDashboardRouteImport } from './routes/app.dashboard'
@@ -22,6 +24,11 @@ import { Route as ApiStripeWebhookRouteImport } from './routes/api/stripe-webhoo
 const WelcomeRoute = WelcomeRouteImport.update({
   id: '/welcome',
   path: '/welcome',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TodoRoute = TodoRouteImport.update({
+  id: '/todo',
+  path: '/todo',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PricingRoute = PricingRouteImport.update({
@@ -38,6 +45,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const TodoUpgradeRoute = TodoUpgradeRouteImport.update({
+  id: '/upgrade',
+  path: '/upgrade',
+  getParentRoute: () => TodoRoute,
 } as any)
 const AppIdeasRoute = AppIdeasRouteImport.update({
   id: '/ideas',
@@ -69,35 +81,41 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
   '/pricing': typeof PricingRoute
+  '/todo': typeof TodoRouteWithChildren
   '/welcome': typeof WelcomeRoute
   '/api/stripe-webhook': typeof ApiStripeWebhookRoute
   '/app/blueprint': typeof AppBlueprintRoute
   '/app/dashboard': typeof AppDashboardRoute
   '/app/founder-dna': typeof AppFounderDnaRoute
   '/app/ideas': typeof AppIdeasRoute
+  '/todo/upgrade': typeof TodoUpgradeRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
   '/pricing': typeof PricingRoute
+  '/todo': typeof TodoRouteWithChildren
   '/welcome': typeof WelcomeRoute
   '/api/stripe-webhook': typeof ApiStripeWebhookRoute
   '/app/blueprint': typeof AppBlueprintRoute
   '/app/dashboard': typeof AppDashboardRoute
   '/app/founder-dna': typeof AppFounderDnaRoute
   '/app/ideas': typeof AppIdeasRoute
+  '/todo/upgrade': typeof TodoUpgradeRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
   '/pricing': typeof PricingRoute
+  '/todo': typeof TodoRouteWithChildren
   '/welcome': typeof WelcomeRoute
   '/api/stripe-webhook': typeof ApiStripeWebhookRoute
   '/app/blueprint': typeof AppBlueprintRoute
   '/app/dashboard': typeof AppDashboardRoute
   '/app/founder-dna': typeof AppFounderDnaRoute
   '/app/ideas': typeof AppIdeasRoute
+  '/todo/upgrade': typeof TodoUpgradeRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -105,40 +123,47 @@ export interface FileRouteTypes {
     | '/'
     | '/app'
     | '/pricing'
+    | '/todo'
     | '/welcome'
     | '/api/stripe-webhook'
     | '/app/blueprint'
     | '/app/dashboard'
     | '/app/founder-dna'
     | '/app/ideas'
+    | '/todo/upgrade'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/app'
     | '/pricing'
+    | '/todo'
     | '/welcome'
     | '/api/stripe-webhook'
     | '/app/blueprint'
     | '/app/dashboard'
     | '/app/founder-dna'
     | '/app/ideas'
+    | '/todo/upgrade'
   id:
     | '__root__'
     | '/'
     | '/app'
     | '/pricing'
+    | '/todo'
     | '/welcome'
     | '/api/stripe-webhook'
     | '/app/blueprint'
     | '/app/dashboard'
     | '/app/founder-dna'
     | '/app/ideas'
+    | '/todo/upgrade'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
   PricingRoute: typeof PricingRoute
+  TodoRoute: typeof TodoRouteWithChildren
   WelcomeRoute: typeof WelcomeRoute
   ApiStripeWebhookRoute: typeof ApiStripeWebhookRoute
 }
@@ -150,6 +175,13 @@ declare module '@tanstack/react-router' {
       path: '/welcome'
       fullPath: '/welcome'
       preLoaderRoute: typeof WelcomeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/todo': {
+      id: '/todo'
+      path: '/todo'
+      fullPath: '/todo'
+      preLoaderRoute: typeof TodoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/pricing': {
@@ -172,6 +204,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/todo/upgrade': {
+      id: '/todo/upgrade'
+      path: '/upgrade'
+      fullPath: '/todo/upgrade'
+      preLoaderRoute: typeof TodoUpgradeRouteImport
+      parentRoute: typeof TodoRoute
     }
     '/app/ideas': {
       id: '/app/ideas'
@@ -227,10 +266,21 @@ const AppRouteChildren: AppRouteChildren = {
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 
+interface TodoRouteChildren {
+  TodoUpgradeRoute: typeof TodoUpgradeRoute
+}
+
+const TodoRouteChildren: TodoRouteChildren = {
+  TodoUpgradeRoute: TodoUpgradeRoute,
+}
+
+const TodoRouteWithChildren = TodoRoute._addFileChildren(TodoRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
   PricingRoute: PricingRoute,
+  TodoRoute: TodoRouteWithChildren,
   WelcomeRoute: WelcomeRoute,
   ApiStripeWebhookRoute: ApiStripeWebhookRoute,
 }
