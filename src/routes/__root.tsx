@@ -10,6 +10,10 @@ import {
 import { ClerkProvider } from "@clerk/tanstack-react-start";
 
 import appCss from "../styles.css?url";
+// Cropped, tighter-bounding-box version of the money stack so the
+// pixel art actually fills the favicon area at 16/32px instead of
+// shrinking into a sea of transparent padding.
+import moneyFaviconUrl from "../assets/money-favicon.png?url";
 
 const CLERK_PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY as
   | string
@@ -91,6 +95,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: appCss,
       },
+      // Favicon = the same green pixel-art money stack used in the
+      // how2getrich wordmark. Pixelated rendering keeps the chunky
+      // 8-bit aesthetic at small sizes.
+      { rel: "icon", type: "image/png", href: moneyFaviconUrl },
+      { rel: "apple-touch-icon", href: moneyFaviconUrl },
       // Geist — Vercel's geometric sans (variable weight 100-900)
       // for the hero headline + giant LaunchFly wordmark.
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -101,7 +110,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Geist:wght@400..900&family=Concert+One&family=JetBrains+Mono:wght@400;500;700&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Geist:wght@400..900&family=Concert+One&family=Chakra+Petch:wght@400;500;600;700&family=Averia+Serif+Libre:wght@300;400;700&family=Spectral:wght@400;500;600;700&family=Dosis:wght@400;700;800&family=Nunito:wght@400;700;800;900&family=Patrick+Hand&family=Mali:wght@400;500;600;700&family=Handlee&family=Londrina+Solid:wght@100;300;400;900&family=Ramaraja&family=Moderustic:wght@300;400;500;600;700;800&family=Martel+Sans:wght@200;300;400;600;700;800;900&family=Sansita:wght@400;700;800;900&family=Anton&family=Lexend:wght@100..900&family=Cabin+Condensed:wght@400;500;600;700&family=Gravitas+One&family=Radio+Canada:wght@300;400;500;600;700&family=Geo:ital@0;1&family=Rationale&family=Kode+Mono:wght@400;500;600;700&family=Athiti:wght@200;300;400;500;600;700&family=Ovo&family=Miltonian&family=Rakkas&family=VT323&family=Geist+Mono:wght@100..900&family=Iceland&family=Oxanium:wght@200..800&family=Handjet:wght@100..900&family=JetBrains+Mono:wght@400;500;700&display=swap",
       },
     ],
   }),

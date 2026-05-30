@@ -265,6 +265,17 @@
     filter: drop-shadow(0 0 60px oklch(0.78 0.14 70 / 70%));
   }
 }
+/* Indeterminate progress bar used on /todo while Claude generates
+   the tailored 7-day plan. The 35%-wide sliver slides from off-screen
+   left to off-screen right and loops. */
+@keyframes h2gr-loader {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(285%); }
+}
+.animate-h2gr-loader {
+  animation: h2gr-loader 1.2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
 @keyframes fade-in-up {
   from {
     opacity: 0;

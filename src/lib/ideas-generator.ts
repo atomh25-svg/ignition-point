@@ -239,6 +239,388 @@ function parseAndValidate(rawText: string): GeneratedIdea[] {
 }
 
 /* -------------------------------------------------------------------------- */
+/*  how2getrich 7-day plan generator                                           */
+/*  Takes one free-text "tell me about yourself" answer and produces a         */
+/*  personalized 7-day execution plan (the kind of plan a get-rich-quick       */
+/*  zine would show, but actually grounded). Returns a static fallback when    */
+/*  no ANTHROPIC_API_KEY is configured so /todo still renders in dev.          */
+/* -------------------------------------------------------------------------- */
+
+export type H2GRPlanStep = {
+  day: string; // e.g. "day 1"
+  title: string; // headline action — 6-12 words
+  body: string; // 1-line detail / examples
+};
+
+const H2GR_PLAN_SYSTEM_PROMPT = `You are a no-bullshit startup advisor who writes 7-day "how to get rich" plans tailored to ONE specific person's situation. Plans are concrete, executable, and aimed at someone with limited time and no audience — but the actual content must be UNIQUELY shaped by what the person told you about themselves.
+
+Output format (HARD rules):
+- Output ONLY a JSON array. No prose before or after. No markdown code fences.
+- The array must contain EXACTLY 7 step objects, ordered day 1 → day 7.
+- Each step matches this shape: { "day": "day N", "title": string, "body": "" }
+- "title" is ONE specific sentence, 12-22 words, 80-140 characters. The sentence names a concrete action AND the specific tool, customer, subreddit, or dollar amount that makes it executable. Plain prose — no markdown bullets, no parenthetical asides, no "you should…" prefix.
+- "body" must be the empty string "". Do NOT put a separate descriptor here — everything goes in "title".
+
+Personalization rules — the BIGGEST source of value:
+- Read the person's "tell me about yourself" answer like you're talking to them in a coffee shop. What's their actual skill, job, location, life stage, money goal, available time, what they HATE, what they LOVE, what they own?
+- Every step must reference something they specifically said. Don't write generic copy. If they said "plumber in Ohio with two kids", day 1 isn't "pick a boring skill", it's a sentence about listing the 5 most annoying jobs they quoted this month, followed by a sentence about how to spot a recurring complaint pattern.
+- DO NOT use the meta-framework language ("boring skills", "one painful customer", "dumbest possible offer", "25 real people") unless it actually fits — translate the arc into THEIR world.
+- If they hate selling, plan around inbound (content, SEO, lead magnets) instead of cold outreach. If they don't code, plan around no-code (Notion forms, Stripe Payment Links, Carrd one-pager). If they have <5 hrs/week, each day is one 30-45 min task.
+- The 7 days should still ARC from "pick something specific" → "prove there's demand" → "make a tiny first thing" → "get a real person to pay". But how that arc shows up is entirely shaped by their situation.
+
+If the person's input is empty or one word, fall back to a generic but still-named-tool plan (e.g. titles that reference Reddit, Carrd, Stripe Payment Links by name).`;
+
+export async function generateSevenDayPlanFor(
+  rawInput: string,
+): Promise<H2GRPlanStep[]> {
+  const input = (rawInput ?? "").trim().slice(0, 800);
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) {
+    console.warn("[h2gr-plan] no ANTHROPIC_API_KEY, using static plan");
+    return staticSevenDayPlan();
+  }
+  try {
+    return await generateSevenDayPlanWithClaude(input, apiKey);
+  } catch (err) {
+    console.error("[h2gr-plan] Claude call failed:", err);
+    return staticSevenDayPlan();
+  }
+}
+
+async function generateSevenDayPlanWithClaude(
+  input: string,
+  apiKey: string,
+): Promise<H2GRPlanStep[]> {
+  const userMessage = input
+    ? `Person's "tell me about yourself" answer:
+"""
+${input}
+"""
+
+Generate their tailored 7-day plan as JSON only.`
+    : `The user did not share anything about themselves. Generate the generic 7-day plan as JSON only.`;
+
+  const response = await fetch(CLAUDE_ENDPOINT, {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      "x-api-key": apiKey,
+      "anthropic-version": "2023-06-01",
+    },
+    body: JSON.stringify({
+      model: CLAUDE_MODEL,
+      max_tokens: 1024,
+      system: [
+        {
+          type: "text",
+          text: H2GR_PLAN_SYSTEM_PROMPT,
+          cache_control: { type: "ephemeral" },
+        },
+      ],
+      messages: [{ role: "user", content: userMessage }],
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Claude HTTP ${response.status}: ${await response.text()}`);
+  }
+  const data = (await response.json()) as AnthropicMessagesResponse;
+  if (data.error) throw new Error(`Claude error: ${data.error.message}`);
+
+  const text = data.content?.find((b) => b.type === "text")?.text ?? "";
+  console.log(
+    "[h2gr-plan] Claude usage:",
+    JSON.stringify(data.usage),
+    "stop_reason:",
+    data.stop_reason,
+  );
+
+  const cleaned = text
+    .trim()
+    .replace(/^```(?:json)?\s*/i, "")
+    .replace(/\s*```$/i, "")
+    .trim();
+
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(cleaned);
+  } catch {
+    const match = cleaned.match(/\[\s*\{[\s\S]*\}\s*\]/);
+    if (!match) throw new Error("h2gr-plan: not JSON");
+    parsed = JSON.parse(match[0]);
+  }
+  if (!Array.isArray(parsed)) throw new Error("h2gr-plan: not an array");
+
+  const steps: H2GRPlanStep[] = [];
+  for (const item of parsed) {
+    if (!item || typeof item !== "object") continue;
+    const o = item as Record<string, unknown>;
+    const day = typeof o.day === "string" ? o.day.trim().toLowerCase() : "";
+    const title = typeof o.title === "string" ? o.title.trim() : "";
+    // body is no longer rendered — accept an empty string or whatever
+    // Claude returns, just don't reject the step over it.
+    const body = typeof o.body === "string" ? o.body.trim() : "";
+    if (!title) continue;
+    steps.push({
+      day: day || `day ${steps.length + 1}`,
+      title: trim(title, 170),
+      body: trim(body, 200),
+    });
+  }
+  // Pad to 7 with the static template if Claude under-delivered.
+  if (steps.length < 7) {
+    const fallback = staticSevenDayPlan();
+    for (let i = steps.length; i < 7; i++) steps.push(fallback[i]);
+  }
+  return steps.slice(0, 7);
+}
+
+/** Static fallback — the original 7-day plan straight from the Figma. */
+export function staticSevenDayPlan(): H2GRPlanStep[] {
+  return [
+    {
+      day: "day 1",
+      title: "Choose one boring skill people already pay for",
+      body: "examples: editing, landing pages, thumbnails, ads, automation",
+    },
+    {
+      day: "day 2",
+      title: "Pick one specific customer with a painful problem",
+      body: "do not build for everyone",
+    },
+    {
+      day: "day 3",
+      title: "Find 20 examples of people already making money this way",
+      body: "steal the pattern, not the product",
+    },
+    {
+      day: "day 4",
+      title: "Write the dumbest possible offer",
+      body: '"I will help [person] get [result] without [pain]"',
+    },
+    {
+      day: "day 5",
+      title: "Make a one-page site explaining the offer",
+      body: "headline, proof, price, contact button",
+    },
+    {
+      day: "day 6",
+      title: "Create one tiny sample result",
+      body: "mockup, demo, before/after, screenshot, short video",
+    },
+    {
+      day: "day 7",
+      title: "Send the offer to 25 real people",
+      body: "no ads yet. no logo redesign. talk to humans.",
+    },
+  ];
+}
+
+/* -------------------------------------------------------------------------- */
+/*  how2getrich PER-DAY detail generator                                       */
+/*  Zooms into ONE day of the 7-day plan and produces an expanded breakdown:   */
+/*  headline restating the action, "why today", 3-5 concrete steps, an         */
+/*  example shaped by the user's own answer, and a stuck-hint escape hatch.    */
+/* -------------------------------------------------------------------------- */
+
+export type H2GRDayDetail = {
+  day_number: number;
+  headline: string;
+  why: string;
+  steps: string[];
+  example: string;
+  if_stuck: string;
+};
+
+const H2GR_DAY_DETAIL_SYSTEM_PROMPT = `You are zooming into ONE day of a 7-day "how to get rich" plan and producing a detailed breakdown a first-time founder can execute in 30-60 minutes.
+
+Output format (HARD rules):
+- Output ONLY a JSON object. No prose before or after. No markdown code fences.
+- Object shape: { "headline": string, "why": string, "steps": string[3..5], "example": string, "if_stuck": string }
+- "headline": 6-10 words restating today's action in the user's own context. Imperative.
+- "why": ONE sentence explaining why this is today's task in the arc — what yesterday set up, what tomorrow depends on. Under 180 chars.
+- "steps": EXACTLY 3 to 5 micro-steps, each one ONE sentence, 12-22 words. Each must name a specific tool, URL, dollar amount, message script, or button label. No vague verbs like "research" or "explore" — say "Open Reddit, search r/freelance for the phrase 'looking for'".
+- "example": 1-2 sentences showing what this looks like for THIS person specifically (reference their stated skill/job/situation). Under 240 chars.
+- "if_stuck": 1 sentence escape hatch — a concrete copy-pasteable Claude prompt, a specific subreddit, or a 5-minute fallback action. Under 200 chars.
+
+Personalization rules:
+- Read the person's "tell me about yourself" answer carefully. Every step and the example must reference their actual skill, job, location, life stage, time, or constraint.
+- The other 6 days of their plan are provided as context — refer to "yesterday" and "tomorrow" by what those days actually are.
+- DO NOT use meta-framework language ("boring skill", "dumbest offer", "25 real people") unless it genuinely fits.
+- If they said they hate selling, the steps cannot include cold DMs. If they don't code, use no-code tools by name (Carrd, Notion, Stripe Payment Links).`;
+
+export async function generateH2GRDayDetailFor(
+  input: string,
+  plan: H2GRPlanStep[],
+  dayNumber: number,
+): Promise<H2GRDayDetail> {
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) {
+    console.warn("[h2gr-day-detail] no ANTHROPIC_API_KEY, using mock");
+    return mockH2GRDayDetail(plan, dayNumber);
+  }
+  try {
+    return await generateH2GRDayDetailWithClaude(input, plan, dayNumber, apiKey);
+  } catch (err) {
+    console.error("[h2gr-day-detail] Claude call failed:", err);
+    return mockH2GRDayDetail(plan, dayNumber);
+  }
+}
+
+async function generateH2GRDayDetailWithClaude(
+  input: string,
+  plan: H2GRPlanStep[],
+  dayNumber: number,
+  apiKey: string,
+): Promise<H2GRDayDetail> {
+  const idx = Math.max(0, Math.min(plan.length - 1, dayNumber - 1));
+  const today = plan[idx];
+  const yesterday = idx > 0 ? plan[idx - 1] : null;
+  const tomorrow = idx < plan.length - 1 ? plan[idx + 1] : null;
+  const restOfPlan = plan
+    .map((s, i) => `${i + 1}. ${s.title}`)
+    .join("\n");
+
+  const userMessage = `Person's "tell me about yourself" answer:
+"""
+${input.trim().slice(0, 800) || "(no input provided)"}
+"""
+
+Their 7-day plan:
+${restOfPlan}
+
+Today (Day ${dayNumber}) is: ${today?.title ?? "(missing)"}
+Yesterday (Day ${dayNumber - 1}): ${yesterday?.title ?? "(this is Day 1)"}
+Tomorrow (Day ${dayNumber + 1}): ${tomorrow?.title ?? "(no tomorrow — this is the last day)"}
+
+Generate today's executable breakdown as JSON only.`;
+
+  const response = await fetch(CLAUDE_ENDPOINT, {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      "x-api-key": apiKey,
+      "anthropic-version": "2023-06-01",
+    },
+    body: JSON.stringify({
+      model: CLAUDE_MODEL,
+      max_tokens: 1536,
+      system: [
+        {
+          type: "text",
+          text: H2GR_DAY_DETAIL_SYSTEM_PROMPT,
+          cache_control: { type: "ephemeral" },
+        },
+      ],
+      messages: [{ role: "user", content: userMessage }],
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Claude HTTP ${response.status}: ${await response.text()}`);
+  }
+  const data = (await response.json()) as AnthropicMessagesResponse;
+  if (data.error) throw new Error(`Claude error: ${data.error.message}`);
+
+  const text = data.content?.find((b) => b.type === "text")?.text ?? "";
+  console.log(
+    "[h2gr-day-detail] Claude usage:",
+    JSON.stringify(data.usage),
+    "day:",
+    dayNumber,
+  );
+
+  const cleaned = text
+    .trim()
+    .replace(/^```(?:json)?\s*/i, "")
+    .replace(/\s*```$/i, "")
+    .trim();
+
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(cleaned);
+  } catch {
+    const match = cleaned.match(/\{[\s\S]*\}/);
+    if (!match) throw new Error("h2gr-day-detail: not JSON");
+    parsed = JSON.parse(match[0]);
+  }
+  if (!parsed || typeof parsed !== "object") {
+    throw new Error("h2gr-day-detail: not an object");
+  }
+  const o = parsed as Record<string, unknown>;
+
+  const stepsRaw = Array.isArray(o.steps) ? o.steps : [];
+  const steps: string[] = [];
+  for (const s of stepsRaw) {
+    if (typeof s === "string" && s.trim()) {
+      steps.push(trim(s.trim(), 220));
+    } else if (s && typeof s === "object") {
+      // Tolerate { action } / { step } variants
+      const r = s as Record<string, unknown>;
+      const v =
+        (typeof r.action === "string" && r.action) ||
+        (typeof r.step === "string" && r.step) ||
+        (typeof r.task === "string" && r.task) ||
+        "";
+      if (v) steps.push(trim(String(v).trim(), 220));
+    }
+  }
+
+  const headline = typeof o.headline === "string" ? o.headline.trim() : "";
+  const why = typeof o.why === "string" ? o.why.trim() : "";
+  const example = typeof o.example === "string" ? o.example.trim() : "";
+  const ifStuck = typeof o.if_stuck === "string" ? o.if_stuck.trim() : "";
+
+  if (steps.length < 3) {
+    console.warn("[h2gr-day-detail] too few steps, padding from mock");
+    const mock = mockH2GRDayDetail(plan, dayNumber);
+    for (let i = steps.length; i < 3; i++) steps.push(mock.steps[i]);
+  }
+
+  return {
+    day_number: dayNumber,
+    headline: trim(headline || today?.title || `Day ${dayNumber}`, 120),
+    why:
+      trim(
+        why || `Day ${dayNumber} of 7 — keeps the arc moving toward your first paying customer.`,
+        220,
+      ),
+    steps: steps.slice(0, 5),
+    example: trim(
+      example || "Adapt today's action to what you actually have time and tools for.",
+      280,
+    ),
+    if_stuck: trim(
+      ifStuck ||
+        "Paste exactly what you're stuck on into Claude with today's headline as context.",
+      240,
+    ),
+  };
+}
+
+function mockH2GRDayDetail(
+  plan: H2GRPlanStep[],
+  dayNumber: number,
+): H2GRDayDetail {
+  const idx = Math.max(0, Math.min(plan.length - 1, dayNumber - 1));
+  const today = plan[idx]?.title ?? `Day ${dayNumber}`;
+  return {
+    day_number: dayNumber,
+    headline: today,
+    why: "(Fallback content — set ANTHROPIC_API_KEY for personalized breakdowns.)",
+    steps: [
+      "Re-read today's headline and break it into 3 sub-tasks you can finish in under 30 minutes.",
+      "Pick the first sub-task, open the tool you need, and set a 15-minute timer.",
+      "Take a screenshot or paste a result somewhere you can find tomorrow.",
+    ],
+    example:
+      "If you said you're a freelancer, the first sub-task is opening your last 5 invoices and listing the most painful step in your workflow.",
+    if_stuck:
+      "Paste the literal sentence 'I'm stuck on X for the how2getrich plan' into Claude with today's task as context.",
+  };
+}
+
+/* -------------------------------------------------------------------------- */
 /*  Blueprint generator                                                       */
 /* -------------------------------------------------------------------------- */
 

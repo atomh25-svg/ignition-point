@@ -18,10 +18,13 @@ export function DottedSpine({
       aria-hidden
       className={className}
       style={{
-        width: 8,
+        // Narrow column + linear-gradient repeating horizontal stripes
+        // → each "dot" reads as a thin short bar. Tighter spacing fits
+        // ~8 more bars in the same vertical length.
+        width: 2.8,
         backgroundImage:
-          "radial-gradient(circle, rgba(255,255,255,0.95) 1.6px, transparent 1.6px)",
-        backgroundSize: "8px 12px",
+          "linear-gradient(to bottom, rgba(255,255,255,0.95) 0 1px, transparent 1px)",
+        backgroundSize: "100% 5.2px",
         backgroundRepeat: "repeat-y",
         ...style,
       }}

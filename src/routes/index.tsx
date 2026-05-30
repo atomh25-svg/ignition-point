@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { Sidebar } from "@/components/how2getrich/Sidebar";
+import { PageLayout } from "@/components/how2getrich/PageLayout";
 import { DottedSpine } from "@/components/how2getrich/DottedSpine";
-import moneyStack from "@/assets/money-stack.png";
+import { Wordmark } from "@/components/how2getrich/Wordmark";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -24,9 +24,9 @@ export const Route = createFileRoute("/")({
  * acting as the visual backbone, and a single textarea for the
  * "Tell me about yourself:" capture. On submit, advance to /todo.
  *
- * Layout numbers (stage 768×, wordmark/spine/capture positioning)
- * are lifted from Figma node 1:2 so the implementation tracks the
- * mockup exactly.
+ * Sizes are scaled ~30% down from the original Figma 2201-canvas
+ * mockup so the proportions read correctly at typical 1440-1920px
+ * desktop widths.
  */
 function Landing() {
   const navigate = useNavigate();
@@ -34,113 +34,161 @@ function Landing() {
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!value.trim()) return;
-    // Stash the user's answer locally so screens 2/3 can read it
-    // without needing a backend wire-up yet.
+    const trimmed = value.trim();
+    if (!trimmed) return;
+
+    // Generate (or reuse) an anonymous session id. Stored in
+    // localStorage so the same browser keeps the same plan across
+    // visits, and passed as a query param so the /todo page knows
+    // which row in D1 to load.
+    let sessionId = "";
     try {
-      window.localStorage.setItem("h2gr:tellMeAboutYourself", value.trim());
+      sessionId = window.localStorage.getItem("h2gr:sessionId") ?? "";
     } catch {
-      // localStorage can be unavailable in private mode — ignore.
+      /* private mode */
     }
-    navigate({ to: "/todo" });
+    if (!sessionId) {
+      sessionId =
+        typeof crypto !== "undefined" && "randomUUID" in crypto
+          ? crypto.randomUUID()
+          : `s_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
+      try {
+        window.localStorage.setItem("h2gr:sessionId", sessionId);
+      } catch {
+        /* private mode */
+      }
+    }
+    try {
+      window.localStorage.setItem("h2gr:tellMeAboutYourself", trimmed);
+    } catch {
+      /* private mode */
+    }
+
+    // /todo will pick up the session id from the URL, call the server
+    // function to generate-or-fetch, and render the plan.
+    navigate({ to: "/todo", search: { s: sessionId } });
   }
 
   return (
-    <main className="relative min-h-screen w-full overflow-hidden bg-black text-white">
-      <Sidebar />
-      <Stage>
-        <Wordmark />
-        <DottedSpine
-          className="mt-[12px] flex-1 min-h-[300px] self-center"
-        />
-        <form
-          onSubmit={handleSubmit}
-          className="mt-[16px] flex w-full flex-col items-center gap-4"
+    <PageLayout>
+      <Wordmark />
+      {/* Spine begins ~10px below the wordmark and stretches down
+          to the label. min-height keeps it visible on shorter
+          windows. */}
+      {/* Spine is a fixed height so the form falls naturally just
+          below it instead of being pushed around by viewport-height
+          tricks. The page now sizes to content rather than min-h-screen. */}
+      <DottedSpine
+        className="mt-[24.5px] mb-[10px] h-[130px] self-center"
+      />
+      <form
+        onSubmit={handleSubmit}
+        className="mt-[11px] flex w-full flex-col items-center gap-[11px]"
+      >
+        <label
+          htmlFor="tell"
+          className="text-[16.4px] leading-tight text-white/90"
+          style={{
+            fontFamily:
+              '"VT323", "JetBrains Mono", ui-monospace, "SF Mono", monospace',
+            letterSpacing: "0.18px",
+          }}
         >
-          <label
-            htmlFor="tell"
-            className="text-[24px] leading-tight text-white/90"
-            style={{
-              fontFamily:
-                '"JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace',
-              letterSpacing: "0.28px",
-            }}
-          >
-            Tell me about yourself:
-          </label>
-          <textarea
-            id="tell"
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
-            onKeyDown={(e) => {
-              // Cmd/Ctrl+Enter submits; plain Enter still inserts a newline.
-              if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
-                e.preventDefault();
-                handleSubmit(e);
-              }
-            }}
-            placeholder="type here"
-            rows={6}
-            className="w-[576px] max-w-full resize-none rounded-2xl bg-white px-[27px] py-[22px] text-[24px] text-black placeholder:text-black/70 focus:outline-none focus:ring-2 focus:ring-white/40"
-            style={{
-              fontFamily:
-                '"JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace',
-              lineHeight: 1.2,
-              minHeight: 240,
-            }}
-          />
-          {/* Hidden submit so Cmd/Ctrl+Enter works and the form is keyboard
-              accessible without forcing a visible button (matches Figma —
-              no submit button is shown). */}
-          <button type="submit" className="sr-only">
-            Submit
-          </button>
-        </form>
-      </Stage>
-    </main>
+          Tell me about yourself:
+        </label>
+        <textarea
+          id="tell"
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          onKeyDown={(e) => {
+            // Plain Enter submits (advances to /todo with the tailored
+            // plan); Shift+Enter still inserts a newline so multi-line
+            // answers are possible.
+            if (e.key === "Enter" && !e.shiftKey) {
+              e.preventDefault();
+              handleSubmit(e);
+            }
+          }}
+          placeholder="type here"
+          rows={5}
+          className="w-[297px] max-w-full resize-none rounded-[6px] bg-white px-[14px] py-[11px] text-[14.4px] text-black placeholder:text-[12.2px] placeholder:text-black/70 focus:outline-none focus:ring-2 focus:ring-white/40"
+          style={{
+            fontFamily:
+              '"VT323", "JetBrains Mono", ui-monospace, "SF Mono", monospace',
+            lineHeight: 1.2,
+            minHeight: 123,
+          }}
+        />
+        {/* Hidden submit so Cmd/Ctrl+Enter works and the form is keyboard
+            accessible without forcing a visible button (matches Figma —
+            no submit button is shown). */}
+        <button type="submit" className="sr-only">
+          Submit
+        </button>
+      </form>
+    </PageLayout>
   );
 }
 
 /**
- * Shared 768px centered stage column. Every screen lives inside one
- * of these so the layout reads as a single tall card on a black void.
+ * Deprecated inline copy of the Wordmark — kept here so any direct
+ * references in older diffs still resolve. The exported version now
+ * lives at src/components/how2getrich/Wordmark.tsx and is imported
+ * above. This local copy is unused.
  */
-function Stage({ children }: { children: React.ReactNode }) {
+function _LegacyWordmark() {
   return (
-    <div className="mx-auto flex min-h-screen w-[768px] max-w-full flex-col items-center px-6 pt-[64px] pb-[64px]">
-      {children}
-    </div>
-  );
-}
-
-/**
- * "how2getrich" + the 94×94 pixel-art money stack to the right.
- * Concert One renders the wordmark in the chunky early-2000s display
- * face the Figma mockup specifies.
- */
-function Wordmark() {
-  return (
-    <div className="flex items-center gap-[40px]">
+    // Inline-block container is centered by the parent's items-center.
+    // The h1 sits inside, dead-center on the spine. The money image
+    // is absolutely positioned at the h1's right edge so it overhangs
+    // the centerline rather than pulling the wordmark off-axis.
+    <div className="relative mt-[51px] inline-block">
       <h1
-        className="text-[40px] leading-none text-white"
+        className="text-[32.9px] leading-none text-white"
         style={{
-          fontFamily: '"Concert One", system-ui, sans-serif',
-          letterSpacing: "-0.72px",
+          // Londrina Solid from Google Fonts — chunky display
+          // sans, retro poster feel. Available weights: 100/300/400/900.
+          fontFamily: '"Cabin Condensed", "Lexend", system-ui, sans-serif',
+          fontWeight: 700,
+          WebkitTextStroke: "0.9px white",
+          letterSpacing: "0.5px",
+          // Squash vertically 9% + horizontally 5% — gives "how2getrich"
+          // a flatter, slightly condensed marquee-style proportion.
+          transform: "scaleY(0.70) scaleX(0.88)",
+          transformOrigin: "center",
+          display: "inline-block",
+          // Nudge the wordmark down 0.5px. position:relative + top lets
+          // the h1 move without growing the container, so the absolutely-
+          // positioned money icon (centered on the container) stays put.
+          position: "relative",
+          top: "2px",
         }}
       >
-        how2getrich
+        {/* The two "h"s get a slight horizontal stretch on top of the
+            parent's scaleX — display: inline-block makes the per-letter
+            transform actually apply. */}
+        <span style={{ display: "inline-block", transform: "scaleX(1.05)" }}>
+          h
+        </span>
+        ow2getric
+        <span style={{ display: "inline-block", transform: "scaleX(1.05)" }}>
+          h
+        </span>
       </h1>
       <img
         src={moneyStack}
         alt=""
         aria-hidden
-        width={94}
-        height={94}
-        className="h-[94px] w-[94px] shrink-0 object-contain"
+        width={41}
+        height={41}
+        className="absolute left-full top-1/2 ml-[0px] h-[41px] w-[41px] object-contain"
         style={{
           imageRendering: "pixelated",
+          // -50% centers against the wordmark baseline; the +3px nudges
+          // the money stack 3px below center.
+          transform: "translateY(calc(-50% + 1px))",
           filter:
-            "drop-shadow(0 0 16px rgba(0, 217, 54, 0.45)) drop-shadow(0 0 32px rgba(0, 217, 54, 0.2))",
+            "drop-shadow(0 0 7px rgba(0, 217, 54, 0.35)) drop-shadow(0 0 14px rgba(0, 217, 54, 0.15))",
         }}
         draggable={false}
       />

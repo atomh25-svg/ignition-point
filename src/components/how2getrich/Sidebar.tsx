@@ -2,36 +2,54 @@ import { Link } from "@tanstack/react-router";
 
 /**
  * Left-side nav rail used on every how2getrich screen. Three items
- * (Home / About / Dashboard) in 32px JetBrains Mono, separated by
- * a 55px white underline divider so the eye reads them as a stack
- * of CRT terminal commands. Spec pulled from Figma node 1:2.
+ * (Home / About / Dashboard) in 19px JetBrains Mono — smaller than
+ * the wordmark on purpose, so the eye reads the wordmark as the
+ * primary focal point and the nav as a quiet rail underneath.
  */
 export function Sidebar() {
   return (
     <nav
       aria-label="Primary"
-      className="absolute left-[74px] top-[64px] z-20 flex flex-col gap-[34px] text-white"
+      className="w-[156px] shrink-0 text-white"
       style={{
         fontFamily:
-          '"JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace',
+          '"VT323", "JetBrains Mono", ui-monospace, "SF Mono", monospace',
       }}
     >
       <SidebarLink to="/" label="Home" />
-      <SidebarLink to="/todo" label="About" />
-      <SidebarLink to="/todo/upgrade" label="Dashboard" />
+      <Divider />
+      <SidebarLink to="/todo" label="About" className="mt-[17px]" />
+      <Divider />
+      <SidebarLink to="/todo/upgrade" label="Dashboard" className="mt-[17px]" />
     </nav>
   );
 }
 
-function SidebarLink({ to, label }: { to: string; label: string }) {
+function SidebarLink({
+  to,
+  label,
+  className = "",
+}: {
+  to: string;
+  label: string;
+  className?: string;
+}) {
   return (
     <Link
       to={to}
-      className="group flex flex-col items-start gap-2 text-[32px] leading-none text-white/90 transition hover:text-white"
+      className={`block h-[21px] text-center text-[17px] leading-none text-white/90 transition hover:text-white ${className}`}
     >
-      <span>{label}</span>
-      {/* 55px underline divider matches Figma "Line 4" / "Line 5" */}
-      <span className="block h-px w-[55px] bg-white/80" aria-hidden />
+      {label}
     </Link>
+  );
+}
+
+/** 31px white underline tucked between two sidebar items. */
+function Divider() {
+  return (
+    <span
+      aria-hidden
+      className="mx-auto mt-[17px] block h-px w-[22px] bg-white/55"
+    />
   );
 }
