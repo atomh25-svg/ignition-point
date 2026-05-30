@@ -35,7 +35,7 @@ export function PageLayout({
         {/* Sidebar — anchored to the stage's left edge with a 55px
             gap. The stage stays perfectly viewport-centered because
             the sidebar is absolutely positioned outside the flow. */}
-        <div className="absolute right-full top-[146px] mr-[25px] hidden md:block">
+        <div className="absolute right-full top-[186px] mr-[25px] hidden md:block">
           <Sidebar />
         </div>
         {children}

@@ -78,12 +78,11 @@ function Landing() {
       {/* Spine is a fixed height so the form falls naturally just
           below it instead of being pushed around by viewport-height
           tricks. The page now sizes to content rather than min-h-screen. */}
-      <DottedSpine
-        className="mt-[24.5px] mb-[10px] h-[130px] self-center"
-      />
+      {/* Spine removed — the wordmark and form sit 40px apart purely
+          via the form's top margin. */}
       <form
         onSubmit={handleSubmit}
-        className="mt-[11px] flex w-full flex-col items-center gap-[11px]"
+        className="mt-[40px] flex w-full flex-col items-center gap-[11px]"
       >
         <label
           htmlFor="tell"
