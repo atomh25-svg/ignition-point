@@ -10,5 +10,9 @@
       "database_name": "launchfly-db",
       "database_id": "a8d71563-4e5a-4509-a1b0-2b5a8cd765ad"
     }
+  ],
+  "routes": [
+    { "pattern": "launchfly.io", "custom_domain": true },
+    { "pattern": "www.launchfly.io", "custom_domain": true }
   ]
 }
