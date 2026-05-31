@@ -10,6 +10,7 @@ import {
 import { ClerkProvider } from "@clerk/tanstack-react-start";
 
 import appCss from "../styles.css?url";
+import faviconUrl from "../assets/launchfly-mark.png?url";
 
 const CLERK_PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY as
   | string
@@ -77,20 +78,28 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "LaunchFly.io — The first step from idea to takeoff" },
+      {
+        name: "description",
+        content:
+          "LaunchFly turns your idea into a launch-ready plan — the first step from idea to takeoff.",
+      },
+      { property: "og:title", content: "LaunchFly.io" },
+      {
+        property: "og:description",
+        content: "The first step from idea to takeoff.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
       {
         rel: "stylesheet",
         href: appCss,
       },
+      // Browser tab favicon — the gold rocket on dark tile.
+      { rel: "icon", type: "image/png", href: faviconUrl },
+      { rel: "apple-touch-icon", href: faviconUrl },
       // Geist — Vercel's geometric sans (variable weight 100-900)
       // for the hero headline + giant LaunchFly wordmark.
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
