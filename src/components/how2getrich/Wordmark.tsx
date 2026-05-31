@@ -17,12 +17,12 @@ import moneyStack from "@/assets/money-stack.png";
  */
 export function Wordmark() {
   return (
-    <div className="relative mt-[195px] inline-block">
+    <div className="relative mt-[44px] inline-block">
       <h1
-        className="text-[85.5px] leading-none text-white"
+        className="text-[31px] leading-none text-white"
         style={{
           fontFamily: '"Handjet", "Oxanium", system-ui, sans-serif',
-          fontWeight: 900,
+          fontWeight: 700,
           letterSpacing: "0.5px",
           transform: "scaleY(0.70) scaleX(0.65)",
           transformOrigin: "center",
@@ -43,9 +43,9 @@ export function Wordmark() {
         src={moneyStack}
         alt=""
         aria-hidden
-        width={78}
-        height={78}
-        className="absolute left-full top-1/2 ml-[-55px] h-[76.4px] w-[76.4px] object-contain"
+        width={28}
+        height={28}
+        className="absolute left-full top-1/2 ml-[-20px] h-[27.7px] w-[27.7px] object-contain"
         style={{
           imageRendering: "pixelated",
           transform: "translateY(calc(-50% + 4px))",
