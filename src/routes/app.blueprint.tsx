@@ -351,7 +351,9 @@ function Blueprint({ data }: { data: BlueprintData }) {
           <h3 className="font-semibold">7-Day Launch Plan</h3>
         </div>
         <ol className="space-y-2.5">
-          {data.seven_day_plan.map((d, i) => (
+          {/* slice(0,7) is defensive — historical cached blueprints may
+              still hold the old 30-entry array, but we always show 7. */}
+          {data.seven_day_plan.slice(0, 7).map((d, i) => (
             <li key={i} className="flex items-start gap-3 text-sm">
               <span className="w-6 h-6 rounded-full bg-gradient-gold text-gold-foreground text-[11px] font-semibold flex items-center justify-center shrink-0 mt-0.5">
                 {i + 1}

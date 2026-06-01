@@ -89,8 +89,8 @@ const SYSTEM_PROMPT = `You are a startup advisor who matches first-time founders
 
 Hard rules:
 - Return ONLY a JSON array. No prose before or after. No markdown code fences.
-- The array must contain exactly 4 ideas.
-- Each idea must be DIFFERENT in audience, build style, and revenue model — don't pitch four variations of the same thing.
+- The array must contain exactly 8 ideas.
+- Each idea must be DIFFERENT in audience, build style, and revenue model — don't pitch eight variations of the same thing. Span at least 4 different industry verticals across the set.
 - "fit" must reflect how well THIS founder (given their time, budget, willingness to sell, build style) could realistically execute the idea — not how good the idea is in absolute terms. Penalize cold-outreach plans for founders who said they hate selling. Penalize big-build SaaS for founders with <5 hours/week.
 - "first_step" must be a concrete action the founder can take in the next 24 hours, not "do research" or "validate the market".
 - "speed" must be honest given their weekly hours.
@@ -133,7 +133,7 @@ async function generateWithClaude(
   const userMessage = `Founder DNA survey answers:
 ${profileLines}
 
-Generate exactly 4 business ideas tailored to this founder, following all hard rules in your system prompt. Return only the JSON array.`;
+Generate exactly 8 business ideas tailored to this founder, following all hard rules in your system prompt. Return only the JSON array.`;
 
   const response = await fetch(CLAUDE_ENDPOINT, {
     method: "POST",
@@ -144,7 +144,8 @@ Generate exactly 4 business ideas tailored to this founder, following all hard r
     },
     body: JSON.stringify({
       model: CLAUDE_MODEL,
-      max_tokens: 2048,
+      // 8 ideas at ~200 tokens each + JSON overhead; headroom for safety.
+      max_tokens: 3500,
       // System prompt is static across all calls → mark it cacheable so
       // repeat generations cost ~1/10 of the first one.
       system: [
@@ -242,24 +243,24 @@ function parseAndValidate(rawText: string): GeneratedIdea[] {
 /*  Blueprint generator                                                       */
 /* -------------------------------------------------------------------------- */
 
-const BLUEPRINT_SYSTEM_PROMPT = `You are a startup advisor turning a founder's chosen idea into a concrete 30-day launch blueprint.
+const BLUEPRINT_SYSTEM_PROMPT = `You are a startup advisor turning a founder's chosen idea into a concrete 7-day launch blueprint.
 
 Hard rules:
 - Output ONLY a single JSON object. No prose before or after. No markdown code fences.
 - Be specific. Name real tools (Stripe, Resend, Lovable, Vercel, OpenAI, etc.). Name real communities (specific subreddits, specific X/Twitter circles, specific Slack/Discord groups). Real numbers — "$9/mo", "5 DMs", "Day 3".
 - No generic marketing-speak ("leverage", "synergy", "engage your audience"). Write like an experienced founder talking to a first-timer.
-- The 30-day plan must respect the founder's weekly hours: each day's task fits comfortably inside the time available. If they said 2-5 hours/week, each day's task should fit in 30-45 min.
+- The 7-day plan must respect the founder's weekly hours: each day's task fits comfortably inside the time available. If they said 2-5 hours/week, each day's task should fit in 30-45 min.
 - "what_to_skip" must list 3-5 specific features/temptations this founder will want to build but doesn't need on day one. Bullet style — separate items with a newline.
 - Every field must be populated with substantive content. Never leave a field blank or write "TBD" or "—". If you don't have enough information, write your best honest guess.
 
-The 30-day plan ARCS like this — don't deviate from the shape, just adapt content to the idea:
-- Days 1-3: Validate (landing page, talk to potential users, get pre-signups).
-- Days 4-10: Build the MVP end-to-end (the smallest thing that solves the problem).
-- Days 11-15: Ship to first 5-10 real users, fix what's broken, add Stripe.
-- Days 16-22: Distribution — Reddit/X/HN posts, cold DMs, content, ProductHunt.
-- Days 23-28: Iterate based on usage. Add the 1-2 features paying users keep asking for. Tighten the funnel.
-- Day 29: Pricing / retention experiment.
-- Day 30: Plan the next 30 days from real data, not vibes.
+The 7-day plan ARCS like this — don't deviate from the shape, just adapt content to the idea:
+- Day 1: Validate the premise — landing page + email capture, post to one specific community, talk to 3 potential users.
+- Day 2: Scaffold the MVP shell — pick the stack, get a project building locally, deploy a "Hello world" to Vercel.
+- Day 3: Build the core flow end-to-end — the smallest path from sign-in to the AI/backend step to a result the user can see.
+- Day 4: Wire billing — Stripe Checkout link or page, one paid tier, smoke-test the full paid flow.
+- Day 5: Onboard 5 testers, watch them use it, fix the top 3 things they trip on.
+- Day 6: Distribute — write one post for r/<subreddit>, one for X, 10 cold DMs with a specific ask. Submit to ProductHunt if it's ready.
+- Day 7: Pricing + retention pass — talk to anyone who paid, decide the next 7-day sprint based on real data.
 
 Schema (every field is REQUIRED and every string must be non-empty):
 {
@@ -278,9 +279,9 @@ Schema (every field is REQUIRED and every string must be non-empty):
     "tools_youll_use": string,             // comma-separated list of real tools by name
     "how_to_get_first_users": string       // 2-3 sentences naming specific communities + the exact ask
   },
-  "seven_day_plan": [string × 30]
-  // EXACTLY 30 items, each starting with "Day N — " (em dash, not hyphen).
-  // Each item must be CONCISE — under 80 characters total, max ~10 words after the "Day N —". No time estimates ("Time: 75 min"). No multi-sentence explanations. Just the headline action. Example: "Day 1 — Build the landing page with email capture in Lovable".
+  "seven_day_plan": [string × 7]
+  // EXACTLY 7 items, each starting with "Day N — " (em dash, not hyphen).
+  // Each item must be CONCISE — under 100 characters total, max ~14 words after the "Day N —". No time estimates. No multi-sentence explanations. Just the headline action. Example: "Day 1 — Build the landing page with email capture in Lovable and post to r/SaaS".
 }`;
 
 export async function generateBlueprintFor(
@@ -394,7 +395,7 @@ function parseBlueprint(rawText: string, idea: GeneratedIdea): Blueprint {
   if (!stats || Object.keys(stats).length === 0) missing.push("stats");
   if (!pillars || Object.keys(pillars).length === 0) missing.push("pillars");
   if (ipeRaw.length < 3) missing.push(`in_plain_english(${ipeRaw.length})`);
-  if (planRaw.length < 30) missing.push(`seven_day_plan(${planRaw.length})`);
+  if (planRaw.length < 7) missing.push(`seven_day_plan(${planRaw.length})`);
   if (missing.length > 0) {
     console.warn("[blueprint] partial output — padding:", missing.join(", "));
   }
@@ -420,8 +421,8 @@ function parseBlueprint(rawText: string, idea: GeneratedIdea): Blueprint {
 
   const plan: string[] = [];
   const defaultPlan = buildDefaultPlan();
-  for (let i = 0; i < 30; i++) {
-    plan.push(trim(str(planRaw[i], defaultPlan[i]), 100));
+  for (let i = 0; i < 7; i++) {
+    plan.push(trim(str(planRaw[i], defaultPlan[i]), 120));
   }
 
   return {
@@ -476,7 +477,7 @@ function mockBlueprint(idea: GeneratedIdea): Blueprint {
     ],
     pillars: {
       what_youre_building: idea.concept,
-      what_to_skip: "Anything not on the 30-day plan.",
+      what_to_skip: "Anything not on the 7-day plan.",
       tools_youll_use: "Lovable, Stripe, Resend, OpenAI API.",
       how_to_get_first_users: idea.first_step,
     },
@@ -485,43 +486,20 @@ function mockBlueprint(idea: GeneratedIdea): Blueprint {
 }
 
 /**
- * Fallback 30-day plan used when Claude returns fewer entries than
+ * Fallback 7-day plan used when Claude returns fewer entries than
  * requested, or when there's no API key. Each entry is generic enough
  * to feel like a real plan; the real magic comes from the per-day
  * breakdown that pulls in actual idea context.
  */
 function buildDefaultPlan(): string[] {
   return [
-    "Day 1 — Set up landing page with email capture",
-    "Day 2 — Talk to 5 potential users about their problem",
-    "Day 3 — Tighten landing copy based on Day 2 feedback",
-    "Day 4 — Scaffold the MVP shell in Lovable or Cursor",
-    "Day 5 — Build the core user-facing flow end-to-end",
-    "Day 6 — Wire the AI / backend logic to the UI",
-    "Day 7 — Get it on a real domain via Vercel",
-    "Day 8 — Add basic auth (Clerk magic-link)",
-    "Day 9 — Onboard 5 testers, take notes on every snag",
-    "Day 10 — Fix the top 3 issues testers hit",
-    "Day 11 — Add Stripe Checkout for the paid plan",
-    "Day 12 — Write confirmation + drip emails via Resend",
-    "Day 13 — Smoke-test the full paid flow end-to-end",
-    "Day 14 — Convert your first paying customer 🚀",
-    "Day 15 — Write a launch post and 5 cold-DM scripts",
-    "Day 16 — Post in 2 niche subreddits with real value first",
-    "Day 17 — DM 10 founders in your target audience on X",
-    "Day 18 — Submit to ProductHunt and IndieHackers",
-    "Day 19 — Write your first piece of content (long-form post)",
-    "Day 20 — Ship 1 quality-of-life feature paying users asked for",
-    "Day 21 — Set up basic analytics (Posthog free tier)",
-    "Day 22 — Audit the signup → paid funnel for drop-off",
-    "Day 23 — Run a pricing experiment (annual plan or higher tier)",
-    "Day 24 — Add the next paid-only feature",
-    "Day 25 — Re-engage day-1 churned trial users via email",
-    "Day 26 — Ship 1 retention feature (e.g. weekly digest)",
-    "Day 27 — Write a 'how I built this' post for distribution",
-    "Day 28 — Reach out to 5 podcasts in your niche",
-    "Day 29 — Decide pricing for the next 30 days based on real usage",
-    "Day 30 — Plan the next 30 days from data, not vibes",
+    "Day 1 — Set up landing page with email capture and talk to 5 potential users",
+    "Day 2 — Scaffold the MVP shell in Lovable or Cursor, deploy to Vercel",
+    "Day 3 — Build the core flow end-to-end (sign-in → AI step → result)",
+    "Day 4 — Wire Stripe Checkout and smoke-test the paid flow end-to-end",
+    "Day 5 — Onboard 5 testers, watch them use it, fix the top 3 snags",
+    "Day 6 — Distribute: post to one subreddit, 10 cold DMs on X, submit to ProductHunt",
+    "Day 7 — Talk to anyone who paid; decide the next 7-day sprint from real data",
   ];
 }
 
@@ -543,7 +521,7 @@ export type DailyBreakdown = {
   stuck_hint: string;
 };
 
-const DAILY_BREAKDOWN_SYSTEM_PROMPT = `You turn ONE day of a 30-day launch arc into an executable breakdown for a first-time founder.
+const DAILY_BREAKDOWN_SYSTEM_PROMPT = `You turn ONE day of a 7-day launch arc into an executable breakdown for a first-time founder.
 
 Hard rules:
 - Output ONLY a single JSON object. No prose. No markdown fences.
@@ -555,7 +533,7 @@ Hard rules:
 
 Schema (every field REQUIRED, every string non-empty):
 {
-  "summary": string,        // 2 sentences. What this day is about, in the context of the 30-day arc.
+  "summary": string,        // 2 sentences. What this day is about, in the context of the 7-day arc.
   "outcome": string,        // 1 sentence: "By end of day, you should have X."
   "substeps": [
     { "action": string, "tool"?: string }   // 5-8 items. Headlines only — 6-12 words, under 80 chars.
@@ -732,7 +710,7 @@ Write today's executable breakdown as JSON only.`;
   const summary =
     typeof o.summary === "string" && o.summary.trim()
       ? trim(o.summary.trim(), 360)
-      : `Day ${dayNumber} of the 30-day arc for ${idea.name}: ${dayTitle.toLowerCase()}.`;
+      : `Day ${dayNumber} of the 7-day arc for ${idea.name}: ${dayTitle.toLowerCase()}.`;
   const outcome =
     typeof o.outcome === "string" && o.outcome.trim()
       ? trim(o.outcome.trim(), 240)
@@ -769,7 +747,7 @@ export type SubstepDive = {
 
 export type GeneratedSubstepDive = SubstepDive & { isMock: boolean };
 
-const SUBSTEP_DIVE_SYSTEM_PROMPT = `You're zooming into ONE substep of a 30-day launch arc and breaking it into ultra-granular micro-steps a first-time founder can execute one-by-one.
+const SUBSTEP_DIVE_SYSTEM_PROMPT = `You're zooming into ONE substep of a 7-day launch arc and breaking it into ultra-granular micro-steps a first-time founder can execute one-by-one.
 
 Hard rules:
 - Output ONLY a JSON object. No prose. No fences.
@@ -928,7 +906,7 @@ function mockDailyBreakdown(
   return {
     day_number: dayNumber,
     day_title: dayTitle,
-    summary: `Day ${dayNumber} of the 30-day arc for ${idea.name}: ${dayTitle.toLowerCase()}. (Reload in a few seconds — the detailed breakdown is still generating.)`,
+    summary: `Day ${dayNumber} of the 7-day arc for ${idea.name}: ${dayTitle.toLowerCase()}. (Reload in a few seconds — the detailed breakdown is still generating.)`,
     outcome: `By end of day, the work for "${dayTitle}" should be done.`,
     substeps: [
       { action: "Re-read the Blueprint section for this day for context." },
@@ -939,6 +917,159 @@ function mockDailyBreakdown(
     stuck_hint:
       "Paste exactly what you're trying to do plus the error into Claude. It's faster than Googling.",
   };
+}
+
+/* -------------------------------------------------------------------------- */
+/*  AI Founder Coach — chat with grounding in the user's idea + blueprint     */
+/* -------------------------------------------------------------------------- */
+
+export type CoachMessage = {
+  role: "user" | "assistant";
+  content: string;
+};
+
+export type CoachContext = {
+  idea?: GeneratedIdea | null;
+  blueprint?: Blueprint | null;
+};
+
+const COACH_SYSTEM_PROMPT = `You are LaunchFly's AI Founder Coach. You're talking to a first-time founder who paid $19 to commit to building. Your job is to be the friend they wish they had — direct, tactical, occasionally funny, never preachy.
+
+What you do:
+- Answer questions about their idea, their plan, their next step, their stuck moment, their fear.
+- Push them toward concrete action this week. Always anchor to "what could you do in the next 24 hours?"
+- When they spiral, redirect: "Let's pick the smallest version of this and ship it."
+- When they ask "should I…", give a real opinion. Don't say "it depends" without saying what it depends ON.
+- Reference their actual idea by name and their blueprint when relevant. You can see both in the context.
+- Cite real tools, real subreddits, real numbers. No "leverage your network" garbage.
+
+What you DON'T do:
+- Don't write essays. Replies should usually fit in 3-6 sentences. If they ask a big question, give the headline answer + offer to expand.
+- Don't end with "Let me know if you have questions" or other AI-tells. Just answer.
+- Don't list "10 tips" when they need 1 next move.
+- Don't moralize ("It's important to remember…"). Talk like a friend at a coffee shop.
+- Don't break character. You're the coach; you don't reference "the AI" or "LaunchFly's prompt".
+
+Format:
+- Plain text. No markdown headers. Light **bold** or \`inline code\` is OK if it genuinely helps. Bullets only when the user explicitly asks for a list.
+- If the user asks for code or copy (an email, a tweet, a landing-page headline), provide it directly without a wind-up.`;
+
+/**
+ * Generate the coach's next reply given chat history + the user's
+ * idea + blueprint as grounding. Returns the assistant text. Throws
+ * on Claude failure — caller should catch and surface a graceful
+ * "coach is temporarily unavailable" message.
+ */
+export async function generateCoachReplyFor(
+  history: CoachMessage[],
+  ctx: CoachContext,
+): Promise<string> {
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) {
+    throw new Error("ANTHROPIC_API_KEY not set");
+  }
+
+  // Build a context block that's prepended to the user's first message
+  // so Claude knows what idea + blueprint they're working on. Cached as
+  // ephemeral so follow-up turns cost ~1/10 of the first.
+  const contextLines: string[] = [];
+  if (ctx.idea) {
+    contextLines.push(
+      `The founder's chosen idea:`,
+      `- Name: ${ctx.idea.name}`,
+      `- Concept: ${ctx.idea.concept}`,
+      `- Audience: ${ctx.idea.audience}`,
+      `- Difficulty: ${ctx.idea.difficulty}`,
+      `- Target time to first paid user: ${ctx.idea.speed}`,
+      `- Suggested first step: ${ctx.idea.first_step}`,
+    );
+  } else {
+    contextLines.push(
+      "The founder hasn't picked an idea yet — encourage them to finish Founder DNA + select one if it comes up.",
+    );
+  }
+  if (ctx.blueprint) {
+    contextLines.push(
+      ``,
+      `Their 7-day Launch Blueprint:`,
+      `- Headline: ${ctx.blueprint.headline}`,
+      `- Tagline: ${ctx.blueprint.tagline}`,
+      `- Who it's for: ${ctx.blueprint.stats.who_its_for}`,
+      `- Why they'll pay: ${ctx.blueprint.stats.why_theyll_pay}`,
+      `- Price: ${ctx.blueprint.stats.price}`,
+      `- What to skip: ${ctx.blueprint.pillars.what_to_skip.replace(/\n/g, "; ")}`,
+      `- Tools: ${ctx.blueprint.pillars.tools_youll_use}`,
+      `- 7-day plan:`,
+      ...ctx.blueprint.seven_day_plan
+        .slice(0, 7)
+        .map((d) => `  ${d}`),
+    );
+  }
+  const contextBlock = contextLines.join("\n");
+
+  // Trim history to last ~20 turns so the prompt doesn't grow unboundedly.
+  const trimmedHistory = history.slice(-20);
+
+  // The Anthropic Messages API expects alternating user/assistant turns
+  // starting with user. If our trimmed history starts with assistant
+  // (unlikely but possible after edits), drop the first message.
+  const cleaned =
+    trimmedHistory[0]?.role === "assistant"
+      ? trimmedHistory.slice(1)
+      : trimmedHistory;
+
+  // Prepend the context block to the first user message so Claude has
+  // grounding without us inflating the system prompt every turn.
+  const messages = cleaned.map((m, i) => {
+    if (i === 0 && m.role === "user" && contextBlock) {
+      return {
+        role: m.role,
+        content: `${contextBlock}\n\n---\n\n${m.content}`,
+      };
+    }
+    return { role: m.role, content: m.content };
+  });
+
+  const response = await fetch(CLAUDE_ENDPOINT, {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      "x-api-key": apiKey,
+      "anthropic-version": "2023-06-01",
+    },
+    body: JSON.stringify({
+      model: CLAUDE_MODEL,
+      max_tokens: 1024,
+      system: [
+        {
+          type: "text",
+          text: COACH_SYSTEM_PROMPT,
+          cache_control: { type: "ephemeral" },
+        },
+      ],
+      messages,
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error(
+      `Claude HTTP ${response.status}: ${await response.text()}`,
+    );
+  }
+  const data = (await response.json()) as AnthropicMessagesResponse;
+  if (data.error) throw new Error(`Claude error: ${data.error.message}`);
+
+  const text = data.content?.find((b) => b.type === "text")?.text ?? "";
+  console.log(
+    "[coach] Claude usage:",
+    JSON.stringify(data.usage),
+    "history-len:",
+    cleaned.length,
+  );
+  if (!text.trim()) {
+    throw new Error("Empty coach reply");
+  }
+  return text.trim();
 }
 
 /* -------------------------------------------------------------------------- */
@@ -973,6 +1104,34 @@ const FALLBACK_IDEAS: ReadonlyArray<Omit<GeneratedIdea, "fit" | "speed">> = [
     audience: "Coaches & teachers",
     difficulty: "Easy",
     first_step: "Show demo to 3 coaches you know.",
+  },
+  {
+    name: "Cold email rewriter",
+    concept: "Paste a draft, get a higher-reply rewrite in your voice.",
+    audience: "B2B founders sending <100 cold emails/wk",
+    difficulty: "Easy",
+    first_step: "Post a free-tier link in r/SaaS with one example.",
+  },
+  {
+    name: "Discord onboarding bot",
+    concept: "Walks new members through your community in one DM thread.",
+    audience: "Discord community owners (2k–50k members)",
+    difficulty: "Medium",
+    first_step: "DM 5 mid-size Discord owners with a 60-sec demo.",
+  },
+  {
+    name: "Etsy listing optimizer",
+    concept: "Rewrites titles, tags, and descriptions for higher search rank.",
+    audience: "Side-hustle Etsy sellers under $5k/mo",
+    difficulty: "Easy",
+    first_step: "Free audit for 10 sellers from r/EtsySellers.",
+  },
+  {
+    name: "Local SEO mini-agency",
+    concept: "Productized monthly Google Business Profile + GBP-post packages.",
+    audience: "Solo dentists, lawyers, plumbers",
+    difficulty: "Hard",
+    first_step: "Walk into 3 local offices with a one-pager.",
   },
 ];
 

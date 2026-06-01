@@ -4,10 +4,12 @@ import { auth } from "@clerk/tanstack-react-start/server";
 import { env } from "cloudflare:workers";
 import {
   generateBlueprintFor,
+  generateCoachReplyFor,
   generateDailyBreakdownFor,
   generateIdeasFor,
   generateSubstepDiveFor,
   type Blueprint,
+  type CoachMessage,
   type DailyBreakdown,
   type GeneratedIdea,
   type SubstepDive,
@@ -487,9 +489,9 @@ export const getDailyBreakdown = createServerFn({ method: "POST" })
       typeof data.dayNumber !== "number" ||
       !Number.isFinite(data.dayNumber) ||
       data.dayNumber < 1 ||
-      data.dayNumber > 60
+      data.dayNumber > 7
     ) {
-      throw new Error("dayNumber must be 1-60");
+      throw new Error("dayNumber must be 1-7");
     }
     return data;
   })
@@ -609,9 +611,9 @@ export const getSubstepDive = createServerFn({ method: "POST" })
       if (
         typeof data.dayNumber !== "number" ||
         data.dayNumber < 1 ||
-        data.dayNumber > 60
+        data.dayNumber > 7
       ) {
-        throw new Error("dayNumber must be 1-60");
+        throw new Error("dayNumber must be 1-7");
       }
       if (
         typeof data.substepIndex !== "number" ||
@@ -729,3 +731,213 @@ export const getSubstepDive = createServerFn({ method: "POST" })
       return { ok: true, dive };
     },
   );
+
+/* -------------------------------------------------------------------------- */
+/*  AI Founder Coach                                                          */
+/*  /app/coach posts a user message; we look up the user's idea + blueprint   */
+/*  for grounding, append the message to coach_messages, call Claude, append  */
+/*  the assistant reply, return the full updated history.                     */
+/* -------------------------------------------------------------------------- */
+
+const COACH_HISTORY_LIMIT = 50;
+
+async function loadCoachContext(
+  db: D1Database,
+  userId: string,
+): Promise<{ idea: GeneratedIdea | null; blueprint: Blueprint | null }> {
+  // Selected idea (if any).
+  const subRow = await db
+    .prepare(
+      `SELECT selected_idea_id FROM subscriptions
+        WHERE clerk_user_id = ? AND status IN ('active','trialing','past_due')
+        ORDER BY updated_at DESC LIMIT 1`,
+    )
+    .bind(userId)
+    .first<{ selected_idea_id: string | null }>();
+  const ideaId = subRow?.selected_idea_id ?? null;
+
+  let idea: GeneratedIdea | null = null;
+  let blueprint: Blueprint | null = null;
+  if (ideaId) {
+    const ideaRow = await db
+      .prepare(
+        `SELECT id, name, concept, audience, fit, difficulty, speed, first_step
+           FROM generated_ideas WHERE id = ? AND clerk_user_id = ?`,
+      )
+      .bind(ideaId, userId)
+      .first<{
+        id: string;
+        name: string;
+        concept: string;
+        audience: string;
+        fit: number;
+        difficulty: string;
+        speed: string;
+        first_step: string;
+      }>();
+    if (ideaRow) {
+      idea = {
+        name: ideaRow.name,
+        concept: ideaRow.concept,
+        audience: ideaRow.audience,
+        fit: ideaRow.fit,
+        difficulty: ideaRow.difficulty as GeneratedIdea["difficulty"],
+        speed: ideaRow.speed,
+        first_step: ideaRow.first_step,
+      };
+    }
+
+    const bpRow = await db
+      .prepare(
+        `SELECT payload_json FROM blueprints
+           WHERE clerk_user_id = ? AND idea_id = ?`,
+      )
+      .bind(userId, ideaId)
+      .first<{ payload_json: string }>();
+    if (bpRow) {
+      try {
+        blueprint = JSON.parse(bpRow.payload_json) as Blueprint;
+      } catch {
+        /* corrupt — ignore */
+      }
+    }
+  }
+
+  return { idea, blueprint };
+}
+
+/**
+ * Load the full chat history for the signed-in user. Returns at most
+ * the last COACH_HISTORY_LIMIT messages, oldest first.
+ */
+export const getCoachHistory = createServerFn({ method: "GET" }).handler(
+  async (): Promise<
+    | { ok: true; messages: CoachMessage[] }
+    | { ok: false; reason: string }
+  > => {
+    const { userId } = await auth();
+    if (!userId) return { ok: false, reason: "unauthenticated" };
+    const db = (env as unknown as Env).DB;
+    if (!db) return { ok: false, reason: "no-db" };
+
+    const rows = await db
+      .prepare(
+        `SELECT role, content FROM coach_messages
+           WHERE clerk_user_id = ?
+           ORDER BY created_at ASC, id ASC
+           LIMIT ?`,
+      )
+      .bind(userId, COACH_HISTORY_LIMIT)
+      .all<{ role: string; content: string }>();
+
+    const messages: CoachMessage[] = (rows.results ?? [])
+      .filter((r): r is { role: "user" | "assistant"; content: string } =>
+        r.role === "user" || r.role === "assistant",
+      )
+      .map((r) => ({ role: r.role, content: r.content }));
+
+    return { ok: true, messages };
+  },
+);
+
+/**
+ * Append a user message, generate the coach's reply, persist both,
+ * return the full updated history. Idempotent against double-clicks
+ * on the send button only insofar as the second click adds a second
+ * row — caller's responsibility to debounce the UI.
+ */
+export const sendCoachMessage = createServerFn({ method: "POST" })
+  .inputValidator((data: { content: string }) => {
+    const c = typeof data?.content === "string" ? data.content.trim() : "";
+    if (!c) throw new Error("content required");
+    if (c.length > 4000) throw new Error("content too long");
+    return { content: c };
+  })
+  .handler(
+    async ({
+      data,
+    }): Promise<
+      | { ok: true; messages: CoachMessage[] }
+      | { ok: false; reason: string }
+    > => {
+      const { userId } = await auth();
+      if (!userId) return { ok: false, reason: "unauthenticated" };
+      const db = (env as unknown as Env).DB;
+      if (!db) return { ok: false, reason: "no-db" };
+
+      // 1. Persist the user message right away so it's visible even if
+      //    the Claude call fails partway.
+      await db
+        .prepare(
+          `INSERT INTO coach_messages (clerk_user_id, role, content)
+           VALUES (?, 'user', ?)`,
+        )
+        .bind(userId, data.content)
+        .run();
+
+      // 2. Load full history (including the message we just inserted)
+      //    + the user's grounding context.
+      const historyRows = await db
+        .prepare(
+          `SELECT role, content FROM coach_messages
+             WHERE clerk_user_id = ?
+             ORDER BY created_at ASC, id ASC
+             LIMIT ?`,
+        )
+        .bind(userId, COACH_HISTORY_LIMIT)
+        .all<{ role: string; content: string }>();
+      const history: CoachMessage[] = (historyRows.results ?? [])
+        .filter((r): r is { role: "user" | "assistant"; content: string } =>
+          r.role === "user" || r.role === "assistant",
+        )
+        .map((r) => ({ role: r.role, content: r.content }));
+
+      const ctx = await loadCoachContext(db, userId);
+
+      // 3. Generate the reply. On failure, return what we have + an
+      //    error reason rather than throwing — client can show a soft
+      //    "coach is taking a sec, try again" message.
+      let reply: string;
+      try {
+        reply = await generateCoachReplyFor(history, ctx);
+      } catch (err) {
+        console.error("[coach] generation failed:", err);
+        return {
+          ok: false,
+          reason: `coach-error: ${err instanceof Error ? err.message.slice(0, 200) : "unknown"}`,
+        };
+      }
+
+      // 4. Persist the assistant reply, return the updated history.
+      await db
+        .prepare(
+          `INSERT INTO coach_messages (clerk_user_id, role, content)
+           VALUES (?, 'assistant', ?)`,
+        )
+        .bind(userId, reply)
+        .run();
+
+      const updated = [...history, { role: "assistant" as const, content: reply }];
+      return { ok: true, messages: updated };
+    },
+  );
+
+/**
+ * Wipe a user's chat history. Used when they want to start fresh, or
+ * when they swap selected_idea_id (so the coach doesn't keep
+ * referencing the old idea).
+ */
+export const clearCoachHistory = createServerFn({ method: "POST" }).handler(
+  async () => {
+    const { userId } = await auth();
+    if (!userId) return { ok: false as const, reason: "unauthenticated" as const };
+    const db = (env as unknown as Env).DB;
+    if (!db) return { ok: false as const, reason: "no-db" as const };
+
+    await db
+      .prepare(`DELETE FROM coach_messages WHERE clerk_user_id = ?`)
+      .bind(userId)
+      .run();
+    return { ok: true as const };
+  },
+);

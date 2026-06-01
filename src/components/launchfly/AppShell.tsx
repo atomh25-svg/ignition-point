@@ -7,6 +7,7 @@ const items = [
   { to: "/app/founder-dna", label: "Founder DNA", icon: Brain },
   { to: "/app/ideas", label: "Ideas", icon: Lightbulb },
   { to: "/app/blueprint", label: "Blueprint", icon: Compass },
+  { to: "/app/coach", label: "Coach", icon: MessageSquare },
 ];
 
 export function AppShell() {
@@ -32,13 +33,16 @@ export function AppShell() {
             );
           })}
         </nav>
-        <div className="glass rounded-xl p-4 text-xs">
+        <Link
+          to="/app/coach"
+          className="glass rounded-xl p-4 text-xs transition hover:bg-white/[0.04]"
+        >
           <div className="flex items-center gap-2 mb-2">
             <MessageSquare className="w-4 h-4 text-primary" />
             <span className="font-medium">AI Founder Coach</span>
           </div>
           <p className="text-muted-foreground">Always on. Ask anything about your launch.</p>
-        </div>
+        </Link>
         <Link to="/" className="mt-4 flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground">
           <Settings className="w-3.5 h-3.5" /> Back to site
         </Link>

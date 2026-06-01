@@ -16,6 +16,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppIdeasRouteImport } from './routes/app.ideas'
 import { Route as AppFounderDnaRouteImport } from './routes/app.founder-dna'
 import { Route as AppDashboardRouteImport } from './routes/app.dashboard'
+import { Route as AppCoachRouteImport } from './routes/app.coach'
 import { Route as AppBlueprintRouteImport } from './routes/app.blueprint'
 import { Route as ApiStripeWebhookRouteImport } from './routes/api/stripe-webhook'
 
@@ -54,6 +55,11 @@ const AppDashboardRoute = AppDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AppRoute,
 } as any)
+const AppCoachRoute = AppCoachRouteImport.update({
+  id: '/coach',
+  path: '/coach',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppBlueprintRoute = AppBlueprintRouteImport.update({
   id: '/blueprint',
   path: '/blueprint',
@@ -72,6 +78,7 @@ export interface FileRoutesByFullPath {
   '/welcome': typeof WelcomeRoute
   '/api/stripe-webhook': typeof ApiStripeWebhookRoute
   '/app/blueprint': typeof AppBlueprintRoute
+  '/app/coach': typeof AppCoachRoute
   '/app/dashboard': typeof AppDashboardRoute
   '/app/founder-dna': typeof AppFounderDnaRoute
   '/app/ideas': typeof AppIdeasRoute
@@ -83,6 +90,7 @@ export interface FileRoutesByTo {
   '/welcome': typeof WelcomeRoute
   '/api/stripe-webhook': typeof ApiStripeWebhookRoute
   '/app/blueprint': typeof AppBlueprintRoute
+  '/app/coach': typeof AppCoachRoute
   '/app/dashboard': typeof AppDashboardRoute
   '/app/founder-dna': typeof AppFounderDnaRoute
   '/app/ideas': typeof AppIdeasRoute
@@ -95,6 +103,7 @@ export interface FileRoutesById {
   '/welcome': typeof WelcomeRoute
   '/api/stripe-webhook': typeof ApiStripeWebhookRoute
   '/app/blueprint': typeof AppBlueprintRoute
+  '/app/coach': typeof AppCoachRoute
   '/app/dashboard': typeof AppDashboardRoute
   '/app/founder-dna': typeof AppFounderDnaRoute
   '/app/ideas': typeof AppIdeasRoute
@@ -108,6 +117,7 @@ export interface FileRouteTypes {
     | '/welcome'
     | '/api/stripe-webhook'
     | '/app/blueprint'
+    | '/app/coach'
     | '/app/dashboard'
     | '/app/founder-dna'
     | '/app/ideas'
@@ -119,6 +129,7 @@ export interface FileRouteTypes {
     | '/welcome'
     | '/api/stripe-webhook'
     | '/app/blueprint'
+    | '/app/coach'
     | '/app/dashboard'
     | '/app/founder-dna'
     | '/app/ideas'
@@ -130,6 +141,7 @@ export interface FileRouteTypes {
     | '/welcome'
     | '/api/stripe-webhook'
     | '/app/blueprint'
+    | '/app/coach'
     | '/app/dashboard'
     | '/app/founder-dna'
     | '/app/ideas'
@@ -194,6 +206,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppDashboardRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/coach': {
+      id: '/app/coach'
+      path: '/coach'
+      fullPath: '/app/coach'
+      preLoaderRoute: typeof AppCoachRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/blueprint': {
       id: '/app/blueprint'
       path: '/blueprint'
@@ -213,6 +232,7 @@ declare module '@tanstack/react-router' {
 
 interface AppRouteChildren {
   AppBlueprintRoute: typeof AppBlueprintRoute
+  AppCoachRoute: typeof AppCoachRoute
   AppDashboardRoute: typeof AppDashboardRoute
   AppFounderDnaRoute: typeof AppFounderDnaRoute
   AppIdeasRoute: typeof AppIdeasRoute
@@ -220,6 +240,7 @@ interface AppRouteChildren {
 
 const AppRouteChildren: AppRouteChildren = {
   AppBlueprintRoute: AppBlueprintRoute,
+  AppCoachRoute: AppCoachRoute,
   AppDashboardRoute: AppDashboardRoute,
   AppFounderDnaRoute: AppFounderDnaRoute,
   AppIdeasRoute: AppIdeasRoute,
