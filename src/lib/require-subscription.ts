@@ -489,9 +489,9 @@ export const getDailyBreakdown = createServerFn({ method: "POST" })
       typeof data.dayNumber !== "number" ||
       !Number.isFinite(data.dayNumber) ||
       data.dayNumber < 1 ||
-      data.dayNumber > 7
+      data.dayNumber > 10
     ) {
-      throw new Error("dayNumber must be 1-7");
+      throw new Error("dayNumber must be 1-10");
     }
     return data;
   })
@@ -611,9 +611,9 @@ export const getSubstepDive = createServerFn({ method: "POST" })
       if (
         typeof data.dayNumber !== "number" ||
         data.dayNumber < 1 ||
-        data.dayNumber > 7
+        data.dayNumber > 10
       ) {
-        throw new Error("dayNumber must be 1-7");
+        throw new Error("dayNumber must be 1-10");
       }
       if (
         typeof data.substepIndex !== "number" ||

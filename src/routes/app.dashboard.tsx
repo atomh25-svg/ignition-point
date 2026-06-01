@@ -608,12 +608,12 @@ function Dashboard() {
               const dayNum = i + 1;
               const isPast = dayNum < today;
               const isToday = dayNum === today;
-              // Collapsed view: a 7-day window that ALWAYS shows 7
+              // Collapsed view: a 10-day window that ALWAYS shows 10
               // days, centered on today when possible but clamped at
-              // the edges of the plan so Day 1 still shows 7 forward
-              // and Day 30 still shows 7 backward.
-              const winStart = Math.max(1, Math.min(today - 3, total - 6));
-              const winEnd = winStart + 6;
+              // the edges of the plan so Day 1 still shows 10 forward
+              // and the last day still shows 10 backward.
+              const winStart = Math.max(1, Math.min(today - 4, total - 9));
+              const winEnd = winStart + 9;
               const inWindow = dayNum >= winStart && dayNum <= winEnd;
               if (!planExpanded && !inWindow) return null;
               return (

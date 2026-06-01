@@ -32,7 +32,7 @@ const QUICK_PROMPTS = [
   "What's my single biggest blocker right now?",
   "Draft a cold DM I can send to 5 potential users today.",
   "I'm overwhelmed. What's the next 30 minutes of work?",
-  "Roast my Day 1 plan and tell me what's missing.",
+  "Evaluate my Day 1 plan and tell me what's missing.",
 ];
 
 function CoachPage() {
