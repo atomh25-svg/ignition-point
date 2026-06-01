@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { MessageSquare, Send, RotateCcw, Sparkles } from "lucide-react";
+import { MessageSquare, Send, RotateCcw, Sparkles, User } from "lucide-react";
 
 import { Card } from "@/components/ui/card";
 import {
@@ -265,7 +265,14 @@ function MessageBubble({ message }: { message: CoachMessage }) {
             : "bg-gradient-gold text-gold-foreground"
         }`}
       >
-        {isUser ? "You" : <Sparkles className="h-3.5 w-3.5" />}
+        {/* Generic head-and-shoulders silhouette for the user — same
+            visual register as the default-avatar fallback you'd see on
+            Instagram/Facebook before someone uploads a photo. */}
+        {isUser ? (
+          <User className="h-4 w-4" />
+        ) : (
+          <Sparkles className="h-3.5 w-3.5" />
+        )}
       </div>
       <div className="flex-1 pt-1">
         {/* whitespace-pre-wrap so the coach's line breaks + paragraphs
