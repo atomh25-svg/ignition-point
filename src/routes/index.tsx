@@ -60,7 +60,7 @@ function Nav() {
               src={launchflyMark}
               alt=""
               aria-hidden
-              className="h-[27px] w-[27px] object-contain shrink-0 brightness-110 logo-glow"
+              className="h-[32px] w-[32px] object-contain shrink-0 brightness-110 logo-glow"
               draggable={false}
             />
             <span className="text-lg font-semibold tracking-tight">
@@ -106,8 +106,24 @@ function Nav() {
 }
 
 function Banner() {
+  // The banner's positioned content (giant wordmark + eyebrow + headline +
+  // floating mark) was hand-tuned at a 1440×720 desktop reference. To keep
+  // every relative position intact across screen sizes, we wrap that content
+  // in a fixed-size "design canvas" and scale it as a single unit on narrower
+  // viewports. Section height tracks the canvas's scaled height so nothing
+  // leaves a vertical gap. Background image stays outside the canvas — it
+  // fills the section directly so it still looks full-bleed everywhere.
   return (
-    <section id="top" className="relative h-[78vh] min-h-[560px] w-full overflow-hidden">
+    <section
+      id="top"
+      className="relative w-full overflow-hidden"
+      style={{
+        // 50vw matches 720px at 1440 viewport (the canvas height); clamps
+        // prevent the section from collapsing below ~560px or growing past
+        // the canvas's natural height on ultra-wide screens.
+        height: "clamp(560px, 50vw, 720px)",
+      }}
+    >
       <img
         src={bannerImg}
         alt="Builder coding late at night, focused on launching their idea"
@@ -117,112 +133,125 @@ function Banner() {
       <div className="absolute inset-0 bg-banner-overlay" />
       <div className="pointer-events-none absolute inset-0 bg-warm-glow" />
 
-      {/* Giant "LaunchFly" wordmark centered behind the overlay text.
-          z-[5] puts it above the banner image but below the eyebrow
-          and bottom row; pointer-events-none keeps it from intercepting
-          clicks. */}
-      <div className="pointer-events-none absolute inset-x-0 top-1/2 z-[5] -translate-y-[calc(50%-60.5px)] -translate-x-[9px] px-6 text-center">
-        <div className="relative inline-block">
-          {/* Sleek reflective surface beneath the wordmark — thin
-              horizontal band that fades at the ends, almost like a
-              glossy floor reflection line under "LaunchFly." */}
-          <div
-            aria-hidden
-            className="pointer-events-none absolute left-1/2 -translate-x-1/2 -z-10"
-            style={{
-              bottom: "-6.5px",
-              width: "79%",
-              height: "17%",
-              // Horizontal gradient = side fades (transparent at both ends).
-              background:
-                "linear-gradient(90deg, rgba(4,3,2,0) 0%, rgba(4,3,2,0.97) 12%, rgba(4,3,2,1) 50%, rgba(4,3,2,0.97) 88%, rgba(4,3,2,0) 100%)",
-              // Vertical mask = solid at top, fades out toward the bottom.
-              maskImage:
-                "linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0.75) 50%, rgba(0,0,0,0) 100%)",
-              WebkitMaskImage:
-                "linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0.75) 50%, rgba(0,0,0,0) 100%)",
-              filter: "blur(1.5px)",
-            }}
-          />
-          <h2
-            className="font-display leading-none inline-block relative"
-            style={{
-              fontSize: "clamp(12.27rem, 22.31vw, 18.19rem)",
-              letterSpacing: "-0.06em",
-              transform: "translateY(0px) scale(0.93, 1.05)",
-              transformOrigin: "center top",
-            }}
-          >
-            <span className="text-gradient-gold-fade">Lau</span>
-            <span className="text-foreground">nchFl</span>
-            <span
+      {/* === 1440×720 design canvas. All translate-px / font-px values below
+          are tuned for this reference width; the scale transform keeps the
+          composition's relative positions identical at any viewport. === */}
+      <div
+        className="absolute left-1/2 top-0"
+        style={{
+          width: "1440px",
+          height: "720px",
+          transform: "translateX(-50%) scale(min(1, calc(100vw / 1440)))",
+          transformOrigin: "top center",
+        }}
+      >
+        {/* Giant "LaunchFly" wordmark centered behind the overlay text.
+            z-[5] puts it above the banner image but below the eyebrow
+            and bottom row; pointer-events-none keeps it from intercepting
+            clicks. */}
+        <div className="pointer-events-none absolute inset-x-0 top-1/2 z-[5] -translate-y-[calc(50%-60.5px)] -translate-x-[9px] px-6 text-center">
+          <div className="relative inline-block">
+            {/* Sleek reflective surface beneath the wordmark — thin
+                horizontal band that fades at the ends, almost like a
+                glossy floor reflection line under "LaunchFly." */}
+            <div
+              aria-hidden
+              className="pointer-events-none absolute left-1/2 -translate-x-1/2 -z-10"
               style={{
+                bottom: "-6.5px",
+                width: "79%",
+                height: "17%",
                 background:
-                  "linear-gradient(180deg, oklch(0.97 0.005 80) 0%, oklch(0.97 0.005 80) 73%, oklch(0.98 0.03 88) 78%, oklch(0.96 0.05 75) 100%)",
-                WebkitBackgroundClip: "text",
-                backgroundClip: "text",
-                color: "transparent",
+                  "linear-gradient(90deg, rgba(4,3,2,0) 0%, rgba(4,3,2,0.97) 12%, rgba(4,3,2,1) 50%, rgba(4,3,2,0.97) 88%, rgba(4,3,2,0) 100%)",
+                maskImage:
+                  "linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0.75) 50%, rgba(0,0,0,0) 100%)",
+                WebkitMaskImage:
+                  "linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0.75) 50%, rgba(0,0,0,0) 100%)",
+                filter: "blur(1.5px)",
               }}
-            >
-              y
-            </span>
-            <span
-              className="text-foreground inline-block"
-              style={{
-                fontSize: "0.77em",
-                marginLeft: "-8.5px",
-                transform: "translateY(-5px)",
-                textShadow:
-                  "0 0 12px oklch(0.78 0.16 70 / 0.6), 0 0 24px oklch(0.78 0.16 70 / 0.35)",
-              }}
-            >
-              .
-            </span>
-          </h2>
-        </div>
-      </div>
-
-      {/* Banner overlay content — slight leftward nudge so the eyebrow/
-          subhead and the bottom row don't sit dead-center over the
-          background subject. */}
-      <div className="absolute inset-x-0 top-[102px] z-10 mx-auto max-w-7xl px-6 -translate-x-6">
-        <div className="text-center -translate-y-[9px]">
-          <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-3 py-1 text-xs text-muted-foreground backdrop-blur">
-            <Sparkles className="h-3.5 w-3.5 text-gold" /> How to start your own business
-          </span>
-        </div>
-        {/* Subhead column on the left ("Want to be a founder?" with the
-            "Start your own business?" tagline tucked beneath it) and the
-            LaunchFly mark on the right, top-aligned. */}
-        <div className="mt-[25px] flex items-start justify-between gap-4">
-          <div className="flex-1 translate-x-[70px] translate-y-[64.5px] text-center">
+            />
             <h2
-              className="text-[2.68rem] font-[800] uppercase tracking-[0.04em] origin-left leading-none"
+              className="font-display leading-none inline-block relative"
               style={{
-                fontFamily: '"Geist", ui-sans-serif, system-ui, sans-serif',
-                background:
-                  "linear-gradient(180deg, rgb(255, 255, 255) 0%, rgb(255, 252, 235) 100%)",
-                WebkitBackgroundClip: "text",
-                backgroundClip: "text",
-                color: "transparent",
-                filter:
-                  "drop-shadow(0 1px 2px rgba(0, 0, 0, 0.07)) drop-shadow(0 2px 5px rgba(0, 0, 0, 0.06)) drop-shadow(0 0 6px oklch(0.96 0.06 82 / 0.4)) drop-shadow(0 0 14px oklch(0.92 0.08 75 / 0.22)) drop-shadow(0 0 28px oklch(0.90 0.10 72 / 0.12))",
+                // Fixed at the original clamp's upper bound (the value it
+                // resolved to at 1440px viewport). The canvas's scale
+                // transform handles narrower viewports.
+                fontSize: "18.19rem",
+                letterSpacing: "-0.06em",
+                transform: "translateY(0px) scale(0.93, 1.05)",
+                transformOrigin: "center top",
               }}
             >
-              Want to be a founder?
+              <span className="text-gradient-gold-fade">Lau</span>
+              <span className="text-foreground">nchFl</span>
+              <span
+                style={{
+                  background:
+                    "linear-gradient(180deg, oklch(0.97 0.005 80) 0%, oklch(0.97 0.005 80) 73%, oklch(0.98 0.03 88) 78%, oklch(0.96 0.05 75) 100%)",
+                  WebkitBackgroundClip: "text",
+                  backgroundClip: "text",
+                  color: "transparent",
+                }}
+              >
+                y
+              </span>
+              <span
+                className="text-foreground inline-block"
+                style={{
+                  fontSize: "0.77em",
+                  marginLeft: "-8.5px",
+                  transform: "translateY(-5px)",
+                  textShadow:
+                    "0 0 12px oklch(0.78 0.16 70 / 0.6), 0 0 24px oklch(0.78 0.16 70 / 0.35)",
+                }}
+              >
+                .
+              </span>
             </h2>
           </div>
-          <div className="flex items-center gap-2.5 translate-y-[24px] -translate-x-[40px]">
-            <img
-              src={launchflyMark}
-              alt=""
-              aria-hidden
-              className="h-[38px] w-[38px] object-contain shrink-0 brightness-110 logo-glow"
-              draggable={false}
-            />
-            <span className="text-[1.58rem] font-semibold tracking-tight">
-              LaunchFly<span className="text-gold">.io</span>
+        </div>
+
+        {/* Banner overlay content — slight leftward nudge so the eyebrow/
+            subhead and the bottom row don't sit dead-center over the
+            background subject. */}
+        <div className="absolute inset-x-0 top-[102px] z-10 mx-auto max-w-7xl px-6 -translate-x-6">
+          <div className="text-center -translate-y-[9px]">
+            <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-3 py-1 text-xs text-muted-foreground backdrop-blur">
+              <Sparkles className="h-3.5 w-3.5 text-gold" /> How to start your own business
             </span>
+          </div>
+          {/* Subhead column on the left ("Want to be a founder?") and the
+              LaunchFly mark on the right, top-aligned. */}
+          <div className="mt-[25px] flex items-start justify-between gap-4">
+            <div className="flex-1 translate-x-[70px] translate-y-[64.5px] text-center">
+              <h2
+                className="text-[2.68rem] font-[800] uppercase tracking-[0.04em] origin-left leading-none"
+                style={{
+                  fontFamily: '"Geist", ui-sans-serif, system-ui, sans-serif',
+                  background:
+                    "linear-gradient(180deg, rgb(255, 255, 255) 0%, rgb(255, 252, 235) 100%)",
+                  WebkitBackgroundClip: "text",
+                  backgroundClip: "text",
+                  color: "transparent",
+                  filter:
+                    "drop-shadow(0 1px 2px rgba(0, 0, 0, 0.07)) drop-shadow(0 2px 5px rgba(0, 0, 0, 0.06)) drop-shadow(0 0 6px oklch(0.96 0.06 82 / 0.4)) drop-shadow(0 0 14px oklch(0.92 0.08 75 / 0.22)) drop-shadow(0 0 28px oklch(0.90 0.10 72 / 0.12))",
+                }}
+              >
+                Want to be a founder?
+              </h2>
+            </div>
+            <div className="flex items-center gap-2.5 translate-y-[24px] -translate-x-[40px]">
+              <img
+                src={launchflyMark}
+                alt=""
+                aria-hidden
+                className="h-[38px] w-[38px] object-contain shrink-0 brightness-110 logo-glow"
+                draggable={false}
+              />
+              <span className="text-[1.58rem] font-semibold tracking-tight">
+                LaunchFly<span className="text-gold">.io</span>
+              </span>
+            </div>
           </div>
         </div>
       </div>
