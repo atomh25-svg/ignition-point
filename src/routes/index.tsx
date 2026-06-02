@@ -135,13 +135,20 @@ function Banner() {
 
       {/* === 1440×720 design canvas. All translate-px / font-px values below
           are tuned for this reference width; the scale transform keeps the
-          composition's relative positions identical at any viewport. === */}
+          composition's relative positions identical at any viewport.
+          We center the canvas with a flex wrapper (instead of left:50% +
+          translateX(-50%)) because composing translateX with scale on the
+          same element caused the centered element to drift right at
+          scale=1 in some browsers. Flex centering + a pure scale transform
+          is order-independent and renders identically everywhere. === */}
+      <div className="absolute inset-0 flex justify-center items-start pointer-events-none">
       <div
-        className="absolute left-1/2 top-0"
+        className="relative pointer-events-auto"
         style={{
           width: "1440px",
           height: "720px",
-          transform: "translateX(-50%) scale(min(1, calc(100vw / 1440)))",
+          flexShrink: 0,
+          transform: "scale(min(1, calc(100vw / 1440)))",
           transformOrigin: "top center",
         }}
       >
@@ -254,6 +261,7 @@ function Banner() {
             </div>
           </div>
         </div>
+      </div>
       </div>
     </section>
   );
