@@ -1,0 +1,117 @@
+import { createFileRoute, Link } from "@tanstack/react-router";
+
+import { Navbar } from "@/components/launchfly/Navbar";
+// Vite's ?raw import — gives us the file contents as a string at
+// build time. The HTML is hand-written for SaaS (see the header
+// comment at the top of that file for context — Termly's "Return
+// Policy" generator only outputs physical-goods language so we
+// authored this one ourselves).
+import refundHtml from "../content/refund-policy.html?raw";
+
+export const Route = createFileRoute("/refunds")({
+  head: () => ({
+    meta: [
+      { title: "Refund & Cancellation Policy — LaunchFly.io" },
+      {
+        name: "description",
+        content:
+          "How to request a refund or cancel your LaunchFly subscription — 7-day refund window, cancel anytime via the Customer Portal.",
+      },
+      { name: "robots", content: "index, follow" },
+    ],
+  }),
+  component: RefundsPage,
+});
+
+function RefundsPage() {
+  return (
+    <main className="min-h-screen flex flex-col bg-background text-foreground">
+      <Navbar />
+
+      <section className="relative flex-1 overflow-hidden px-6 py-16">
+        <div className="pointer-events-none absolute inset-0 bg-warm-glow opacity-50" />
+        <div className="relative mx-auto w-full max-w-3xl">
+          {/* Same wrapper class as /privacy and /terms — the scoped CSS
+              below translates the Termly-style inline light-theme colors
+              into the warm-dark + gold palette. */}
+          <div
+            className="privacy-doc rounded-3xl border border-gold/20 bg-card/50 p-8 sm:p-12 shadow-elegant"
+            dangerouslySetInnerHTML={{ __html: refundHtml }}
+          />
+
+          <div className="mt-10 text-center">
+            <Link
+              to="/"
+              className="text-sm text-muted-foreground transition hover:text-foreground"
+            >
+              ← Back to launchfly.io
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Same scoped overrides as /privacy and /terms. Inline here so the
+          route is self-contained and doesn't depend on global CSS we
+          don't ship. */}
+      <style>{`
+        .privacy-doc [data-custom-class='body'],
+        .privacy-doc [data-custom-class='body'] * {
+          background: transparent !important;
+        }
+        .privacy-doc [data-custom-class='title'],
+        .privacy-doc [data-custom-class='title'] *,
+        .privacy-doc h1, .privacy-doc h2, .privacy-doc h3 {
+          font-family: inherit !important;
+          color: rgb(244, 239, 230) !important;
+        }
+        .privacy-doc [data-custom-class='subtitle'],
+        .privacy-doc [data-custom-class='subtitle'] * {
+          font-family: inherit !important;
+          color: rgb(154, 146, 134) !important;
+        }
+        .privacy-doc [data-custom-class='heading_1'],
+        .privacy-doc [data-custom-class='heading_1'] * {
+          font-family: inherit !important;
+          color: rgb(214, 166, 81) !important;
+          font-size: 1.5rem !important;
+          margin-top: 2rem !important;
+          margin-bottom: 0.5rem !important;
+        }
+        .privacy-doc [data-custom-class='heading_2'],
+        .privacy-doc [data-custom-class='heading_2'] * {
+          font-family: inherit !important;
+          color: rgb(244, 239, 230) !important;
+          font-size: 1.125rem !important;
+          margin-top: 1.5rem !important;
+          margin-bottom: 0.4rem !important;
+        }
+        .privacy-doc [data-custom-class='body_text'],
+        .privacy-doc [data-custom-class='body_text'] *,
+        .privacy-doc p, .privacy-doc li, .privacy-doc span {
+          color: rgb(204, 198, 188) !important;
+          font-family: inherit !important;
+          font-size: 0.9375rem !important;
+          line-height: 1.65 !important;
+        }
+        .privacy-doc [data-custom-class='link'],
+        .privacy-doc [data-custom-class='link'] *,
+        .privacy-doc a {
+          color: rgb(214, 166, 81) !important;
+          text-decoration: underline !important;
+          text-underline-offset: 2px !important;
+        }
+        .privacy-doc a:hover {
+          color: rgb(232, 196, 121) !important;
+        }
+        .privacy-doc ul,
+        .privacy-doc ol {
+          padding-left: 1.5rem !important;
+          margin: 0.5rem 0 !important;
+        }
+        .privacy-doc li {
+          margin: 0.3rem 0 !important;
+        }
+      `}</style>
+    </main>
+  );
+}

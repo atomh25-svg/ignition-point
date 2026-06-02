@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WelcomeRouteImport } from './routes/welcome'
 import { Route as TermsRouteImport } from './routes/terms'
+import { Route as RefundsRouteImport } from './routes/refunds'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as AppRouteImport } from './routes/app'
@@ -30,6 +31,11 @@ const WelcomeRoute = WelcomeRouteImport.update({
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
   path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RefundsRoute = RefundsRouteImport.update({
+  id: '/refunds',
+  path: '/refunds',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PrivacyRoute = PrivacyRouteImport.update({
@@ -88,6 +94,7 @@ export interface FileRoutesByFullPath {
   '/app': typeof AppRouteWithChildren
   '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
+  '/refunds': typeof RefundsRoute
   '/terms': typeof TermsRoute
   '/welcome': typeof WelcomeRoute
   '/api/stripe-webhook': typeof ApiStripeWebhookRoute
@@ -102,6 +109,7 @@ export interface FileRoutesByTo {
   '/app': typeof AppRouteWithChildren
   '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
+  '/refunds': typeof RefundsRoute
   '/terms': typeof TermsRoute
   '/welcome': typeof WelcomeRoute
   '/api/stripe-webhook': typeof ApiStripeWebhookRoute
@@ -117,6 +125,7 @@ export interface FileRoutesById {
   '/app': typeof AppRouteWithChildren
   '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
+  '/refunds': typeof RefundsRoute
   '/terms': typeof TermsRoute
   '/welcome': typeof WelcomeRoute
   '/api/stripe-webhook': typeof ApiStripeWebhookRoute
@@ -133,6 +142,7 @@ export interface FileRouteTypes {
     | '/app'
     | '/pricing'
     | '/privacy'
+    | '/refunds'
     | '/terms'
     | '/welcome'
     | '/api/stripe-webhook'
@@ -147,6 +157,7 @@ export interface FileRouteTypes {
     | '/app'
     | '/pricing'
     | '/privacy'
+    | '/refunds'
     | '/terms'
     | '/welcome'
     | '/api/stripe-webhook'
@@ -161,6 +172,7 @@ export interface FileRouteTypes {
     | '/app'
     | '/pricing'
     | '/privacy'
+    | '/refunds'
     | '/terms'
     | '/welcome'
     | '/api/stripe-webhook'
@@ -176,6 +188,7 @@ export interface RootRouteChildren {
   AppRoute: typeof AppRouteWithChildren
   PricingRoute: typeof PricingRoute
   PrivacyRoute: typeof PrivacyRoute
+  RefundsRoute: typeof RefundsRoute
   TermsRoute: typeof TermsRoute
   WelcomeRoute: typeof WelcomeRoute
   ApiStripeWebhookRoute: typeof ApiStripeWebhookRoute
@@ -195,6 +208,13 @@ declare module '@tanstack/react-router' {
       path: '/terms'
       fullPath: '/terms'
       preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/refunds': {
+      id: '/refunds'
+      path: '/refunds'
+      fullPath: '/refunds'
+      preLoaderRoute: typeof RefundsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/privacy': {
@@ -293,6 +313,7 @@ const rootRouteChildren: RootRouteChildren = {
   AppRoute: AppRouteWithChildren,
   PricingRoute: PricingRoute,
   PrivacyRoute: PrivacyRoute,
+  RefundsRoute: RefundsRoute,
   TermsRoute: TermsRoute,
   WelcomeRoute: WelcomeRoute,
   ApiStripeWebhookRoute: ApiStripeWebhookRoute,

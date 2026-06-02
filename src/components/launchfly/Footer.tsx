@@ -9,10 +9,13 @@ export function Footer() {
         <p className="text-sm text-muted-foreground">© 2026 LaunchFly.io — The first step from idea to takeoff.</p>
         <div className="flex gap-6 text-sm text-muted-foreground">
           {/* Privacy + Terms are full Termly-generated policies rendered
-              in our dark-theme wrapper. Contact opens mailto: until we
+              in our dark-theme wrapper. Refunds is hand-written because
+              Termly's "Return Policy" generator only outputs
+              physical-goods language. Contact opens mailto: until we
               ship a real contact form. */}
           <Link to="/privacy" className="hover:text-foreground">Privacy</Link>
           <Link to="/terms" className="hover:text-foreground">Terms</Link>
+          <Link to="/refunds" className="hover:text-foreground">Refunds</Link>
           <a href="mailto:atomh25@gmail.com" className="hover:text-foreground">Contact</a>
         </div>
       </div>
