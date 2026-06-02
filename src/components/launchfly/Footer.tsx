@@ -16,7 +16,7 @@ export function Footer() {
           <Link to="/privacy" className="hover:text-foreground">Privacy</Link>
           <Link to="/terms" className="hover:text-foreground">Terms</Link>
           <Link to="/refunds" className="hover:text-foreground">Refunds</Link>
-          <a href="mailto:atomh25@gmail.com" className="hover:text-foreground">Contact</a>
+          <a href="mailto:hello@launchfly.io" className="hover:text-foreground">Contact</a>
         </div>
       </div>
     </footer>
