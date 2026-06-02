@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WelcomeRouteImport } from './routes/welcome'
+import { Route as TermsRouteImport } from './routes/terms'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as AppRouteImport } from './routes/app'
@@ -24,6 +25,11 @@ import { Route as ApiStripeWebhookRouteImport } from './routes/api/stripe-webhoo
 const WelcomeRoute = WelcomeRouteImport.update({
   id: '/welcome',
   path: '/welcome',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PrivacyRoute = PrivacyRouteImport.update({
@@ -82,6 +88,7 @@ export interface FileRoutesByFullPath {
   '/app': typeof AppRouteWithChildren
   '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
+  '/terms': typeof TermsRoute
   '/welcome': typeof WelcomeRoute
   '/api/stripe-webhook': typeof ApiStripeWebhookRoute
   '/app/blueprint': typeof AppBlueprintRoute
@@ -95,6 +102,7 @@ export interface FileRoutesByTo {
   '/app': typeof AppRouteWithChildren
   '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
+  '/terms': typeof TermsRoute
   '/welcome': typeof WelcomeRoute
   '/api/stripe-webhook': typeof ApiStripeWebhookRoute
   '/app/blueprint': typeof AppBlueprintRoute
@@ -109,6 +117,7 @@ export interface FileRoutesById {
   '/app': typeof AppRouteWithChildren
   '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
+  '/terms': typeof TermsRoute
   '/welcome': typeof WelcomeRoute
   '/api/stripe-webhook': typeof ApiStripeWebhookRoute
   '/app/blueprint': typeof AppBlueprintRoute
@@ -124,6 +133,7 @@ export interface FileRouteTypes {
     | '/app'
     | '/pricing'
     | '/privacy'
+    | '/terms'
     | '/welcome'
     | '/api/stripe-webhook'
     | '/app/blueprint'
@@ -137,6 +147,7 @@ export interface FileRouteTypes {
     | '/app'
     | '/pricing'
     | '/privacy'
+    | '/terms'
     | '/welcome'
     | '/api/stripe-webhook'
     | '/app/blueprint'
@@ -150,6 +161,7 @@ export interface FileRouteTypes {
     | '/app'
     | '/pricing'
     | '/privacy'
+    | '/terms'
     | '/welcome'
     | '/api/stripe-webhook'
     | '/app/blueprint'
@@ -164,6 +176,7 @@ export interface RootRouteChildren {
   AppRoute: typeof AppRouteWithChildren
   PricingRoute: typeof PricingRoute
   PrivacyRoute: typeof PrivacyRoute
+  TermsRoute: typeof TermsRoute
   WelcomeRoute: typeof WelcomeRoute
   ApiStripeWebhookRoute: typeof ApiStripeWebhookRoute
 }
@@ -175,6 +188,13 @@ declare module '@tanstack/react-router' {
       path: '/welcome'
       fullPath: '/welcome'
       preLoaderRoute: typeof WelcomeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/privacy': {
@@ -273,6 +293,7 @@ const rootRouteChildren: RootRouteChildren = {
   AppRoute: AppRouteWithChildren,
   PricingRoute: PricingRoute,
   PrivacyRoute: PrivacyRoute,
+  TermsRoute: TermsRoute,
   WelcomeRoute: WelcomeRoute,
   ApiStripeWebhookRoute: ApiStripeWebhookRoute,
 }
