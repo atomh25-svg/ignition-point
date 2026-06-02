@@ -270,10 +270,9 @@ function Banner() {
 function Hero() {
   return (
     // -mt pulls the Hero (and every section below it) up into the banner.
-    // Bumped from -172 to -182 after the banner-canvas rework added a
-    // touch of vertical padding; -182 puts "This is How to Start" back at
-    // its original visual position.
-    <section className="relative -mt-[182px] px-6">
+    // Bumped from -172 → -182 → -189 to tighten the gap between the banner
+    // wordmark and "This is How to Start" after the canvas rework.
+    <section className="relative -mt-[189px] px-6">
       <div className="mx-auto max-w-5xl text-center">
         <h1
           className="font-display mt-16 whitespace-nowrap leading-[1.02] tracking-tight -translate-x-[11px] -translate-y-[3px]"
