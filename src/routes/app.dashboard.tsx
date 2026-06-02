@@ -282,7 +282,7 @@ function Dashboard() {
     );
   }
 
-  const total = blueprint.seven_day_plan.length || 7;
+  const total = blueprint.seven_day_plan.length || 30;
   // Day count derived from launch_started_at (unix seconds → days).
   // Clamp to 1..total so "Today" always points at a valid day in the plan.
   const dayIndex0 = launchStartedAt

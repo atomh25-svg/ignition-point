@@ -44,7 +44,7 @@ export type Blueprint = {
     tools_youll_use: string;
     how_to_get_first_users: string;
   };
-  seven_day_plan: string[]; // 7 strings, each "Day N — …"
+  seven_day_plan: string[]; // 30 strings, each "Day N — …". Property name is legacy; the array holds 30 entries.
 };
 
 const QUESTION_LABELS: Record<string, string> = {
@@ -243,7 +243,7 @@ function parseAndValidate(rawText: string): GeneratedIdea[] {
 /*  Blueprint generator                                                       */
 /* -------------------------------------------------------------------------- */
 
-const BLUEPRINT_SYSTEM_PROMPT = `You are a startup advisor turning a founder's chosen idea into a concrete 10-day launch blueprint. The first 7 days are the core "commitment" sprint; Days 8-10 are momentum — they extend distribution + iteration past initial launch.
+const BLUEPRINT_SYSTEM_PROMPT = `You are a startup advisor turning a founder's chosen idea into a concrete 30-day launch blueprint. Days 1-7 are the commitment sprint (validate → MVP → first paid user). Days 8-21 are momentum (iterate, distribute, retain). Days 22-30 are scale (channels that worked, content, plan next sprint).
 
 Hard rules:
 - Output ONLY a single JSON object. No prose before or after. No markdown code fences.
@@ -253,17 +253,37 @@ Hard rules:
 - "what_to_skip" must list 3-5 specific features/temptations this founder will want to build but doesn't need on day one. Bullet style — separate items with a newline.
 - Every field must be populated with substantive content. Never leave a field blank or write "TBD" or "—". If you don't have enough information, write your best honest guess.
 
-The 10-day plan ARCS like this — don't deviate from the shape, just adapt content to the idea:
+The 30-day plan ARCS like this — don't deviate from the shape, just adapt content to the idea:
 - Day 1: Validate the premise — landing page + email capture, post to one specific community, talk to 3 potential users.
 - Day 2: Scaffold the MVP shell — pick the stack, get a project building locally, deploy a "Hello world" to Vercel.
 - Day 3: Build the core flow end-to-end — the smallest path from sign-in to the AI/backend step to a result the user can see.
 - Day 4: Wire billing — Stripe Checkout link or page, one paid tier, smoke-test the full paid flow.
 - Day 5: Onboard 5 testers, watch them use it, fix the top 3 things they trip on.
-- Day 6: Distribute — write one post for r/<subreddit>, one for X, 10 cold DMs with a specific ask. Submit to ProductHunt if it's ready.
+- Day 6: Distribute — write one post for r/<subreddit>, one for X, 10 cold DMs with a specific ask.
 - Day 7: Pricing + retention pass — talk to anyone who paid, decide what to keep/cut for week 2.
-- Day 8: Double down on the distribution channel that moved a needle. Ship 1 quality-of-life feature paying users asked for.
-- Day 9: Write the "how I built this" post for distribution; reach out to 3 podcasts or newsletters in the niche.
-- Day 10: Set up basic analytics (Posthog free tier), audit the signup → paid funnel for drop-off, plan the next 10-day sprint from real data.
+- Day 8: Double down on the distribution channel that moved a needle.
+- Day 9: Ship 1 quality-of-life feature paying users asked for.
+- Day 10: Submit to ProductHunt (or scheduled launch) with a strong hunter from your network.
+- Day 11: Write the "how I built this" post; share to X and one community.
+- Day 12: Reach out to 3 podcasts or newsletters in the niche.
+- Day 13: Set up basic analytics (Posthog free tier) and audit the signup → paid funnel.
+- Day 14: 10 cold DMs to a second ICP segment based on funnel data.
+- Day 15: Run a small A/B test on landing page copy or pricing.
+- Day 16: Add second pricing tier or annual discount.
+- Day 17: Build a single shareable referral mechanism.
+- Day 18: Write a follow-up post showing month-1 numbers, share to 2 communities.
+- Day 19: Submit a guest post to one industry newsletter.
+- Day 20: Add an integration with a tool your users already use.
+- Day 21: Tighten the email onboarding sequence (welcome, day 1, day 3, day 7).
+- Day 22: Build a tiny embeddable widget or free tool for SEO/distribution.
+- Day 23: Reach out to 5 micro-influencers in the niche.
+- Day 24: Run an AMA in your community of choice.
+- Day 25: Run a 24-hour launch sale to convert hesitant signups.
+- Day 26: Audit churn — talk to 3 cancellations, identify the top reason.
+- Day 27: Ship the one fix from yesterday's churn audit.
+- Day 28: Set up retention metrics dashboard.
+- Day 29: Write the month-1 retrospective post.
+- Day 30: Plan the next 30-day sprint based on real data — pick the 3 biggest leverage points.
 
 Schema (every field is REQUIRED and every string must be non-empty):
 {
@@ -282,9 +302,10 @@ Schema (every field is REQUIRED and every string must be non-empty):
     "tools_youll_use": string,             // comma-separated list of real tools by name
     "how_to_get_first_users": string       // 2-3 sentences naming specific communities + the exact ask
   },
-  "seven_day_plan": [string × 10]
-  // EXACTLY 10 items, each starting with "Day N — " (em dash, not hyphen).
+  "seven_day_plan": [string × 30]
+  // EXACTLY 30 items, each starting with "Day N — " (em dash, not hyphen).
   // Each item must be CONCISE — under 100 characters total, max ~14 words after the "Day N —". No time estimates. No multi-sentence explanations. Just the headline action. Example: "Day 1 — Build the landing page with email capture in Lovable and post to r/SaaS".
+  // Property is named seven_day_plan for legacy reasons; it now holds 30 entries.
 }`;
 
 export async function generateBlueprintFor(
@@ -335,7 +356,8 @@ Write the blueprint they can execute given those constraints. Return only the JS
     },
     body: JSON.stringify({
       model: CLAUDE_MODEL,
-      max_tokens: 2048,
+      // 30-day plan + all the other fields → ~4k tokens worst case.
+      max_tokens: 4096,
       system: [
         {
           type: "text",
@@ -398,7 +420,7 @@ function parseBlueprint(rawText: string, idea: GeneratedIdea): Blueprint {
   if (!stats || Object.keys(stats).length === 0) missing.push("stats");
   if (!pillars || Object.keys(pillars).length === 0) missing.push("pillars");
   if (ipeRaw.length < 3) missing.push(`in_plain_english(${ipeRaw.length})`);
-  if (planRaw.length < 10) missing.push(`seven_day_plan(${planRaw.length})`);
+  if (planRaw.length < 30) missing.push(`seven_day_plan(${planRaw.length})`);
   if (missing.length > 0) {
     console.warn("[blueprint] partial output — padding:", missing.join(", "));
   }
@@ -424,7 +446,7 @@ function parseBlueprint(rawText: string, idea: GeneratedIdea): Blueprint {
 
   const plan: string[] = [];
   const defaultPlan = buildDefaultPlan();
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 30; i++) {
     plan.push(trim(str(planRaw[i], defaultPlan[i]), 120));
   }
 
@@ -480,7 +502,7 @@ function mockBlueprint(idea: GeneratedIdea): Blueprint {
     ],
     pillars: {
       what_youre_building: idea.concept,
-      what_to_skip: "Anything not on the 10-day plan.",
+      what_to_skip: "Anything not on the 30-day plan.",
       tools_youll_use: "Lovable, Stripe, Resend, OpenAI API.",
       how_to_get_first_users: idea.first_step,
     },
@@ -489,10 +511,10 @@ function mockBlueprint(idea: GeneratedIdea): Blueprint {
 }
 
 /**
- * Fallback 10-day plan used when Claude returns fewer entries than
- * requested, or when there's no API key. Days 1-7 are the core
- * commitment; Days 8-10 are momentum (distribution + iteration past
- * initial launch). Real per-day detail comes from generateDailyBreakdownFor.
+ * Fallback 30-day plan used when Claude returns fewer entries than
+ * requested, or when there's no API key. Days 1-7 are the commitment
+ * sprint, Days 8-21 are momentum, Days 22-30 are scale. Real per-day
+ * detail comes from generateDailyBreakdownFor.
  */
 function buildDefaultPlan(): string[] {
   return [
@@ -501,11 +523,31 @@ function buildDefaultPlan(): string[] {
     "Day 3 — Build the core flow end-to-end (sign-in → AI step → result)",
     "Day 4 — Wire Stripe Checkout and smoke-test the paid flow end-to-end",
     "Day 5 — Onboard 5 testers, watch them use it, fix the top 3 snags",
-    "Day 6 — Distribute: post to one subreddit, 10 cold DMs on X, submit to ProductHunt",
+    "Day 6 — Distribute: post to one subreddit, 10 cold DMs on X",
     "Day 7 — Talk to anyone who paid; decide what to keep/cut for week 2",
     "Day 8 — Double down on the distribution channel that moved a needle",
-    "Day 9 — Write the 'how I built this' post; reach out to 3 podcasts in the niche",
-    "Day 10 — Set up Posthog analytics, audit the funnel, plan the next 10-day sprint",
+    "Day 9 — Ship one quality-of-life feature paying users asked for",
+    "Day 10 — Submit to ProductHunt with a hunter from your network",
+    "Day 11 — Write the 'how I built this' post and share to X + one community",
+    "Day 12 — Reach out to 3 podcasts or newsletters in the niche",
+    "Day 13 — Set up Posthog analytics and audit the signup → paid funnel",
+    "Day 14 — 10 cold DMs to a second ICP segment based on funnel data",
+    "Day 15 — A/B test landing page copy or pricing",
+    "Day 16 — Add a second pricing tier or annual discount",
+    "Day 17 — Build a single shareable referral mechanism",
+    "Day 18 — Write a follow-up post showing month-1 numbers",
+    "Day 19 — Submit a guest post to one industry newsletter",
+    "Day 20 — Add an integration with a tool your users already use",
+    "Day 21 — Tighten the email onboarding sequence (welcome, day 1, day 3, day 7)",
+    "Day 22 — Build a tiny embeddable widget or free tool for SEO",
+    "Day 23 — Reach out to 5 micro-influencers in the niche",
+    "Day 24 — Run an AMA in your community of choice",
+    "Day 25 — Run a 24-hour launch sale to convert hesitant signups",
+    "Day 26 — Audit churn — talk to 3 cancellations, identify the top reason",
+    "Day 27 — Ship the one fix from yesterday's churn audit",
+    "Day 28 — Set up retention metrics dashboard",
+    "Day 29 — Write the month-1 retrospective post",
+    "Day 30 — Plan the next 30-day sprint based on real data",
   ];
 }
 
@@ -527,7 +569,7 @@ export type DailyBreakdown = {
   stuck_hint: string;
 };
 
-const DAILY_BREAKDOWN_SYSTEM_PROMPT = `You turn ONE day of a 10-day launch arc into an executable breakdown for a first-time founder.
+const DAILY_BREAKDOWN_SYSTEM_PROMPT = `You turn ONE day of a 30-day launch arc into an executable breakdown for a first-time founder.
 
 Hard rules:
 - Output ONLY a single JSON object. No prose. No markdown fences.
@@ -539,7 +581,7 @@ Hard rules:
 
 Schema (every field REQUIRED, every string non-empty):
 {
-  "summary": string,        // 2 sentences. What this day is about, in the context of the 10-day arc.
+  "summary": string,        // 2 sentences. What this day is about, in the context of the 30-day arc.
   "outcome": string,        // 1 sentence: "By end of day, you should have X."
   "substeps": [
     { "action": string, "tool"?: string }   // 5-8 items. Headlines only — 6-12 words, under 80 chars.
@@ -716,7 +758,7 @@ Write today's executable breakdown as JSON only.`;
   const summary =
     typeof o.summary === "string" && o.summary.trim()
       ? trim(o.summary.trim(), 360)
-      : `Day ${dayNumber} of the 10-day arc for ${idea.name}: ${dayTitle.toLowerCase()}.`;
+      : `Day ${dayNumber} of the 30-day arc for ${idea.name}: ${dayTitle.toLowerCase()}.`;
   const outcome =
     typeof o.outcome === "string" && o.outcome.trim()
       ? trim(o.outcome.trim(), 240)
@@ -753,7 +795,7 @@ export type SubstepDive = {
 
 export type GeneratedSubstepDive = SubstepDive & { isMock: boolean };
 
-const SUBSTEP_DIVE_SYSTEM_PROMPT = `You're zooming into ONE substep of a 10-day launch arc and breaking it into ultra-granular micro-steps a first-time founder can execute one-by-one.
+const SUBSTEP_DIVE_SYSTEM_PROMPT = `You're zooming into ONE substep of a 30-day launch arc and breaking it into ultra-granular micro-steps a first-time founder can execute one-by-one.
 
 Hard rules:
 - Output ONLY a JSON object. No prose. No fences.
@@ -912,7 +954,7 @@ function mockDailyBreakdown(
   return {
     day_number: dayNumber,
     day_title: dayTitle,
-    summary: `Day ${dayNumber} of the 10-day arc for ${idea.name}: ${dayTitle.toLowerCase()}. (Reload in a few seconds — the detailed breakdown is still generating.)`,
+    summary: `Day ${dayNumber} of the 30-day arc for ${idea.name}: ${dayTitle.toLowerCase()}. (Reload in a few seconds — the detailed breakdown is still generating.)`,
     outcome: `By end of day, the work for "${dayTitle}" should be done.`,
     substeps: [
       { action: "Re-read the Blueprint section for this day for context." },
@@ -955,7 +997,7 @@ Voice + format:
 - If they ask for copy or code (email, tweet, headline, snippet), give it raw — no wind-up, no "Here's an example:".
 - Name real tools, real subreddits, real numbers. Skip "leverage", "synergy", "engage your audience".
 
-You see their selected idea + 10-day blueprint in context. Reference them by name when it sharpens the answer; don't otherwise.`;
+You see their selected idea + 30-day blueprint in context. Reference them by name when it sharpens the answer; don't otherwise.`;
 
 /**
  * Generate the coach's next reply given chat history + the user's
@@ -994,7 +1036,7 @@ export async function generateCoachReplyFor(
   if (ctx.blueprint) {
     contextLines.push(
       ``,
-      `Their 10-day Launch Blueprint:`,
+      `Their 30-day Launch Blueprint:`,
       `- Headline: ${ctx.blueprint.headline}`,
       `- Tagline: ${ctx.blueprint.tagline}`,
       `- Who it's for: ${ctx.blueprint.stats.who_its_for}`,
@@ -1002,7 +1044,7 @@ export async function generateCoachReplyFor(
       `- Price: ${ctx.blueprint.stats.price}`,
       `- What to skip: ${ctx.blueprint.pillars.what_to_skip.replace(/\n/g, "; ")}`,
       `- Tools: ${ctx.blueprint.pillars.tools_youll_use}`,
-      `- 10-day plan:`,
+      `- 30-day plan:`,
       ...ctx.blueprint.seven_day_plan
         .slice(0, 10)
         .map((d) => `  ${d}`),
