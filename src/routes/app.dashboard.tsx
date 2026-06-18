@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { GeneratingScreen } from "@/components/launchfly/GeneratingScreen";
 import {
+  extendBlueprintIfBehind,
   getBlueprint,
   getDailyBreakdown,
   getSubstepDive,
@@ -158,6 +159,15 @@ function Dashboard() {
     let cancelled = false;
     (async () => {
       try {
+        // Lazy month-rolling: if user's months_unlocked is ahead of
+        // their blueprint length, append the missing months via Claude
+        // before reading. No-op when already up to date. Soft-fails if
+        // extension errors — we still render the existing blueprint.
+        try {
+          await extendBlueprintIfBehind({ data: { ideaId: selectedIdeaId } });
+        } catch (err) {
+          console.warn("[dashboard] extend-if-behind failed:", err);
+        }
         const result = await getBlueprint({ data: { ideaId: selectedIdeaId } });
         if (cancelled) return;
         if (!result.ok) {

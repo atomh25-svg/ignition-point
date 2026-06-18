@@ -3,6 +3,7 @@ import { auth } from "@clerk/tanstack-react-start/server";
 // eslint-disable-next-line import/no-unresolved
 import { env } from "cloudflare:workers";
 import {
+  appendThirtyDaysToBlueprint,
   generateBlueprintFor,
   generateCoachReplyFor,
   generateDailyBreakdownFor,
@@ -476,6 +477,125 @@ export const generateBlueprint = createServerFn({ method: "POST" })
   });
 
 /**
+ * Lazy month-rolling extender. Called by the dashboard on every load:
+ * if the user's subscription has `months_unlocked > N` but their
+ * blueprint only has `N*30` days of content, we append the missing
+ * months via Claude in one pass and persist the new blueprint.
+ *
+ * This is the fallback path — the webhook tries to extend on every
+ * invoice.payment_succeeded renewal, but if that pass fails (Claude
+ * 5xx, transient D1 issue, Stripe retry hiccup), the next dashboard
+ * load self-heals here. Idempotent: if blueprint already has enough
+ * days, this is a no-op.
+ */
+export const extendBlueprintIfBehind = createServerFn({ method: "POST" })
+  .inputValidator((data: { ideaId: string }) => {
+    if (!data || typeof data.ideaId !== "string" || !data.ideaId) {
+      throw new Error("ideaId required");
+    }
+    return data;
+  })
+  .handler(
+    async ({
+      data,
+    }): Promise<
+      | { ok: true; blueprint: Blueprint; appendedMonths: number }
+      | { ok: false; reason: string }
+    > => {
+      const { userId } = await auth();
+      if (!userId) return { ok: false, reason: "unauthenticated" };
+      const db = (env as unknown as Env).DB;
+      if (!db) return { ok: false, reason: "no-db" };
+
+      const subRow = await db
+        .prepare(
+          `SELECT months_unlocked FROM subscriptions
+            WHERE clerk_user_id = ? AND status IN ('active','trialing','past_due')
+            ORDER BY updated_at DESC LIMIT 1`,
+        )
+        .bind(userId)
+        .first<{ months_unlocked: number }>();
+      const monthsUnlocked = subRow?.months_unlocked ?? 1;
+
+      const bpRow = await db
+        .prepare(
+          `SELECT payload_json FROM blueprints
+             WHERE clerk_user_id = ? AND idea_id = ?`,
+        )
+        .bind(userId, data.ideaId)
+        .first<{ payload_json: string }>();
+      if (!bpRow) return { ok: false, reason: "no-blueprint" };
+
+      let blueprint = JSON.parse(bpRow.payload_json) as Blueprint;
+      const targetDays = monthsUnlocked * 30;
+      if (blueprint.seven_day_plan.length >= targetDays) {
+        return { ok: true, blueprint, appendedMonths: 0 };
+      }
+
+      const idea = await db
+        .prepare(
+          `SELECT id, name, concept, audience, fit, difficulty, speed, first_step
+             FROM generated_ideas WHERE id = ? AND clerk_user_id = ?`,
+        )
+        .bind(data.ideaId, userId)
+        .first<{
+          id: string;
+          name: string;
+          concept: string;
+          audience: string;
+          fit: number;
+          difficulty: string;
+          speed: string;
+          first_step: string;
+        }>();
+      if (!idea) return { ok: false, reason: "not-your-idea" };
+
+      let appended = 0;
+      while (blueprint.seven_day_plan.length < targetDays) {
+        const currentMonth = Math.floor(blueprint.seven_day_plan.length / 30) + 1;
+        const nextMonth = currentMonth + 1;
+        const newDays = await appendThirtyDaysToBlueprint(
+          {
+            name: idea.name,
+            concept: idea.concept,
+            audience: idea.audience,
+            fit: idea.fit,
+            difficulty: idea.difficulty as GeneratedIdea["difficulty"],
+            speed: idea.speed,
+            first_step: idea.first_step,
+          },
+          blueprint,
+          nextMonth,
+        );
+        blueprint = {
+          ...blueprint,
+          seven_day_plan: [...blueprint.seven_day_plan, ...newDays],
+        };
+        appended++;
+      }
+
+      await db
+        .prepare(
+          `UPDATE blueprints SET payload_json = ?, generated_at = unixepoch()
+             WHERE clerk_user_id = ? AND idea_id = ?`,
+        )
+        .bind(JSON.stringify(blueprint), userId, data.ideaId)
+        .run();
+
+      console.log(
+        "[extend-blueprint] appended",
+        appended,
+        "month(s) to idea",
+        data.ideaId,
+        "now",
+        blueprint.seven_day_plan.length,
+        "days",
+      );
+      return { ok: true, blueprint, appendedMonths: appended };
+    },
+  );
+
+/**
  * Per-day breakdown for the dashboard. Returns the cached payload if
  * we've already generated it for this (user, idea, day); otherwise
  * calls Claude, stores the result, and returns it.
@@ -489,9 +609,9 @@ export const getDailyBreakdown = createServerFn({ method: "POST" })
       typeof data.dayNumber !== "number" ||
       !Number.isFinite(data.dayNumber) ||
       data.dayNumber < 1 ||
-      data.dayNumber > 30
+      data.dayNumber > 360
     ) {
-      throw new Error("dayNumber must be 1-30");
+      throw new Error("dayNumber must be 1-360");
     }
     return data;
   })
@@ -611,9 +731,9 @@ export const getSubstepDive = createServerFn({ method: "POST" })
       if (
         typeof data.dayNumber !== "number" ||
         data.dayNumber < 1 ||
-        data.dayNumber > 30
+        data.dayNumber > 360
       ) {
-        throw new Error("dayNumber must be 1-30");
+        throw new Error("dayNumber must be 1-360");
       }
       if (
         typeof data.substepIndex !== "number" ||

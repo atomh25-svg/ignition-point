@@ -552,6 +552,158 @@ function buildDefaultPlan(): string[] {
 }
 
 /* -------------------------------------------------------------------------- */
+/*  Month extension — append the next 30 days to an existing blueprint        */
+/* -------------------------------------------------------------------------- */
+
+const APPEND_MONTH_SYSTEM_PROMPT = `You are continuing a founder's launch journey. They've been working through a 30-day-per-month plan for an existing idea, and just unlocked another 30 days by renewing their monthly subscription.
+
+Generate the NEXT 30 days (days N+1 through N+30) as a continuation. The arc shifts month over month:
+- Month 2 (days 31-60): distribution at scale — paid channels, partnerships, content engine, growing past the first 10 customers.
+- Month 3 (days 61-90): retention + LTV — onboarding deepening, churn reduction, second product or tier, community building.
+- Month 4+ (days 91+): leverage — automate ops, hire/contract, optimize CAC:LTV, prepare for scale or second SKU.
+
+Hard rules:
+- Output ONLY a single JSON object: { "next_30_days": [string × 30] }. No prose. No markdown fences.
+- Each string starts with "Day N — " (em dash, not hyphen), where N is the NEXT day after the founder's current plan ends. Continue the numbering — do NOT restart at Day 1.
+- Each item: UNDER 100 CHARACTERS, max ~14 words after "Day N —". No time estimates. No multi-sentence explanations. Just the headline action.
+- Be specific. Name real tools, real communities, real numbers.
+- Don't repeat tasks the founder already did in earlier days. Reference but advance.
+- Respect founder constraints: their weekly hours, their idea's nature, their audience.`;
+
+/**
+ * Generate the next 30 days for an existing blueprint when the user
+ * renews their subscription. The result is APPENDED to the blueprint's
+ * seven_day_plan array (kept named that for legacy reasons; really now
+ * an unbounded list of days, 30 per unlocked month).
+ *
+ * `monthNumber` is 1-indexed and refers to the new month being unlocked
+ * (2 = the first renewal, 3 = next, etc.). The current plan length
+ * tells us what day numbers to start at.
+ */
+export async function appendThirtyDaysToBlueprint(
+  idea: GeneratedIdea,
+  currentBlueprint: Blueprint,
+  monthNumber: number,
+): Promise<string[]> {
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  const currentDayCount = currentBlueprint.seven_day_plan.length;
+  const nextDayStart = currentDayCount + 1;
+
+  if (!apiKey) {
+    console.warn(
+      "[append-month] no ANTHROPIC_API_KEY, using mock continuation",
+    );
+    return buildDefaultMonthExtension(nextDayStart, monthNumber);
+  }
+  try {
+    const days = await appendMonthWithClaude(
+      idea,
+      currentBlueprint,
+      monthNumber,
+      apiKey,
+    );
+    if (days.length === 30) return days;
+    console.warn(
+      "[append-month] Claude returned",
+      days.length,
+      "items, padding with defaults",
+    );
+    const padded = [...days];
+    while (padded.length < 30) {
+      padded.push(`Day ${nextDayStart + padded.length} — Focus block`);
+    }
+    return padded.slice(0, 30);
+  } catch (err) {
+    console.error("[append-month] Claude call failed:", err);
+    return buildDefaultMonthExtension(nextDayStart, monthNumber);
+  }
+}
+
+async function appendMonthWithClaude(
+  idea: GeneratedIdea,
+  currentBlueprint: Blueprint,
+  monthNumber: number,
+  apiKey: string,
+): Promise<string[]> {
+  const planSoFar = currentBlueprint.seven_day_plan
+    .map((line) => `- ${line}`)
+    .join("\n");
+
+  const userMessage = `Founder's chosen idea:
+- Name: ${idea.name}
+- Concept: ${idea.concept}
+- Audience: ${idea.audience}
+- Difficulty: ${idea.difficulty}
+- Time to first paid user: ${idea.speed}
+
+Their plan so far (days 1-${currentBlueprint.seven_day_plan.length}):
+${planSoFar}
+
+They just unlocked month ${monthNumber}. Generate days ${currentBlueprint.seven_day_plan.length + 1} through ${currentBlueprint.seven_day_plan.length + 30}. Return only { "next_30_days": [...] } as JSON.`;
+
+  const response = await fetch(CLAUDE_ENDPOINT, {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      "x-api-key": apiKey,
+      "anthropic-version": "2023-06-01",
+    },
+    body: JSON.stringify({
+      model: CLAUDE_MODEL,
+      max_tokens: 2048,
+      system: [
+        {
+          type: "text",
+          text: APPEND_MONTH_SYSTEM_PROMPT,
+          cache_control: { type: "ephemeral" },
+        },
+      ],
+      messages: [{ role: "user", content: userMessage }],
+    }),
+  });
+  if (!response.ok) {
+    const body = await response.text();
+    throw new Error(`Claude HTTP ${response.status}: ${body}`);
+  }
+  const data = (await response.json()) as AnthropicMessagesResponse;
+  if (data.error) throw new Error(`Claude error: ${data.error.message}`);
+
+  const text = data.content?.find((b) => b.type === "text")?.text ?? "";
+  const cleaned = text
+    .trim()
+    .replace(/^```(?:json)?\s*/i, "")
+    .replace(/\s*```$/i, "")
+    .trim();
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(cleaned);
+  } catch {
+    const match = cleaned.match(/\{[\s\S]*\}/);
+    if (!match) throw new Error("Append-month output not JSON");
+    parsed = JSON.parse(match[0]);
+  }
+  const obj = parsed as { next_30_days?: unknown };
+  const arr = Array.isArray(obj.next_30_days) ? obj.next_30_days : [];
+  return arr.filter((x): x is string => typeof x === "string" && x.length > 0);
+}
+
+function buildDefaultMonthExtension(
+  startDay: number,
+  monthNumber: number,
+): string[] {
+  const arc =
+    monthNumber === 2
+      ? "distribution"
+      : monthNumber === 3
+        ? "retention"
+        : "scale";
+  return Array.from({ length: 30 }, (_, i) => {
+    const day = startDay + i;
+    return `Day ${day} — ${arc} focus block (placeholder — set ANTHROPIC_API_KEY for real)`;
+  });
+}
+
+/* -------------------------------------------------------------------------- */
 /*  Daily breakdown generator — per-day sub-tasks + AI tool hints             */
 /* -------------------------------------------------------------------------- */
 
