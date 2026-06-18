@@ -11,6 +11,7 @@ import {
   type Blueprint,
   type GeneratedIdea,
 } from "@/lib/ideas-generator";
+import { sendTikTokServerEvent } from "@/lib/tiktok-events";
 
 type Env = {
   DB: D1Database;
@@ -164,11 +165,34 @@ async function persistEvent(db: D1Database, event: Stripe.Event): Promise<void> 
       break;
     }
     case "invoice.payment_succeeded": {
+      const invoice = event.data.object as Stripe.Invoice;
+
+      // Fire TikTok CompletePayment for EVERY paid invoice (first +
+      // renewals). Server-side so iOS/blocked-pixel users still attribute.
+      // event.id is idempotency-safe — Stripe retries reuse the same id,
+      // and TikTok dedupes by event_id, so retries won't double-count.
+      await sendTikTokServerEvent({
+        event: "CompletePayment",
+        eventId: event.id,
+        email: invoice.customer_email ?? undefined,
+        externalId:
+          typeof invoice.customer === "string" ? invoice.customer : undefined,
+        value:
+          typeof invoice.amount_paid === "number"
+            ? invoice.amount_paid / 100
+            : undefined,
+        currency: invoice.currency?.toUpperCase() ?? "USD",
+        contentName: "LaunchFly Subscription",
+        contentId:
+          typeof invoice.subscription === "string"
+            ? invoice.subscription
+            : undefined,
+      });
+
       // Monthly subscription renewal → unlock another 30 days of plan.
       // billing_reason='subscription_create' is the FIRST invoice (the
       // 30 days the user gets at signup, already covered by default
       // months_unlocked=1). Only 'subscription_cycle' renewals bump.
-      const invoice = event.data.object as Stripe.Invoice;
       if (invoice.billing_reason !== "subscription_cycle") {
         console.log(
           "[stripe-webhook] invoice.paid skipped, reason:",
