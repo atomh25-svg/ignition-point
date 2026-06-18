@@ -1,9 +1,13 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
-import { Show, SignInButton } from "@clerk/tanstack-react-start";
+import { useEffect, useState } from "react";
+import { Show, SignInButton, useAuth } from "@clerk/tanstack-react-start";
 import { Navbar } from "@/components/launchfly/Navbar";
 import { CheckCircle2, ArrowRight, Rocket, Loader2 } from "lucide-react";
-import { createCheckoutSession } from "@/lib/stripe-checkout";
+import {
+  createCheckoutSession,
+  createCustomerPortalSession,
+} from "@/lib/stripe-checkout";
+import { requireActiveSubscription } from "@/lib/require-subscription";
 
 export const Route = createFileRoute("/pricing")({
   head: () => ({
@@ -29,8 +33,37 @@ const includes = [
 ];
 
 function Pricing() {
+  const { isSignedIn, isLoaded: authLoaded } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // Did this user already subscribe? If yes, the CTA flips to "Manage
+  // subscription" → opens Stripe Customer Portal instead of trying to
+  // create a duplicate Checkout Session (which Stripe would happily
+  // process and create a second active subscription).
+  const [alreadySubscribed, setAlreadySubscribed] = useState(false);
+  const [statusChecked, setStatusChecked] = useState(false);
+
+  useEffect(() => {
+    if (!authLoaded || !isSignedIn) {
+      setStatusChecked(true);
+      return;
+    }
+    let cancelled = false;
+    (async () => {
+      try {
+        const result = await requireActiveSubscription();
+        if (cancelled) return;
+        setAlreadySubscribed(result.ok);
+      } catch (err) {
+        console.warn("[pricing] sub status check failed:", err);
+      } finally {
+        if (!cancelled) setStatusChecked(true);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [authLoaded, isSignedIn]);
 
   const handleCommit = async () => {
     if (loading) return;
@@ -49,6 +82,34 @@ function Pricing() {
       console.error(err);
       setError(
         `Couldn't start checkout: ${err instanceof Error ? err.message : String(err)}`,
+      );
+      setLoading(false);
+    }
+  };
+
+  const handleManage = async () => {
+    if (loading) return;
+    setLoading(true);
+    setError(null);
+    try {
+      const result = await createCustomerPortalSession();
+      if (result.ok) {
+        window.location.href = result.url;
+        return;
+      }
+      console.error("[portal]", result);
+      // If we somehow lost the customer link, fall back to checkout.
+      if (result.reason === "no-customer") {
+        setAlreadySubscribed(false);
+        setLoading(false);
+        return;
+      }
+      setError(`Couldn't open billing portal: ${result.reason}`);
+      setLoading(false);
+    } catch (err) {
+      console.error(err);
+      setError(
+        `Couldn't open billing portal: ${err instanceof Error ? err.message : String(err)}`,
       );
       setLoading(false);
     }
@@ -91,24 +152,61 @@ function Pricing() {
               </ul>
 
               <Show when="signed-in">
-                <button
-                  type="button"
-                  onClick={handleCommit}
-                  disabled={loading}
-                  className="mt-10 inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-gold px-6 py-3 text-base font-medium text-gold-foreground shadow-gold transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-70 sm:w-auto"
-                >
-                  {loading ? (
-                    <>
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                      Redirecting to checkout…
-                    </>
-                  ) : (
-                    <>
-                      Commit &amp; Begin
-                      <ArrowRight className="h-4 w-4" />
-                    </>
-                  )}
-                </button>
+                {alreadySubscribed ? (
+                  <>
+                    <button
+                      type="button"
+                      onClick={handleManage}
+                      disabled={loading}
+                      className="mt-10 inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-gold px-6 py-3 text-base font-medium text-gold-foreground shadow-gold transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-70 sm:w-auto"
+                    >
+                      {loading ? (
+                        <>
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                          Opening billing portal…
+                        </>
+                      ) : (
+                        <>
+                          Manage subscription
+                          <ArrowRight className="h-4 w-4" />
+                        </>
+                      )}
+                    </button>
+                    <p className="mt-3 text-xs text-muted-foreground">
+                      You're already a member. This opens the Stripe
+                      Customer Portal where you can update payment
+                      method, switch plan, or cancel.
+                    </p>
+                    <div className="mt-4">
+                      <Link
+                        to="/app/dashboard"
+                        className="inline-flex items-center gap-1 text-sm text-amber-glow hover:underline"
+                      >
+                        Or jump back to your dashboard
+                        <ArrowRight className="h-3 w-3" />
+                      </Link>
+                    </div>
+                  </>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={handleCommit}
+                    disabled={loading || !statusChecked}
+                    className="mt-10 inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-gold px-6 py-3 text-base font-medium text-gold-foreground shadow-gold transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-70 sm:w-auto"
+                  >
+                    {loading ? (
+                      <>
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        Redirecting to checkout…
+                      </>
+                    ) : (
+                      <>
+                        Commit &amp; Begin
+                        <ArrowRight className="h-4 w-4" />
+                      </>
+                    )}
+                  </button>
+                )}
               </Show>
               <Show when="signed-out">
                 <SignInButton mode="modal">

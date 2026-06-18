@@ -1,6 +1,10 @@
 import { createServerFn } from "@tanstack/react-start";
 import { auth, clerkClient } from "@clerk/tanstack-react-start/server";
+// eslint-disable-next-line import/no-unresolved
+import { env } from "cloudflare:workers";
 import Stripe from "stripe";
+
+type Env = { DB: D1Database };
 
 /**
  * Server-only function that creates a Stripe Checkout Session for the
@@ -76,6 +80,61 @@ export const createCheckoutSession = createServerFn({ method: "POST" }).handler(
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : String(err);
       return { ok: false as const, reason: `stripe call failed: ${message}` };
+    }
+  },
+);
+
+/**
+ * Opens the Stripe Customer Portal so an already-subscribed user can
+ * manage / cancel / update their subscription. Returns the hosted
+ * portal URL; the client redirects to it.
+ *
+ * Falls back to { ok: false, reason: 'no-customer' } if we can't find
+ * a Stripe customer for this user — the pricing page treats that as
+ * "user isn't actually subscribed yet" and routes back to checkout.
+ */
+export const createCustomerPortalSession = createServerFn({ method: "POST" }).handler(
+  async () => {
+    const { userId } = await auth();
+    if (!userId) return { ok: false as const, reason: "unauthenticated" };
+
+    const secretKey = process.env.STRIPE_SECRET_KEY;
+    if (!secretKey) {
+      return { ok: false as const, reason: "missing STRIPE_SECRET_KEY" };
+    }
+
+    const db = (env as unknown as Env).DB;
+    if (!db) return { ok: false as const, reason: "no-db" };
+
+    const row = await db
+      .prepare(
+        `SELECT stripe_customer_id FROM subscriptions
+           WHERE clerk_user_id = ?
+             AND status IN ('active','trialing','past_due')
+           ORDER BY updated_at DESC LIMIT 1`,
+      )
+      .bind(userId)
+      .first<{ stripe_customer_id: string | null }>();
+    const customerId = row?.stripe_customer_id;
+    if (!customerId) {
+      return { ok: false as const, reason: "no-customer" };
+    }
+
+    try {
+      const stripe = new Stripe(secretKey, {
+        httpClient: Stripe.createFetchHttpClient(),
+      });
+      const session = await stripe.billingPortal.sessions.create({
+        customer: customerId,
+        return_url: "https://launchfly.io/app/dashboard",
+      });
+      return { ok: true as const, url: session.url };
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err);
+      return {
+        ok: false as const,
+        reason: `stripe portal call failed: ${message}`,
+      };
     }
   },
 );
