@@ -96,14 +96,40 @@ Hard rules:
 - "speed" must be honest given their weekly hours.
 
 Specificity ceiling — DO NOT exceed this:
-- Ideas should be **broadly applicable**, not hyper-niche. The audience should be a sizable group (tens of thousands of people minimum), not a fringe subniche.
-- Examples of the RIGHT specificity: "AI writing tool for newsletter creators", "Marketplace for local home services", "Subscription meal-prep kits for busy professionals", "Online course platform for small businesses", "Automated bookkeeping app for freelancers".
-- Examples of TOO niche (do not generate): "Browser screenshot comparison tool for ProductHunt launchers", "Vercel deployment helper for solo plumbers", "Comparison chart generator for screenshot-tool reviewers". If the audience is a niche-within-a-niche, broaden it.
-- At least 4 of the 6 ideas should be in broadly recognizable categories: SaaS tools, content/media, e-commerce, services/marketplaces, courses/education, AI products, mobile apps. Save the more creative/unusual ideas for slots 5 and 6.
+
+THE NAME is an ARCHETYPE-level business category, NOT a hyper-specific product name. The founder should recognize the name as a real business model they've heard of.
+
+Good "name" examples (use these as templates):
+- "Ecommerce store"
+- "Newsletter business"
+- "AI agency"
+- "SaaS tool"
+- "Online course"
+- "Mobile app"
+- "Affiliate site"
+- "Print-on-demand brand"
+- "Coaching service"
+- "Local services business"
+- "Content brand on YouTube"
+- "Niche directory"
+- "Membership community"
+- "Productized service"
+
+Bad "name" examples (DO NOT generate):
+- "Browser Screenshot Comparison Tool" (too specific, jargon-laden, unrecognizable as a business archetype)
+- "Vercel Deployment Helper for Solo Plumbers" (niche-within-a-niche)
+- "AI-powered Slack Standup Bot" (one specific tool, not an archetype)
+- "Comparison Chart Generator" (a feature, not a business)
+
+The PERSONALIZATION goes in `concept` and `audience` — that's where you tailor the archetype to the founder's profile. For an ecommerce store: concept = "DTC brand selling kitchen tools to home cooks who hate clutter"; audience = "Home cooks, 25-45". Same archetype, different concept for a different founder.
+
+Cross-set rule:
+- At least 5 of the 6 ideas must have names from (or that closely resemble) the Good examples list above. Slot 6 may be one more imaginative archetype if it genuinely fits the founder.
+- Span at least 3 different categories across the 6 (don't pitch 6 SaaS variants or 6 ecommerce variants).
 - The "concept" should read like something the founder could describe to a non-technical friend without losing them in jargon.
 
 Length limits — these are hard, not suggestions:
-- "name" must be 2–4 words, under 30 characters total. NOT a sentence.
+- "name" must be 2–5 words, under 40 characters total. NOT a sentence. Should read as a business archetype (see Specificity ceiling below).
 - "audience" must be a persona, under 60 characters total. Examples: "Career switchers, 25–40", "Solo plumbers and electricians", "Newsletter creators with <1k subs". NOT a sentence.
 - "concept" is one sentence, under 140 characters.
 - "first_step" is one concrete sentence, under 140 characters.
