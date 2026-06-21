@@ -1,4 +1,4 @@
-import type { SVGProps } from "react";
+import { useEffect, type SVGProps } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Show, SignInButton, UserButton } from "@clerk/tanstack-react-start";
 import { Button } from "@/components/ui/button";
@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Footer } from "@/components/launchfly/Footer";
 import bannerImg from "@/assets/banner-takeoff.png";
 import launchflyMark from "@/assets/launchfly-mark.png";
+import { trackTikTokEvent } from "@/lib/tiktok-events";
 import {
   Sparkles, Compass, Rocket, Code2, Users,
   Brain, Zap, CheckCircle2, ArrowRight, Calendar,
@@ -34,6 +35,18 @@ export const Route = createFileRoute("/")({
 });
 
 function Home() {
+  // TikTok funnel signal: landing page = top-of-funnel ViewContent.
+  // Fires once per mount; the pixel snippet already fires PageView.
+  useEffect(() => {
+    trackTikTokEvent("ViewContent", {
+      content_name: "LaunchFly Landing",
+      content_type: "product",
+      content_id: "launchfly-membership",
+      value: 19,
+      currency: "USD",
+    });
+  }, []);
+
   return (
     <main className="min-h-screen bg-background text-foreground">
       <Nav />
@@ -292,6 +305,15 @@ function Hero() {
         <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
           <Link
             to="/pricing"
+            onClick={() =>
+              trackTikTokEvent("AddToCart", {
+                content_name: "LaunchFly Membership",
+                content_type: "product",
+                content_id: "launchfly-membership",
+                value: 19,
+                currency: "USD",
+              })
+            }
             className="inline-flex items-center gap-2 rounded-full bg-gradient-gold px-6 py-3 text-base font-medium text-gold-foreground shadow-gold transition hover:opacity-90"
           >
             Start Your Launch — $19/month

@@ -8,6 +8,7 @@ import {
   createCustomerPortalSession,
 } from "@/lib/stripe-checkout";
 import { requireActiveSubscription } from "@/lib/require-subscription";
+import { trackTikTokEvent } from "@/lib/tiktok-events";
 
 export const Route = createFileRoute("/pricing")({
   head: () => ({
@@ -43,6 +44,18 @@ function Pricing() {
   const [alreadySubscribed, setAlreadySubscribed] = useState(false);
   const [statusChecked, setStatusChecked] = useState(false);
 
+  // TikTok funnel signal: pricing page view = mid-funnel ViewContent
+  // on the actual SKU.
+  useEffect(() => {
+    trackTikTokEvent("ViewContent", {
+      content_name: "LaunchFly Membership Pricing",
+      content_type: "product",
+      content_id: "launchfly-membership",
+      value: 19,
+      currency: "USD",
+    });
+  }, []);
+
   useEffect(() => {
     if (!authLoaded || !isSignedIn) {
       setStatusChecked(true);
@@ -67,6 +80,16 @@ function Pricing() {
 
   const handleCommit = async () => {
     if (loading) return;
+    // TikTok funnel signal: bottom-of-funnel InitiateCheckout right
+    // before we redirect to Stripe. The server-side webhook fires
+    // CompletePayment when (and only if) the payment actually succeeds.
+    trackTikTokEvent("InitiateCheckout", {
+      content_name: "LaunchFly Membership",
+      content_type: "product",
+      content_id: "launchfly-membership",
+      value: 19,
+      currency: "USD",
+    });
     setLoading(true);
     setError(null);
     try {
