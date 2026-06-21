@@ -100,20 +100,47 @@ Specificity ceiling — DO NOT exceed this:
 THE NAME is an ARCHETYPE-level business category, NOT a hyper-specific product name. The founder should recognize the name as a real business model they've heard of.
 
 Good "name" examples (use these as templates):
-- "Ecommerce store"
-- "Newsletter business"
-- "AI agency"
-- "SaaS tool"
-- "Online course"
-- "Mobile app"
-- "Affiliate site"
+
+Ecommerce & physical-product archetypes:
+- "Dropshipping store"
+- "Amazon FBA brand"
+- "Shopify DTC brand"
+- "Etsy shop"
 - "Print-on-demand brand"
-- "Coaching service"
-- "Local services business"
-- "Content brand on YouTube"
-- "Niche directory"
+- "Subscription box"
+- "TikTok Shop seller"
+
+Creator-economy archetypes:
+- "Newsletter business"
+- "Faceless YouTube channel"
+- "TikTok theme page"
+- "Substack publication"
+- "Skool community"
+- "Notion template shop"
+- "Digital product on Gumroad"
+- "Podcast brand"
+- "Online course"
 - "Membership community"
+
+Services & agency archetypes:
+- "AI agency"
+- "SMMA (social media agency)"
+- "Lead-gen agency"
+- "Local services business"
+- "Coaching service"
 - "Productized service"
+- "Freelance brand"
+
+Tech & SaaS archetypes:
+- "SaaS tool"
+- "AI chatbot for businesses"
+- "Mobile app"
+- "Chrome extension"
+- "Niche directory"
+- "Affiliate site"
+- "White-label SaaS"
+
+The list isn't exhaustive — any recognizable business model that someone could plausibly hear someone on YouTube/TikTok talking about ("I built a faceless YouTube channel", "I run a dropshipping store", "I have a Notion template shop") qualifies. The key is recognizability — the founder shouldn't need to ask "wait, what's that?"
 
 Bad "name" examples (DO NOT generate):
 - "Browser Screenshot Comparison Tool" (too specific, jargon-laden, unrecognizable as a business archetype)
