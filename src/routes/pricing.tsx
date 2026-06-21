@@ -43,6 +43,29 @@ function Pricing() {
   // process and create a second active subscription).
   const [alreadySubscribed, setAlreadySubscribed] = useState(false);
   const [statusChecked, setStatusChecked] = useState(false);
+  // Tracks "the user clicked Sign in to commit" so that the moment
+  // Clerk reports them signed in, we auto-forward to Stripe Checkout
+  // — saving the second click. Persisted in sessionStorage so OAuth
+  // round-trips (Google sign-in) don't lose the intent across the
+  // full-page redirect back to /pricing.
+  const [autoForwardArmed, setAutoForwardArmed] = useState(false);
+  const armAutoForward = () => {
+    setAutoForwardArmed(true);
+    try {
+      sessionStorage.setItem("launchfly:checkoutIntent", "1");
+    } catch {
+      /* private mode */
+    }
+  };
+  useEffect(() => {
+    try {
+      if (sessionStorage.getItem("launchfly:checkoutIntent") === "1") {
+        setAutoForwardArmed(true);
+      }
+    } catch {
+      /* private mode */
+    }
+  }, []);
 
   // TikTok funnel signal: pricing page view = mid-funnel ViewContent
   // on the actual SKU.
@@ -77,6 +100,36 @@ function Pricing() {
       cancelled = true;
     };
   }, [authLoaded, isSignedIn]);
+
+  // Auto-forward to Stripe Checkout the moment we confirm the user is
+  // signed in AND not already subscribed AND they explicitly clicked
+  // the sign-in CTA from this page. Skips the second "Commit & Begin"
+  // click that previously broke the flow.
+  useEffect(() => {
+    if (!autoForwardArmed) return;
+    if (!authLoaded || !isSignedIn) return;
+    if (!statusChecked) return;
+    if (alreadySubscribed) {
+      // They signed in but already have a sub — clear the intent and
+      // let them see the "Manage subscription" CTA.
+      try {
+        sessionStorage.removeItem("launchfly:checkoutIntent");
+      } catch {
+        /* private mode */
+      }
+      setAutoForwardArmed(false);
+      return;
+    }
+    // Clear before redirecting so a back-button trip doesn't loop.
+    try {
+      sessionStorage.removeItem("launchfly:checkoutIntent");
+    } catch {
+      /* private mode */
+    }
+    setAutoForwardArmed(false);
+    handleCommit();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autoForwardArmed, authLoaded, isSignedIn, statusChecked, alreadySubscribed]);
 
   const handleCommit = async () => {
     if (loading) return;
@@ -235,6 +288,7 @@ function Pricing() {
                 <SignInButton mode="modal">
                   <button
                     type="button"
+                    onClick={armAutoForward}
                     className="mt-10 inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-gold px-6 py-3 text-base font-medium text-gold-foreground shadow-gold transition hover:opacity-90 sm:w-auto"
                   >
                     Sign in to commit
@@ -242,7 +296,7 @@ function Pricing() {
                   </button>
                 </SignInButton>
                 <p className="mt-3 text-xs text-muted-foreground">
-                  We need an account so your subscription stays attached to you across devices.
+                  We need an account so your subscription stays attached to you across devices. After sign-in, you'll go straight to checkout.
                 </p>
               </Show>
               {error && (
