@@ -43,7 +43,7 @@ const GENERATING_HINTS = [
   "Reading your Founder DNA…",
   "Pruning ideas that don't fit your time budget…",
   "Penalizing cold-outreach plans if you said you hate selling…",
-  "Picking 4 that look executable for you…",
+  "Picking 6 that look executable for you…",
 ];
 
 function Badge({

@@ -155,6 +155,13 @@ Cross-set rule:
 - Span at least 3 different categories across the 6 (don't pitch 6 SaaS variants or 6 ecommerce variants).
 - The "concept" should read like something the founder could describe to a non-technical friend without losing them in jargon.
 
+ORDERING — this matters:
+- The array order is the order the founder reads them in. The first ideas should be the most recognizable, low-friction archetypes from the list above ("Dropshipping store", "Ecommerce store", "Newsletter business", "AI agency", "Faceless YouTube channel", "Online course", "Notion template shop", etc.). These give the founder a "yes, I've heard of that" anchor.
+- Slots 1, 2, 3 must be from the Good examples list verbatim or near-verbatim. No exceptions.
+- Slots 4, 5 can be slightly more tailored variants of archetypes but still in the Good examples spirit.
+- Slot 6 may be the most imaginative / least common archetype.
+- This is the OPPOSITE of saving the best for last — the most universally recognizable goes first.
+
 Length limits — these are hard, not suggestions:
 - "name" must be 2–5 words, under 40 characters total. NOT a sentence. Should read as a business archetype (see Specificity ceiling below).
 - "audience" must be a persona, under 60 characters total. Examples: "Career switchers, 25–40", "Solo plumbers and electricians", "Newsletter creators with <1k subs". NOT a sentence.
