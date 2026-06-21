@@ -195,46 +195,52 @@
      in the matching hue so the gradient doesn't look washed out against
      the dark card background. */
   .text-idea-1 {
-    background: linear-gradient(135deg, oklch(0.88 0.18 88), oklch(0.74 0.18 60));
+    background: linear-gradient(135deg, oklch(0.92 0.18 88), oklch(0.74 0.18 60));
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
-    -webkit-text-stroke: 0.5px oklch(0.86 0.16 75 / 35%);
+    -webkit-text-stroke: 1.5px oklch(0.62 0.20 55);
+    paint-order: stroke fill;
   }
   .text-idea-2 {
-    background: linear-gradient(135deg, oklch(0.84 0.20 45), oklch(0.70 0.22 25));
+    background: linear-gradient(135deg, oklch(0.88 0.20 45), oklch(0.70 0.22 25));
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
-    -webkit-text-stroke: 0.5px oklch(0.80 0.20 35 / 35%);
+    -webkit-text-stroke: 1.5px oklch(0.55 0.22 28);
+    paint-order: stroke fill;
   }
   .text-idea-3 {
-    background: linear-gradient(135deg, oklch(0.85 0.18 170), oklch(0.70 0.16 200));
+    background: linear-gradient(135deg, oklch(0.90 0.18 170), oklch(0.70 0.16 200));
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
-    -webkit-text-stroke: 0.5px oklch(0.80 0.16 180 / 35%);
+    -webkit-text-stroke: 1.5px oklch(0.50 0.18 180);
+    paint-order: stroke fill;
   }
   .text-idea-4 {
-    background: linear-gradient(135deg, oklch(0.82 0.22 320), oklch(0.70 0.24 290));
+    background: linear-gradient(135deg, oklch(0.85 0.22 320), oklch(0.70 0.24 290));
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
-    -webkit-text-stroke: 0.5px oklch(0.78 0.22 305 / 35%);
+    -webkit-text-stroke: 1.5px oklch(0.50 0.24 300);
+    paint-order: stroke fill;
   }
   .text-idea-5 {
-    background: linear-gradient(135deg, oklch(0.84 0.20 10), oklch(0.72 0.20 50));
+    background: linear-gradient(135deg, oklch(0.88 0.20 10), oklch(0.72 0.20 50));
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
-    -webkit-text-stroke: 0.5px oklch(0.80 0.20 30 / 35%);
+    -webkit-text-stroke: 1.5px oklch(0.55 0.22 18);
+    paint-order: stroke fill;
   }
   .text-idea-6 {
-    background: linear-gradient(135deg, oklch(0.85 0.16 230), oklch(0.70 0.20 270));
+    background: linear-gradient(135deg, oklch(0.88 0.16 230), oklch(0.70 0.20 270));
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
-    -webkit-text-stroke: 0.5px oklch(0.80 0.18 250 / 35%);
+    -webkit-text-stroke: 1.5px oklch(0.50 0.22 260);
+    paint-order: stroke fill;
   }
   /* Geist — Vercel's geometric sans (variable weight). Loaded from
      Google Fonts in __root.tsx. Use weight 700 by default for the
