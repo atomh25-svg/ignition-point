@@ -153,6 +153,11 @@ function Dashboard() {
   const [diveLoadingIdx, setDiveLoadingIdx] = useState<number | null>(null);
   // UI: keep the full 30-day plan collapsed by default — it's a lot.
   const [planExpanded, setPlanExpanded] = useState(false);
+  // Day the user is currently looking at. Defaults to "today"; the
+  // progress grid lets them click any past/today chip to review what
+  // that day looked like. Initialized to null and synced from `today`
+  // once we have a blueprint + launchStartedAt.
+  const [viewingDay, setViewingDay] = useState<number | null>(null);
 
   useEffect(() => {
     if (!selectedIdeaId) return;
@@ -193,8 +198,8 @@ function Dashboard() {
   }, [selectedIdeaId]);
 
   // Per-day breakdown: Claude-generated 5-8 sub-steps + AI-tool hints
-  // for whatever Day N maps to in the plan. Refetches when the day
-  // rolls over (or when the user switches ideas).
+  // for whatever Day N maps to in the plan. Refetches when the user
+  // switches days via the progress grid (viewingDay) or switches ideas.
   const computedDayIndex = (() => {
     if (!blueprint || !launchStartedAt) return 0;
     const planLen = blueprint.seven_day_plan.length || 30;
@@ -206,6 +211,18 @@ function Dashboard() {
       ),
     );
   })();
+  // Initialize viewingDay to today the moment we have a blueprint;
+  // subsequent rolls keep the user where they were unless they exceed
+  // today's index after a day rolls over.
+  useEffect(() => {
+    if (!blueprint) return;
+    setViewingDay((d) => {
+      const cap = computedDayIndex + 1;
+      if (d == null) return cap;
+      return Math.min(cap, Math.max(1, d));
+    });
+  }, [blueprint, computedDayIndex]);
+  const effectiveDayNumber = viewingDay ?? computedDayIndex + 1;
   useEffect(() => {
     if (!selectedIdeaId || !blueprint) return;
     let cancelled = false;
@@ -215,7 +232,7 @@ function Dashboard() {
     (async () => {
       try {
         const result = await getDailyBreakdown({
-          data: { ideaId: selectedIdeaId, dayNumber: computedDayIndex + 1 },
+          data: { ideaId: selectedIdeaId, dayNumber: effectiveDayNumber },
         });
         if (cancelled) return;
         if (result.ok) setBreakdown(result.breakdown);
@@ -230,7 +247,7 @@ function Dashboard() {
     return () => {
       cancelled = true;
     };
-  }, [selectedIdeaId, blueprint, computedDayIndex]);
+  }, [selectedIdeaId, blueprint, effectiveDayNumber]);
 
   // Lazy-fetch the substep deep-dive when the user opens the modal.
   // Re-used from cache on subsequent opens of the same step.
@@ -245,7 +262,7 @@ function Dashboard() {
         const result = await getSubstepDive({
           data: {
             ideaId: selectedIdeaId,
-            dayNumber: computedDayIndex + 1,
+            dayNumber: effectiveDayNumber,
             substepIndex: activeStep,
           },
         });
@@ -262,7 +279,7 @@ function Dashboard() {
     return () => {
       cancelled = true;
     };
-  }, [activeStep, selectedIdeaId, breakdown, computedDayIndex, dives]);
+  }, [activeStep, selectedIdeaId, breakdown, effectiveDayNumber, dives]);
 
   if (loading) {
     return (
@@ -309,7 +326,12 @@ function Dashboard() {
   const pct = Math.round((completed / total) * 100);
   const tracker = Array.from({ length: total }, (_, i) => i + 1);
 
-  const todaysStep = stripDayPrefix(blueprint.seven_day_plan[dayIndex0] ?? "");
+  const isReviewing = viewingDay !== null && viewingDay !== today;
+  const viewedIndex0 = (viewingDay ?? today) - 1;
+
+  const todaysStep = stripDayPrefix(
+    blueprint.seven_day_plan[viewedIndex0] ?? "",
+  );
   const nextMilestone =
     blueprint.seven_day_plan[Math.min(total - 1, dayIndex0 + 1)] ?? null;
   const productName = ideaName ?? blueprint.headline;
@@ -358,8 +380,19 @@ function Dashboard() {
           <div className="relative grid md:grid-cols-[1fr_280px] gap-6 items-center">
             <div>
               <span className="text-xs uppercase tracking-[0.25em] text-amber-glow">
-                Today's step · Day {today} of {total}
+                {isReviewing
+                  ? `Reviewing · Day ${viewingDay} of ${total}`
+                  : `Today's step · Day ${today} of ${total}`}
               </span>
+              {isReviewing && (
+                <button
+                  type="button"
+                  onClick={() => setViewingDay(today)}
+                  className="ml-3 inline-flex items-center gap-1 rounded-full border border-gold/40 bg-gold/10 px-2.5 py-0.5 text-[10px] uppercase tracking-[0.2em] text-gold transition hover:bg-gold/20"
+                >
+                  Back to today
+                </button>
+              )}
               <h2 className="mt-3 text-2xl md:text-3xl font-semibold leading-tight">
                 <span className="text-gradient-gold">{todaysStep}</span>
               </h2>
@@ -477,18 +510,30 @@ function Dashboard() {
             {tracker.map((d) => {
               const isDone = d <= completed;
               const isToday = d === today;
+              const isFuture = d > today;
+              const isViewed = (viewingDay ?? today) === d;
               const dayLine = blueprint.seven_day_plan[d - 1];
+              const baseClass = isDone
+                ? "border-emerald-400/60 bg-emerald-500/15 text-emerald-400"
+                : isToday
+                  ? "border-gold bg-gold/10 text-gold animate-pulse"
+                  : "border-border bg-muted/40 text-muted-foreground/60";
+              const ringClass = isViewed
+                ? " ring-2 ring-amber-glow ring-offset-2 ring-offset-background"
+                : "";
+              const interactiveClass = !isFuture
+                ? " cursor-pointer hover:scale-110 transition"
+                : " cursor-not-allowed opacity-70";
               return (
-                <div
+                <button
                   key={d}
+                  type="button"
+                  disabled={isFuture}
+                  onClick={() => {
+                    if (!isFuture) setViewingDay(d);
+                  }}
                   title={dayLine ?? `Day ${d}`}
-                  className={`aspect-square rounded-md border flex items-center justify-center text-[9px] font-semibold ${
-                    isDone
-                      ? "border-emerald-400/60 bg-emerald-500/15 text-emerald-400"
-                      : isToday
-                      ? "border-gold bg-gold/10 text-gold animate-pulse"
-                      : "border-border bg-muted/40 text-muted-foreground/60"
-                  }`}
+                  className={`aspect-square rounded-md border flex items-center justify-center text-[9px] font-semibold ${baseClass}${ringClass}${interactiveClass}`}
                 >
                   {isDone ? (
                     <Check className="w-3 h-3" strokeWidth={3.5} />
@@ -497,7 +542,7 @@ function Dashboard() {
                   ) : (
                     d
                   )}
-                </div>
+                </button>
               );
             })}
           </div>

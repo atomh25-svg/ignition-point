@@ -95,6 +95,13 @@ Hard rules:
 - "first_step" must be a concrete action the founder can take in the next 24 hours, not "do research" or "validate the market".
 - "speed" must be honest given their weekly hours.
 
+Specificity ceiling — DO NOT exceed this:
+- Ideas should be **broadly applicable**, not hyper-niche. The audience should be a sizable group (tens of thousands of people minimum), not a fringe subniche.
+- Examples of the RIGHT specificity: "AI writing tool for newsletter creators", "Marketplace for local home services", "Subscription meal-prep kits for busy professionals", "Online course platform for small businesses", "Automated bookkeeping app for freelancers".
+- Examples of TOO niche (do not generate): "Browser screenshot comparison tool for ProductHunt launchers", "Vercel deployment helper for solo plumbers", "Comparison chart generator for screenshot-tool reviewers". If the audience is a niche-within-a-niche, broaden it.
+- At least 4 of the 6 ideas should be in broadly recognizable categories: SaaS tools, content/media, e-commerce, services/marketplaces, courses/education, AI products, mobile apps. Save the more creative/unusual ideas for slots 5 and 6.
+- The "concept" should read like something the founder could describe to a non-technical friend without losing them in jargon.
+
 Length limits — these are hard, not suggestions:
 - "name" must be 2–4 words, under 30 characters total. NOT a sentence.
 - "audience" must be a persona, under 60 characters total. Examples: "Career switchers, 25–40", "Solo plumbers and electricians", "Newsletter creators with <1k subs". NOT a sentence.
