@@ -236,9 +236,13 @@ function Ideas() {
                     : "border-border/50 hover:border-gold/40"
                 }`}
               >
-                <div className="flex items-start justify-between gap-3">
-                  <h3 className="text-xl font-semibold">{idea.name}</h3>
-                  <Badge tone="primary">{idea.fit}% fit</Badge>
+                <div className="relative flex flex-col items-center text-center">
+                  <h3 className="text-3xl md:text-4xl font-bold tracking-tight text-gradient-gold leading-tight">
+                    {idea.name}
+                  </h3>
+                  <div className="mt-2">
+                    <Badge tone="primary">{idea.fit}% fit</Badge>
+                  </div>
                 </div>
                 <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
                   {idea.concept}
