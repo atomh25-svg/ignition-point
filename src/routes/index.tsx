@@ -129,12 +129,12 @@ function Banner() {
   return (
     <section
       id="top"
-      className="relative w-full overflow-hidden"
+      className="relative w-full overflow-hidden md:h-[var(--banner-h)]"
       style={{
-        // 50vw matches the canvas's scaled height (720px * 100vw/1440px).
-        // Floor at 280px so on phones we don't get a too-cramped band;
-        // cap at 720px on ultra-wide.
-        height: "clamp(280px, 50vw, 720px)",
+        // On mobile, the canvas is replaced by a simpler stacked layout
+        // (see below) and the section sizes to its content. From md up,
+        // the 1440×720 design canvas drives section height via this var.
+        ["--banner-h" as string]: "clamp(280px, 50vw, 720px)",
       }}
     >
       <img
@@ -146,15 +146,86 @@ function Banner() {
       <div className="absolute inset-0 bg-banner-overlay" />
       <div className="pointer-events-none absolute inset-0 bg-warm-glow" />
 
-      {/* === 1440×720 design canvas. All translate-px / font-px values below
-          are tuned for this reference width; the scale transform keeps the
-          composition's relative positions identical at any viewport.
-          We center the canvas with a flex wrapper (instead of left:50% +
-          translateX(-50%)) because composing translateX with scale on the
-          same element caused the centered element to drift right at
-          scale=1 in some browsers. Flex centering + a pure scale transform
-          is order-independent and renders identically everywhere. === */}
-      <div className="absolute inset-0 flex justify-center items-start pointer-events-none">
+      {/* Mobile-first stacked layout — used below md. The 1440px design
+          canvas (kept intact below for desktop) doesn't translate well to
+          a 390px viewport, so on mobile we render a simpler stack:
+          chip → eyebrow → wordmark → mini-mark. Tuned to feel like the
+          desktop composition, just stacked. */}
+      <div className="relative z-10 flex flex-col items-center justify-center gap-5 px-6 py-12 text-center md:hidden">
+        <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-3 py-1 text-[11px] text-muted-foreground backdrop-blur">
+          <Sparkles className="h-3.5 w-3.5 text-gold" /> How to start your own business
+        </span>
+        <h2
+          className="text-2xl font-[800] uppercase tracking-[0.04em] leading-none"
+          style={{
+            fontFamily: '"Geist", ui-sans-serif, system-ui, sans-serif',
+            background:
+              "linear-gradient(180deg, rgb(255, 255, 255) 0%, rgb(255, 252, 235) 100%)",
+            WebkitBackgroundClip: "text",
+            backgroundClip: "text",
+            color: "transparent",
+            filter:
+              "drop-shadow(0 1px 2px rgba(0, 0, 0, 0.07)) drop-shadow(0 0 14px oklch(0.92 0.08 75 / 0.22))",
+          }}
+        >
+          Want to be a founder?
+        </h2>
+        <h1
+          className="font-display leading-none"
+          style={{
+            fontSize: "clamp(3.4rem, 17vw, 6rem)",
+            letterSpacing: "-0.05em",
+            transform: "scale(0.96, 1.05)",
+          }}
+        >
+          <span className="text-gradient-gold-fade">Lau</span>
+          <span className="text-foreground">nchFl</span>
+          <span
+            style={{
+              background:
+                "linear-gradient(180deg, oklch(0.97 0.005 80) 0%, oklch(0.97 0.005 80) 73%, oklch(0.98 0.03 88) 78%, oklch(0.96 0.05 75) 100%)",
+              WebkitBackgroundClip: "text",
+              backgroundClip: "text",
+              color: "transparent",
+            }}
+          >
+            y
+          </span>
+          <span
+            className="text-foreground inline-block"
+            style={{
+              fontSize: "0.77em",
+              marginLeft: "-2px",
+              transform: "translateY(-3px)",
+              textShadow:
+                "0 0 12px oklch(0.78 0.16 70 / 0.6), 0 0 24px oklch(0.78 0.16 70 / 0.35)",
+            }}
+          >
+            .
+          </span>
+        </h1>
+        <div className="flex items-center gap-2">
+          <img
+            src={launchflyMark}
+            alt=""
+            aria-hidden
+            className="h-[26px] w-[26px] object-contain shrink-0 brightness-110 logo-glow"
+            draggable={false}
+          />
+          <span className="text-base font-semibold tracking-tight">
+            LaunchFly<span className="text-gold">.io</span>
+          </span>
+        </div>
+      </div>
+
+      {/* === 1440×720 design canvas (DESKTOP ONLY, hidden below md). Every
+          translate-px / font-px value below is tuned for this reference
+          width; the scale transform keeps the composition's relative
+          positions identical at any viewport. === */}
+      <div
+        className="absolute inset-0 hidden justify-center items-start pointer-events-none md:flex"
+        style={{ height: "var(--banner-h)" }}
+      >
       <div
         className="relative pointer-events-auto"
         style={{
@@ -282,10 +353,12 @@ function Banner() {
 
 function Hero() {
   return (
-    // -mt pulls the Hero (and every section below it) up into the banner.
+    // -mt pulls the Hero (and every section below it) up into the banner —
+    // desktop only. On mobile the banner is a content-height stack (no
+    // empty space to claw back), so Hero just flows after it normally.
     // Tuned -172 → -182 → -189 → -187 by eye to match the gap between
     // the banner wordmark and "This is How to Start".
-    <section className="relative -mt-[187px] px-6">
+    <section className="relative px-6 md:-mt-[187px]">
       <div className="mx-auto max-w-5xl text-center">
         <h1
           className="font-display mt-16 whitespace-nowrap leading-[1.02] tracking-tight -translate-x-[11px] -translate-y-[3px]"
