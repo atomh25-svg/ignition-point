@@ -131,10 +131,10 @@ function Banner() {
       id="top"
       className="relative w-full overflow-hidden"
       style={{
-        // 50vw matches 720px at 1440 viewport (the canvas height); clamps
-        // prevent the section from collapsing below ~560px or growing past
-        // the canvas's natural height on ultra-wide screens.
-        height: "clamp(560px, 50vw, 720px)",
+        // 50vw matches the canvas's scaled height (720px * 100vw/1440px).
+        // Floor at 280px so on phones we don't get a too-cramped band;
+        // cap at 720px on ultra-wide.
+        height: "clamp(280px, 50vw, 720px)",
       }}
     >
       <img
@@ -161,7 +161,7 @@ function Banner() {
           width: "1440px",
           height: "720px",
           flexShrink: 0,
-          transform: "scale(min(1, calc(100vw / 1440)))",
+          transform: "scale(min(1, calc(100vw / 1440px)))",
           transformOrigin: "top center",
         }}
       >
