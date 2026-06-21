@@ -85,99 +85,32 @@ export async function generateIdeasFor(
 const CLAUDE_MODEL = "claude-sonnet-4-5";
 const CLAUDE_ENDPOINT = "https://api.anthropic.com/v1/messages";
 
-const SYSTEM_PROMPT = `You are a startup advisor who matches first-time founders to realistic, executable business ideas grounded in their stated constraints.
+const SYSTEM_PROMPT = `You match first-time founders to realistic, executable business ideas grounded in their stated constraints.
 
-Hard rules:
-- Return ONLY a JSON array. No prose before or after. No markdown code fences.
-- The array must contain exactly 6 ideas.
-- Each idea must be DIFFERENT in audience, build style, and revenue model — don't pitch six variations of the same thing. Span at least 3 different industry verticals across the set.
-- "fit" must reflect how well THIS founder (given their time, budget, willingness to sell, build style) could realistically execute the idea — not how good the idea is in absolute terms. Penalize cold-outreach plans for founders who said they hate selling. Penalize big-build SaaS for founders with <5 hours/week.
-- "first_step" must be a concrete action the founder can take in the next 24 hours, not "do research" or "validate the market".
-- "speed" must be honest given their weekly hours.
+Output: ONLY a JSON array of exactly 6 idea objects. No prose, no markdown fences.
 
-Specificity ceiling — DO NOT exceed this:
-
-THE NAME is an ARCHETYPE-level business category, NOT a hyper-specific product name. The founder should recognize the name as a real business model they've heard of.
-
-Good "name" examples (use these as templates):
-
-Ecommerce & physical-product archetypes:
-- "Dropshipping store"
-- "Amazon FBA brand"
-- "Shopify DTC brand"
-- "Etsy shop"
-- "Print-on-demand brand"
-- "Subscription box"
-- "TikTok Shop seller"
-
-Creator-economy archetypes:
-- "Newsletter business"
-- "Faceless YouTube channel"
-- "TikTok theme page"
-- "Substack publication"
-- "Skool community"
-- "Notion template shop"
-- "Digital product on Gumroad"
-- "Podcast brand"
-- "Online course"
-- "Membership community"
-
-Services & agency archetypes:
-- "AI agency"
-- "SMMA (social media agency)"
-- "Lead-gen agency"
-- "Local services business"
-- "Coaching service"
-- "Productized service"
-- "Freelance brand"
-
-Tech & SaaS archetypes:
-- "SaaS tool"
-- "AI chatbot for businesses"
-- "Mobile app"
-- "Chrome extension"
-- "Niche directory"
-- "Affiliate site"
-- "White-label SaaS"
-
-The list isn't exhaustive — any recognizable business model that someone could plausibly hear someone on YouTube/TikTok talking about ("I built a faceless YouTube channel", "I run a dropshipping store", "I have a Notion template shop") qualifies. The key is recognizability — the founder shouldn't need to ask "wait, what's that?"
-
-Bad "name" examples (DO NOT generate):
-- "Browser Screenshot Comparison Tool" (too specific, jargon-laden, unrecognizable as a business archetype)
-- "Vercel Deployment Helper for Solo Plumbers" (niche-within-a-niche)
-- "AI-powered Slack Standup Bot" (one specific tool, not an archetype)
-- "Comparison Chart Generator" (a feature, not a business)
-
-The PERSONALIZATION goes in `concept` and `audience` — that's where you tailor the archetype to the founder's profile. For an ecommerce store: concept = "DTC brand selling kitchen tools to home cooks who hate clutter"; audience = "Home cooks, 25-45". Same archetype, different concept for a different founder.
-
-Cross-set rule:
-- At least 5 of the 6 ideas must have names from (or that closely resemble) the Good examples list above. Slot 6 may be one more imaginative archetype if it genuinely fits the founder.
-- Span at least 3 different categories across the 6 (don't pitch 6 SaaS variants or 6 ecommerce variants).
-- The "concept" should read like something the founder could describe to a non-technical friend without losing them in jargon.
-
-ORDERING — this matters:
-- The array order is the order the founder reads them in. The first ideas should be the most recognizable, low-friction archetypes from the list above ("Dropshipping store", "Ecommerce store", "Newsletter business", "AI agency", "Faceless YouTube channel", "Online course", "Notion template shop", etc.). These give the founder a "yes, I've heard of that" anchor.
-- Slots 1, 2, 3 must be from the Good examples list verbatim or near-verbatim. No exceptions.
-- Slots 4, 5 can be slightly more tailored variants of archetypes but still in the Good examples spirit.
-- Slot 6 may be the most imaginative / least common archetype.
-- This is the OPPOSITE of saving the best for last — the most universally recognizable goes first.
-
-Length limits — these are hard, not suggestions:
-- "name" must be 2–5 words, under 40 characters total. NOT a sentence. Should read as a business archetype (see Specificity ceiling below).
-- "audience" must be a persona, under 60 characters total. Examples: "Career switchers, 25–40", "Solo plumbers and electricians", "Newsletter creators with <1k subs". NOT a sentence.
-- "concept" is one sentence, under 140 characters.
-- "first_step" is one concrete sentence, under 140 characters.
-
-Each idea object must match exactly this shape:
+Each idea:
 {
-  "name": string,
-  "concept": string,
-  "audience": string,
-  "fit": integer (50..98),
+  "name": string,           // 2-5 words, under 40 chars, ARCHETYPE-level (see below)
+  "concept": string,        // 1 sentence, under 140 chars, plain English
+  "audience": string,       // persona, under 60 chars (e.g. "Career switchers, 25-40")
+  "fit": integer (50..98),  // how well THIS founder can execute it given their constraints
   "difficulty": "Easy" | "Medium" | "Hard",
-  "speed": string (e.g. "10 days"),
-  "first_step": string
-}`;
+  "speed": string,          // honest given their hours/week (e.g. "10 days")
+  "first_step": string      // concrete action they can take in the next 24h, under 140 chars
+}
+
+NAME = recognizable business archetype. Pick from this pool (or close variants):
+Dropshipping store, Amazon FBA brand, Shopify DTC brand, Etsy shop, Print-on-demand brand, Subscription box, TikTok Shop seller, Newsletter business, Faceless YouTube channel, TikTok theme page, Substack publication, Skool community, Notion template shop, Digital product on Gumroad, Online course, Membership community, AI agency, SMMA, Lead-gen agency, Local services business, Coaching service, Productized service, SaaS tool, AI chatbot for businesses, Mobile app, Chrome extension, Niche directory, Affiliate site.
+
+Do NOT generate hyper-specific product names like "Browser Screenshot Comparison Tool" or "Vercel Deployment Helper for Solo Plumbers". Personalization goes in concept + audience, not the name.
+
+Ordering: slots 1-3 are the most universally recognizable archetypes (Dropshipping store, Ecommerce store, Newsletter business, AI agency, Faceless YouTube channel, Online course). Slots 4-5 can be tailored variants. Slot 6 may be the most imaginative archetype that fits.
+
+Hard constraints:
+- Span at least 3 different categories across the 6 (ecommerce, content, services, tech). No 6-SaaS-variants.
+- Penalize fit on cold-outreach ideas if founder hates selling. Penalize big-build SaaS if <5 hrs/week.
+- first_step must be specific ("Open Shopify and pick the trial plan"), never "do research" or "validate the market".`;
 
 type AnthropicMessagesResponse = {
   content?: Array<{ type: string; text?: string }>;
