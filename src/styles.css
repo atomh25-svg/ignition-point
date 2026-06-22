@@ -205,8 +205,8 @@
     color: transparent;
     -webkit-text-stroke: 1.5px #ffffff;
     paint-order: stroke fill;
-    font-family: "Plus Jakarta Sans", "Geist", ui-sans-serif, system-ui, sans-serif;
-    font-weight: 800;
+    font-family: "Space Grotesk", "Geist", ui-sans-serif, system-ui, sans-serif;
+    font-weight: 700;
     letter-spacing: 0.01em;
   }
   .text-idea-2 {
@@ -217,8 +217,8 @@
     color: transparent;
     -webkit-text-stroke: 1.5px #ffffff;
     paint-order: stroke fill;
-    font-family: "Plus Jakarta Sans", "Geist", ui-sans-serif, system-ui, sans-serif;
-    font-weight: 800;
+    font-family: "Space Grotesk", "Geist", ui-sans-serif, system-ui, sans-serif;
+    font-weight: 700;
     letter-spacing: 0.01em;
   }
   .text-idea-3 {
@@ -229,8 +229,8 @@
     color: transparent;
     -webkit-text-stroke: 1.5px #ffffff;
     paint-order: stroke fill;
-    font-family: "Plus Jakarta Sans", "Geist", ui-sans-serif, system-ui, sans-serif;
-    font-weight: 800;
+    font-family: "Space Grotesk", "Geist", ui-sans-serif, system-ui, sans-serif;
+    font-weight: 700;
     letter-spacing: 0.01em;
   }
   .text-idea-4 {
@@ -241,8 +241,8 @@
     color: transparent;
     -webkit-text-stroke: 1.5px #ffffff;
     paint-order: stroke fill;
-    font-family: "Plus Jakarta Sans", "Geist", ui-sans-serif, system-ui, sans-serif;
-    font-weight: 800;
+    font-family: "Space Grotesk", "Geist", ui-sans-serif, system-ui, sans-serif;
+    font-weight: 700;
     letter-spacing: 0.01em;
   }
   .text-idea-5 {
@@ -253,8 +253,8 @@
     color: transparent;
     -webkit-text-stroke: 1.5px #ffffff;
     paint-order: stroke fill;
-    font-family: "Plus Jakarta Sans", "Geist", ui-sans-serif, system-ui, sans-serif;
-    font-weight: 800;
+    font-family: "Space Grotesk", "Geist", ui-sans-serif, system-ui, sans-serif;
+    font-weight: 700;
     letter-spacing: 0.01em;
   }
   .text-idea-6 {
@@ -265,8 +265,8 @@
     color: transparent;
     -webkit-text-stroke: 1.5px #ffffff;
     paint-order: stroke fill;
-    font-family: "Plus Jakarta Sans", "Geist", ui-sans-serif, system-ui, sans-serif;
-    font-weight: 800;
+    font-family: "Space Grotesk", "Geist", ui-sans-serif, system-ui, sans-serif;
+    font-weight: 700;
     letter-spacing: 0.01em;
   }
   /* Geist — Vercel's geometric sans (variable weight). Loaded from
@@ -274,7 +274,7 @@
      hero-scale type. */
   .font-display {
     font-family: "Geist", ui-sans-serif, system-ui, sans-serif;
-    font-weight: 800;
+    font-weight: 700;
   }
   /* Light brand gold across the leading glyphs, holding flat through
      the first ~38% of the word (covers "Lau" of "Launch" / "St" of
