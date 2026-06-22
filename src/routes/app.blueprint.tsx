@@ -228,7 +228,7 @@ function Blueprint({ data }: { data: BlueprintData }) {
               v1.0 · LOCKED
             </span>
           </div>
-          <h1 className="mt-5 text-4xl md:text-6xl font-bold leading-[1.05] tracking-tight">
+          <h1 className="mt-5 text-5xl md:text-7xl font-bold leading-[1.05] tracking-tight">
             <span className="text-gradient-gold">{data.headline}</span>
           </h1>
           <p className="mt-4 max-w-2xl text-muted-foreground">{data.tagline}</p>
