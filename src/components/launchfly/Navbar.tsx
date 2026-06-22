@@ -1,6 +1,6 @@
-import type { SVGProps } from "react";
+import { useState, type SVGProps } from "react";
 import { Link } from "@tanstack/react-router";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Menu, X } from "lucide-react";
 import { Show, SignInButton, UserButton } from "@clerk/tanstack-react-start";
 import launchflyMark from "@/assets/launchfly-mark.png";
 
@@ -14,6 +14,8 @@ function CaretDown(props: SVGProps<SVGSVGElement>) {
 }
 
 export function Navbar() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const closeMenu = () => setMobileMenuOpen(false);
   return (
     <header className="sticky top-0 z-50 w-full">
       <div className="glass-nav border-b border-border/40">
@@ -63,8 +65,69 @@ export function Navbar() {
                 <ArrowRight className="h-3 w-3 md:h-4 md:w-4" />
               </Link>
             </Show>
+            {/* Mobile hamburger — desktop already shows inline nav above */}
+            <button
+              type="button"
+              aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+              aria-expanded={mobileMenuOpen}
+              onClick={() => setMobileMenuOpen((v) => !v)}
+              className="grid h-8 w-8 place-items-center rounded-md border border-border/40 bg-card/40 text-foreground/80 transition hover:bg-card/60 md:hidden"
+            >
+              {mobileMenuOpen ? (
+                <X className="h-4 w-4" />
+              ) : (
+                <Menu className="h-4 w-4" />
+              )}
+            </button>
           </div>
         </div>
+        {mobileMenuOpen && (
+          <div className="border-t border-border/40 bg-card/95 backdrop-blur md:hidden">
+            <nav className="mx-auto flex max-w-7xl flex-col gap-1 px-4 py-3 text-sm">
+              <a
+                href="/#how"
+                onClick={closeMenu}
+                className="rounded-md px-3 py-2 text-foreground/85 transition hover:bg-card hover:text-foreground"
+              >
+                How It Works
+              </a>
+              <a
+                href="/#features"
+                onClick={closeMenu}
+                className="rounded-md px-3 py-2 text-foreground/85 transition hover:bg-card hover:text-foreground"
+              >
+                Features
+              </a>
+              <Link
+                to="/pricing"
+                onClick={closeMenu}
+                className="rounded-md px-3 py-2 text-foreground/85 transition hover:bg-card hover:text-foreground"
+              >
+                Pricing
+              </Link>
+              <Show when="signed-out">
+                <SignInButton mode="modal">
+                  <button
+                    type="button"
+                    onClick={closeMenu}
+                    className="rounded-md px-3 py-2 text-left text-foreground/85 transition hover:bg-card hover:text-foreground"
+                  >
+                    Sign In
+                  </button>
+                </SignInButton>
+              </Show>
+              <Show when="signed-in">
+                <Link
+                  to="/app/dashboard"
+                  onClick={closeMenu}
+                  className="rounded-md px-3 py-2 text-foreground/85 transition hover:bg-card hover:text-foreground"
+                >
+                  Dashboard
+                </Link>
+              </Show>
+            </nav>
+          </div>
+        )}
       </div>
     </header>
   );

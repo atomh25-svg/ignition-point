@@ -1,4 +1,4 @@
-import { useEffect, type SVGProps } from "react";
+import { useEffect, useState, type SVGProps } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Show, SignInButton, UserButton } from "@clerk/tanstack-react-start";
 import { Button } from "@/components/ui/button";
@@ -10,7 +10,7 @@ import { trackTikTokEvent } from "@/lib/tiktok-events";
 import {
   Sparkles, Compass, Rocket, Code2, Users,
   Brain, Zap, CheckCircle2, ArrowRight, Calendar,
-  Lightbulb, Map as MapIcon, PlayCircle,
+  Lightbulb, Map as MapIcon, PlayCircle, Menu, X,
 } from "lucide-react";
 
 /** Small filled-triangle caret for dropdown affordances. */
@@ -64,6 +64,8 @@ function Home() {
 }
 
 function Nav() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const closeMenu = () => setMobileMenuOpen(false);
   return (
     // Mobile: static top bar that sits above the banner (no overlap with
     // the banner image). Desktop md+: absolute overlay so the giant
@@ -96,7 +98,7 @@ function Nav() {
               <Link to="/app/dashboard" className="transition hover:text-foreground">Dashboard</Link>
             </Show>
           </nav>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 md:gap-3">
             <Show when="signed-in">
               {/* Chevron next to the avatar so the dropdown affordance
                   is visible without hovering. */}
@@ -114,8 +116,71 @@ function Nav() {
                 <ArrowRight className="h-3 w-3 md:h-4 md:w-4" />
               </Link>
             </Show>
+            {/* Mobile hamburger — desktop already shows inline nav above */}
+            <button
+              type="button"
+              aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+              aria-expanded={mobileMenuOpen}
+              onClick={() => setMobileMenuOpen((v) => !v)}
+              className="grid h-8 w-8 place-items-center rounded-md border border-border/40 bg-card/40 text-foreground/80 transition hover:bg-card/60 md:hidden"
+            >
+              {mobileMenuOpen ? (
+                <X className="h-4 w-4" />
+              ) : (
+                <Menu className="h-4 w-4" />
+              )}
+            </button>
           </div>
         </div>
+        {/* Mobile dropdown — only mounted when toggled open. Closes on
+            link tap so the user lands on the anchor without an extra X. */}
+        {mobileMenuOpen && (
+          <div className="border-t border-border/40 bg-card/95 backdrop-blur md:hidden">
+            <nav className="mx-auto flex max-w-7xl flex-col gap-1 px-4 py-3 text-sm">
+              <a
+                href="#how"
+                onClick={closeMenu}
+                className="rounded-md px-3 py-2 text-foreground/85 transition hover:bg-card hover:text-foreground"
+              >
+                How It Works
+              </a>
+              <a
+                href="#features"
+                onClick={closeMenu}
+                className="rounded-md px-3 py-2 text-foreground/85 transition hover:bg-card hover:text-foreground"
+              >
+                Features
+              </a>
+              <Link
+                to="/pricing"
+                onClick={closeMenu}
+                className="rounded-md px-3 py-2 text-foreground/85 transition hover:bg-card hover:text-foreground"
+              >
+                Pricing
+              </Link>
+              <Show when="signed-out">
+                <SignInButton mode="modal">
+                  <button
+                    type="button"
+                    onClick={closeMenu}
+                    className="rounded-md px-3 py-2 text-left text-foreground/85 transition hover:bg-card hover:text-foreground"
+                  >
+                    Sign In
+                  </button>
+                </SignInButton>
+              </Show>
+              <Show when="signed-in">
+                <Link
+                  to="/app/dashboard"
+                  onClick={closeMenu}
+                  className="rounded-md px-3 py-2 text-foreground/85 transition hover:bg-card hover:text-foreground"
+                >
+                  Dashboard
+                </Link>
+              </Show>
+            </nav>
+          </div>
+        )}
       </div>
     </header>
   );
