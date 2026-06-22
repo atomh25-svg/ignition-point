@@ -203,10 +203,10 @@
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
-    -webkit-text-stroke: 1.5px #ffffff;
+    -webkit-text-stroke: 1px #ffffff;
     paint-order: stroke fill;
     font-family: "Space Grotesk", "Geist", ui-sans-serif, system-ui, sans-serif;
-    font-weight: 800;
+    font-weight: 700;
     letter-spacing: 0.01em;
   }
   .text-idea-2 {
@@ -215,10 +215,10 @@
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
-    -webkit-text-stroke: 1.5px #ffffff;
+    -webkit-text-stroke: 1px #ffffff;
     paint-order: stroke fill;
     font-family: "Space Grotesk", "Geist", ui-sans-serif, system-ui, sans-serif;
-    font-weight: 800;
+    font-weight: 700;
     letter-spacing: 0.01em;
   }
   .text-idea-3 {
@@ -227,10 +227,10 @@
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
-    -webkit-text-stroke: 1.5px #ffffff;
+    -webkit-text-stroke: 1px #ffffff;
     paint-order: stroke fill;
     font-family: "Space Grotesk", "Geist", ui-sans-serif, system-ui, sans-serif;
-    font-weight: 800;
+    font-weight: 700;
     letter-spacing: 0.01em;
   }
   .text-idea-4 {
@@ -239,10 +239,10 @@
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
-    -webkit-text-stroke: 1.5px #ffffff;
+    -webkit-text-stroke: 1px #ffffff;
     paint-order: stroke fill;
     font-family: "Space Grotesk", "Geist", ui-sans-serif, system-ui, sans-serif;
-    font-weight: 800;
+    font-weight: 700;
     letter-spacing: 0.01em;
   }
   .text-idea-5 {
@@ -251,10 +251,10 @@
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
-    -webkit-text-stroke: 1.5px #ffffff;
+    -webkit-text-stroke: 1px #ffffff;
     paint-order: stroke fill;
     font-family: "Space Grotesk", "Geist", ui-sans-serif, system-ui, sans-serif;
-    font-weight: 800;
+    font-weight: 700;
     letter-spacing: 0.01em;
   }
   .text-idea-6 {
@@ -263,10 +263,10 @@
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
-    -webkit-text-stroke: 1.5px #ffffff;
+    -webkit-text-stroke: 1px #ffffff;
     paint-order: stroke fill;
     font-family: "Space Grotesk", "Geist", ui-sans-serif, system-ui, sans-serif;
-    font-weight: 800;
+    font-weight: 700;
     letter-spacing: 0.01em;
   }
   /* Geist — Vercel's geometric sans (variable weight). Loaded from
