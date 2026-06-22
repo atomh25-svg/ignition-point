@@ -73,11 +73,11 @@ function FounderDNA() {
   return (
     <div className="p-4 md:p-8 max-w-2xl mx-auto w-full">
       <p className="text-xs uppercase tracking-[0.25em] text-primary">Founder DNA</p>
-      <h1 className="mt-3 text-4xl md:text-5xl font-semibold tracking-tight">
+      <h1 className="mt-2 md:mt-3 text-2xl md:text-5xl font-semibold tracking-tight leading-tight">
         Calibrate your build path.
       </h1>
 
-      <div className="mt-10 h-1 rounded-full bg-secondary overflow-hidden">
+      <div className="mt-4 md:mt-10 h-1 rounded-full bg-secondary overflow-hidden">
         <div
           className="h-full transition-all duration-500 bg-gradient-primary shadow-glow"
           style={{ width: `${progress}%` }}
@@ -86,12 +86,12 @@ function FounderDNA() {
 
       <Card
         key={step}
-        className="mt-10 glass bg-gradient-card rounded-2xl p-8 border-border/50 animate-fade-in-up"
+        className="mt-4 md:mt-10 glass bg-gradient-card rounded-2xl p-5 md:p-8 border-border/50 animate-fade-in-up"
       >
-        <p className="text-sm text-muted-foreground">
+        <p className="text-xs md:text-sm text-muted-foreground">
           Question {step + 1} of {total}
         </p>
-        <h2 className="mt-3 text-2xl font-semibold">{current.q}</h2>
+        <h2 className="mt-2 md:mt-3 text-lg md:text-2xl font-semibold leading-snug">{current.q}</h2>
         <div className="mt-6 grid gap-3">
           {current.opts.map((opt) => {
             const isSel = selected === opt;
