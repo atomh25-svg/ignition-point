@@ -200,10 +200,10 @@
     background-clip: text;
     color: transparent;
     text-shadow:
-      -0.5px -0.5px 0 oklch(0.62 0.20 255),
-       0.5px -0.5px 0 oklch(0.62 0.20 255),
-      -0.5px  0.5px 0 oklch(0.62 0.20 255),
-       0.5px  0.5px 0 oklch(0.62 0.20 255);
+      0 -1px 0 oklch(0.62 0.20 255),
+       1px 0 0 oklch(0.62 0.20 255),
+      -1px 0 0 oklch(0.62 0.20 255),
+       0 1px 0 oklch(0.62 0.20 255);
     letter-spacing: 0.02em;
   }
   .text-idea-2 {
@@ -212,10 +212,10 @@
     background-clip: text;
     color: transparent;
     text-shadow:
-      -0.5px -0.5px 0 oklch(0.62 0.18 215),
-       0.5px -0.5px 0 oklch(0.62 0.18 215),
-      -0.5px  0.5px 0 oklch(0.62 0.18 215),
-       0.5px  0.5px 0 oklch(0.62 0.18 215);
+      0 -1px 0 oklch(0.62 0.18 215),
+       1px 0 0 oklch(0.62 0.18 215),
+      -1px 0 0 oklch(0.62 0.18 215),
+       0 1px 0 oklch(0.62 0.18 215);
     letter-spacing: 0.02em;
   }
   .text-idea-3 {
@@ -224,10 +224,10 @@
     background-clip: text;
     color: transparent;
     text-shadow:
-      -0.5px -0.5px 0 oklch(0.62 0.25 5),
-       0.5px -0.5px 0 oklch(0.62 0.25 5),
-      -0.5px  0.5px 0 oklch(0.62 0.25 5),
-       0.5px  0.5px 0 oklch(0.62 0.25 5);
+      0 -1px 0 oklch(0.62 0.25 5),
+       1px 0 0 oklch(0.62 0.25 5),
+      -1px 0 0 oklch(0.62 0.25 5),
+       0 1px 0 oklch(0.62 0.25 5);
     letter-spacing: 0.02em;
   }
   .text-idea-4 {
@@ -236,10 +236,10 @@
     background-clip: text;
     color: transparent;
     text-shadow:
-      -0.5px -0.5px 0 oklch(0.72 0.20 125),
-       0.5px -0.5px 0 oklch(0.72 0.20 125),
-      -0.5px  0.5px 0 oklch(0.72 0.20 125),
-       0.5px  0.5px 0 oklch(0.72 0.20 125);
+      0 -1px 0 oklch(0.72 0.20 125),
+       1px 0 0 oklch(0.72 0.20 125),
+      -1px 0 0 oklch(0.72 0.20 125),
+       0 1px 0 oklch(0.72 0.20 125);
     letter-spacing: 0.02em;
   }
   .text-idea-5 {
@@ -248,10 +248,10 @@
     background-clip: text;
     color: transparent;
     text-shadow:
-      -0.5px -0.5px 0 oklch(0.62 0.18 210),
-       0.5px -0.5px 0 oklch(0.62 0.18 210),
-      -0.5px  0.5px 0 oklch(0.62 0.18 210),
-       0.5px  0.5px 0 oklch(0.62 0.18 210);
+      0 -1px 0 oklch(0.62 0.18 210),
+       1px 0 0 oklch(0.62 0.18 210),
+      -1px 0 0 oklch(0.62 0.18 210),
+       0 1px 0 oklch(0.62 0.18 210);
     letter-spacing: 0.02em;
   }
   .text-idea-6 {
@@ -260,10 +260,10 @@
     background-clip: text;
     color: transparent;
     text-shadow:
-      -0.5px -0.5px 0 oklch(0.72 0.22 70),
-       0.5px -0.5px 0 oklch(0.72 0.22 70),
-      -0.5px  0.5px 0 oklch(0.72 0.22 70),
-       0.5px  0.5px 0 oklch(0.72 0.22 70);
+      0 -1px 0 oklch(0.72 0.22 70),
+       1px 0 0 oklch(0.72 0.22 70),
+      -1px 0 0 oklch(0.72 0.22 70),
+       0 1px 0 oklch(0.72 0.22 70);
     letter-spacing: 0.02em;
   }
   /* Geist — Vercel's geometric sans (variable weight). Loaded from
