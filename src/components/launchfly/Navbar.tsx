@@ -17,16 +17,16 @@ export function Navbar() {
   return (
     <header className="sticky top-0 z-50 w-full">
       <div className="glass-nav border-b border-border/40">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-2 px-4 py-3 md:px-6 md:py-4">
           <Link to="/" className="flex items-center gap-1.5">
             <img
               src={launchflyMark}
               alt=""
               aria-hidden
-              className="h-[27px] w-[27px] object-contain shrink-0 brightness-110 logo-glow"
+              className="h-[26px] w-[26px] object-contain shrink-0 brightness-110 logo-glow md:h-[27px] md:w-[27px]"
               draggable={false}
             />
-            <span className="text-lg font-semibold tracking-tight">
+            <span className="text-sm font-semibold tracking-tight md:text-lg">
               LaunchFly<span className="text-gold">.io</span>
             </span>
           </Link>
@@ -57,10 +57,10 @@ export function Navbar() {
             <Show when="signed-out">
               <Link
                 to="/pricing"
-                className="inline-flex items-center gap-2 rounded-full bg-gradient-gold px-4 py-2 text-sm font-medium text-gold-foreground shadow-gold transition hover:opacity-90"
+                className="inline-flex items-center gap-1 rounded-full bg-gradient-gold px-2.5 py-1 text-[11px] font-medium text-gold-foreground shadow-gold transition hover:opacity-90 md:gap-2 md:px-4 md:py-2 md:text-sm"
               >
-                Start Your Launch
-                <ArrowRight className="h-4 w-4" />
+                Start
+                <ArrowRight className="h-3 w-3 md:h-4 md:w-4" />
               </Link>
             </Show>
           </div>

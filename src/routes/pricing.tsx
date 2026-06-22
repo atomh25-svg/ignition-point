@@ -194,34 +194,34 @@ function Pricing() {
   return (
     <main className="min-h-screen flex flex-col bg-background text-foreground">
       <Navbar />
-      <section className="relative flex-1 overflow-hidden px-6 py-20">
+      <section className="relative flex-1 overflow-hidden px-4 py-10 md:px-6 md:py-20">
         <div className="pointer-events-none absolute inset-0 bg-warm-glow" />
         <div className="relative mx-auto w-full max-w-3xl">
           <div className="text-center">
-            <p className="text-xs uppercase tracking-[0.25em] text-gold">The commitment</p>
-            <h1 className="mt-4 text-5xl font-semibold tracking-tight sm:text-6xl">
+            <p className="text-[10px] uppercase tracking-[0.25em] text-gold md:text-xs">The commitment</p>
+            <h1 className="mt-2 md:mt-4 text-3xl font-semibold tracking-tight sm:text-6xl">
               Pay before you plan.
             </h1>
-            <p className="mt-4 mx-auto max-w-xl text-muted-foreground leading-relaxed">
+            <p className="mt-3 md:mt-4 mx-auto max-w-md md:max-w-xl text-sm md:text-base text-muted-foreground leading-relaxed">
               You're not unlocking a report. You're committing to becoming someone who builds.
             </p>
           </div>
 
-          <div className="relative mt-14 overflow-hidden rounded-3xl border border-gold/40 bg-card p-8 shadow-gold sm:p-10">
+          <div className="relative mt-6 md:mt-14 overflow-hidden rounded-2xl md:rounded-3xl border border-gold/40 bg-card p-5 md:p-8 shadow-gold sm:p-10">
             <div className="pointer-events-none absolute inset-0 bg-warm-glow" />
             <div className="relative">
-              <p className="text-xs uppercase tracking-[0.25em] text-amber-glow">
+              <p className="text-[10px] uppercase tracking-[0.25em] text-amber-glow md:text-xs">
                 LaunchFly Membership
               </p>
-              <div className="mt-4 flex items-baseline gap-2">
-                <span className="text-6xl font-semibold text-gradient-gold">$19</span>
-                <span className="text-muted-foreground">/month</span>
+              <div className="mt-2 md:mt-4 flex items-baseline gap-2">
+                <span className="text-5xl md:text-6xl font-semibold text-gradient-gold">$19</span>
+                <span className="text-sm md:text-base text-muted-foreground">/month</span>
               </div>
 
-              <ul className="mt-8 grid gap-3 sm:grid-cols-2">
+              <ul className="mt-5 md:mt-8 grid grid-cols-2 gap-2 md:gap-3">
                 {includes.map((item) => (
-                  <li key={item} className="flex items-start gap-2 text-sm">
-                    <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-gold" />
+                  <li key={item} className="flex items-start gap-2 text-xs md:text-sm">
+                    <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 md:h-4 md:w-4 shrink-0 text-gold" />
                     <span>{item}</span>
                   </li>
                 ))}
