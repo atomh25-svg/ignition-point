@@ -146,12 +146,11 @@ function Banner() {
       <div className="absolute inset-0 bg-banner-overlay" />
       <div className="pointer-events-none absolute inset-0 bg-warm-glow" />
 
-      {/* Mobile-first stacked layout — used below md. The 1440px design
-          canvas (kept intact below for desktop) doesn't translate well to
-          a 390px viewport, so on mobile we render a simpler stack:
-          chip → eyebrow → wordmark → mini-mark. Tuned to feel like the
-          desktop composition, just stacked. */}
-      <div className="relative z-10 flex flex-col items-center justify-center gap-5 px-6 py-12 text-center md:hidden">
+      {/* Mobile stacked layout — used below md. Removed the LaunchFly.io
+          mini-mark below the wordmark; it's redundant with the wordmark
+          itself (which already ends in "LaunchFly.") and the nav. Tight
+          gaps so the composition lands in a single viewport on phones. */}
+      <div className="relative z-10 flex flex-col items-center justify-center gap-3 px-6 pt-6 pb-3 text-center md:hidden">
         <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-3 py-1 text-[11px] text-muted-foreground backdrop-blur">
           <Sparkles className="h-3.5 w-3.5 text-gold" /> How to start your own business
         </span>
@@ -204,18 +203,6 @@ function Banner() {
             .
           </span>
         </h1>
-        <div className="flex items-center gap-2">
-          <img
-            src={launchflyMark}
-            alt=""
-            aria-hidden
-            className="h-[26px] w-[26px] object-contain shrink-0 brightness-110 logo-glow"
-            draggable={false}
-          />
-          <span className="text-base font-semibold tracking-tight">
-            LaunchFly<span className="text-gold">.io</span>
-          </span>
-        </div>
       </div>
 
       {/* === 1440×720 design canvas (DESKTOP ONLY, hidden below md). Every
@@ -361,7 +348,7 @@ function Hero() {
     <section className="relative px-6 md:-mt-[187px]">
       <div className="mx-auto max-w-5xl text-center">
         <h1
-          className="font-display mt-16 whitespace-nowrap leading-[1.02] tracking-tight -translate-x-[11px] -translate-y-[3px]"
+          className="font-display mt-2 md:mt-16 whitespace-nowrap leading-[1.02] tracking-tight md:-translate-x-[11px] md:-translate-y-[3px]"
           style={{
             fontSize: "clamp(1.6rem, 7vw, 5.1rem)",
             textShadow:
@@ -371,7 +358,7 @@ function Hero() {
           <span className="text-gradient-gold">This</span> is How to Start.
         </h1>
 
-        <p className="mx-auto mt-[25.5px] max-w-2xl text-lg text-muted-foreground">
+        <p className="mx-auto mt-4 md:mt-[25.5px] max-w-md md:max-w-2xl text-sm md:text-lg text-muted-foreground leading-relaxed">
           LaunchFly helps you go from "I want to start something" to knowing exactly what
           to build, how to start, and what to do next.
         </p>
