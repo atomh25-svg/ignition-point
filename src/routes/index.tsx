@@ -417,7 +417,7 @@ function Problem() {
             <span className="text-gradient-gold">LaunchFly tells you what to do next.</span>
           </h2>
         </div>
-        <div className="mt-10 md:mt-14 grid grid-cols-3 gap-2 md:gap-5">
+        <div className="mt-10 md:mt-14 grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-5">
           <ProblemCard
             icon={Lightbulb}
             title="Too many ideas"
@@ -489,14 +489,14 @@ function Features() {
           <p className="text-xs uppercase tracking-[0.25em] text-gold mb-3">Features</p>
           <h2 className="text-4xl md:text-5xl font-semibold tracking-tight">Everything you need to leave the runway</h2>
         </div>
-        <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
           {features.map((f) => (
-            <Card key={f.title} className="glass bg-gradient-card p-3 md:p-7 rounded-xl md:rounded-2xl border-border/50 hover:border-gold/50 hover:shadow-gold hover:-translate-y-1 transition-all">
-              <div className="w-7 h-7 md:w-12 md:h-12 rounded-lg md:rounded-xl glass glow-ring flex items-center justify-center mb-2 md:mb-5">
-                <f.icon className="w-3.5 h-3.5 md:w-5 md:h-5 text-gold" />
+            <Card key={f.title} className="glass bg-gradient-card p-4 md:p-7 rounded-xl md:rounded-2xl border-border/50 hover:border-gold/50 hover:shadow-gold hover:-translate-y-1 transition-all">
+              <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl glass glow-ring flex items-center justify-center mb-3 md:mb-5">
+                <f.icon className="w-4 h-4 md:w-5 md:h-5 text-gold" />
               </div>
-              <h3 className="text-xs md:text-xl font-semibold mb-1 md:mb-2 leading-tight">{f.title}</h3>
-              <p className="text-[10px] md:text-base text-muted-foreground leading-snug md:leading-relaxed">{f.text}</p>
+              <h3 className="text-base md:text-xl font-semibold mb-1.5 md:mb-2 leading-tight">{f.title}</h3>
+              <p className="text-sm md:text-base text-muted-foreground leading-relaxed">{f.text}</p>
             </Card>
           ))}
         </div>
