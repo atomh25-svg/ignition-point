@@ -199,8 +199,11 @@
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
-    -webkit-text-stroke: 0.5px oklch(0.70 0.25 30);
-    paint-order: stroke fill;
+    text-shadow:
+      -1px -1px 0 oklch(0.70 0.25 30),
+       1px -1px 0 oklch(0.70 0.25 30),
+      -1px  1px 0 oklch(0.70 0.25 30),
+       1px  1px 0 oklch(0.70 0.25 30);
     letter-spacing: 0.02em;
   }
   .text-idea-2 {
@@ -208,8 +211,11 @@
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
-    -webkit-text-stroke: 0.5px oklch(0.66 0.25 320);
-    paint-order: stroke fill;
+    text-shadow:
+      -1px -1px 0 oklch(0.66 0.25 320),
+       1px -1px 0 oklch(0.66 0.25 320),
+      -1px  1px 0 oklch(0.66 0.25 320),
+       1px  1px 0 oklch(0.66 0.25 320);
     letter-spacing: 0.02em;
   }
   .text-idea-3 {
@@ -217,8 +223,11 @@
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
-    -webkit-text-stroke: 0.5px oklch(0.66 0.25 270);
-    paint-order: stroke fill;
+    text-shadow:
+      -1px -1px 0 oklch(0.66 0.25 270),
+       1px -1px 0 oklch(0.66 0.25 270),
+      -1px  1px 0 oklch(0.66 0.25 270),
+       1px  1px 0 oklch(0.66 0.25 270);
     letter-spacing: 0.02em;
   }
   .text-idea-4 {
@@ -226,8 +235,11 @@
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
-    -webkit-text-stroke: 0.5px oklch(0.80 0.20 100);
-    paint-order: stroke fill;
+    text-shadow:
+      -1px -1px 0 oklch(0.80 0.20 100),
+       1px -1px 0 oklch(0.80 0.20 100),
+      -1px  1px 0 oklch(0.80 0.20 100),
+       1px  1px 0 oklch(0.80 0.20 100);
     letter-spacing: 0.02em;
   }
   .text-idea-5 {
@@ -235,8 +247,11 @@
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
-    -webkit-text-stroke: 0.5px oklch(0.74 0.20 180);
-    paint-order: stroke fill;
+    text-shadow:
+      -1px -1px 0 oklch(0.74 0.20 180),
+       1px -1px 0 oklch(0.74 0.20 180),
+      -1px  1px 0 oklch(0.74 0.20 180),
+       1px  1px 0 oklch(0.74 0.20 180);
     letter-spacing: 0.02em;
   }
   .text-idea-6 {
@@ -244,8 +259,11 @@
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
-    -webkit-text-stroke: 0.5px oklch(0.78 0.18 140);
-    paint-order: stroke fill;
+    text-shadow:
+      -1px -1px 0 oklch(0.78 0.18 140),
+       1px -1px 0 oklch(0.78 0.18 140),
+      -1px  1px 0 oklch(0.78 0.18 140),
+       1px  1px 0 oklch(0.78 0.18 140);
     letter-spacing: 0.02em;
   }
   /* Geist — Vercel's geometric sans (variable weight). Loaded from
