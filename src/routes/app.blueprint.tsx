@@ -133,7 +133,7 @@ function BlueprintLoader() {
 
   if (error) {
     return (
-      <div className="p-8 max-w-2xl mx-auto w-full">
+      <div className="p-4 md:p-8 max-w-2xl mx-auto w-full">
         <Card className="glass bg-gradient-card p-8 rounded-2xl border-destructive/40">
           <p className="text-xs uppercase tracking-[0.25em] text-destructive">
             Blueprint error
@@ -214,7 +214,7 @@ function Blueprint({ data }: { data: BlueprintData }) {
   ];
 
   return (
-    <div className="p-8 max-w-6xl mx-auto w-full">
+    <div className="p-4 md:p-8 max-w-6xl mx-auto w-full">
       {/* Idea hero */}
       <Card className="glass bg-gradient-card rounded-3xl p-8 md:p-10 relative overflow-hidden border-gold/30">
         <div className="absolute -top-40 -right-32 w-[28rem] h-[28rem] rounded-full bg-gradient-gold blur-3xl opacity-25 animate-pulse-glow" />

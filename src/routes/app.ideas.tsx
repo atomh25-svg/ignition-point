@@ -171,7 +171,7 @@ function Ideas() {
   }
 
   return (
-    <div className="p-8 max-w-7xl mx-auto w-full">
+    <div className="p-4 md:p-8 max-w-7xl mx-auto w-full">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <p className="text-xs uppercase tracking-[0.25em] text-gold">

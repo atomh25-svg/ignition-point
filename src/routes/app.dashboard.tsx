@@ -292,7 +292,7 @@ function Dashboard() {
 
   if (error || !blueprint) {
     return (
-      <div className="p-8 max-w-2xl mx-auto w-full">
+      <div className="p-4 md:p-8 max-w-2xl mx-auto w-full">
         <Card className="glass bg-gradient-card p-8 rounded-2xl border-destructive/40">
           <p className="text-xs uppercase tracking-[0.25em] text-destructive">
             Dashboard error
@@ -350,7 +350,7 @@ function Dashboard() {
   )}?width=640&height=576&nologo=true&seed=${heroSeed}&model=flux`;
 
   return (
-    <div className="p-8 max-w-7xl mx-auto w-full">
+    <div className="p-4 md:p-8 max-w-7xl mx-auto w-full">
       {/* Top bar */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-border/50">
         <div>
