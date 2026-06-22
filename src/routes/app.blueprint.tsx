@@ -216,33 +216,33 @@ function Blueprint({ data }: { data: BlueprintData }) {
   return (
     <div className="p-4 md:p-8 max-w-6xl mx-auto w-full">
       {/* Idea hero */}
-      <Card className="glass bg-gradient-card rounded-3xl p-8 md:p-10 relative overflow-hidden border-gold/30">
+      <Card className="glass bg-gradient-card rounded-2xl md:rounded-3xl p-4 md:p-10 relative overflow-hidden border-gold/30">
         <div className="absolute -top-40 -right-32 w-[28rem] h-[28rem] rounded-full bg-gradient-gold blur-3xl opacity-25 animate-pulse-glow" />
         <div className="relative">
           <div className="flex items-center gap-3">
-            <span className="text-xs uppercase tracking-[0.25em] text-gold">
+            <span className="text-[10px] md:text-xs uppercase tracking-[0.25em] text-gold">
               Idea
             </span>
             <span className="h-px flex-1 bg-border" />
-            <span className="text-xs font-semibold text-amber-glow">
+            <span className="text-[10px] md:text-xs font-semibold text-amber-glow">
               v1.0 · LOCKED
             </span>
           </div>
-          <h1 className="mt-5 text-5xl md:text-7xl font-bold leading-[1.05] tracking-tight">
+          <h1 className="mt-2 md:mt-5 text-3xl md:text-7xl font-bold leading-[1.05] tracking-tight">
             <span className="text-gradient-gold">{data.headline}</span>
           </h1>
-          <p className="mt-4 max-w-2xl text-muted-foreground">{data.tagline}</p>
+          <p className="mt-2 md:mt-4 max-w-2xl text-sm md:text-base text-muted-foreground leading-snug md:leading-relaxed">{data.tagline}</p>
 
-          <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div className="mt-4 md:mt-8 grid grid-cols-2 gap-2 md:gap-3">
             {stats.map((s) => (
               <div
                 key={s.label}
-                className="rounded-xl border border-border/50 bg-secondary/30 p-4"
+                className="rounded-lg md:rounded-xl border border-border/50 bg-secondary/30 p-2.5 md:p-4"
               >
-                <div className="flex items-center gap-2 text-muted-foreground text-xs uppercase tracking-wider">
-                  <s.icon className="w-3.5 h-3.5" /> {s.label}
+                <div className="flex items-center gap-1.5 md:gap-2 text-muted-foreground text-[9px] md:text-xs uppercase tracking-wider">
+                  <s.icon className="w-3 h-3 md:w-3.5 md:h-3.5 shrink-0" /> {s.label}
                 </div>
-                <p className="mt-2 font-semibold text-base">{s.value}</p>
+                <p className="mt-1 md:mt-2 font-semibold text-xs md:text-base leading-snug">{s.value}</p>
               </div>
             ))}
           </div>
