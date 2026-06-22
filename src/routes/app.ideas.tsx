@@ -246,7 +246,7 @@ function Ideas() {
                     <Badge tone="primary">{idea.fit}% fit</Badge>
                   </div>
                 </div>
-                <p className="mt-2 text-xs md:text-sm text-muted-foreground leading-snug md:leading-relaxed">
+                <p className="mt-2 text-xs md:text-sm text-foreground text-center leading-snug md:leading-relaxed">
                   {idea.concept}
                 </p>
                 <div className="mt-3 md:mt-5 grid gap-1.5 md:gap-3 text-xs md:text-sm">
