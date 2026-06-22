@@ -172,8 +172,8 @@ function Banner() {
         <h1
           className="font-display leading-none"
           style={{
-            fontSize: "clamp(3.4rem, 17vw, 6rem)",
-            letterSpacing: "-0.05em",
+            fontSize: "clamp(4.5rem, 24vw, 8rem)",
+            letterSpacing: "-0.06em",
             transform: "scale(0.96, 1.05)",
           }}
         >
@@ -362,7 +362,7 @@ function Hero() {
           LaunchFly helps you go from "I want to start something" to knowing exactly what
           to build, how to start, and what to do next.
         </p>
-        <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
+        <div className="mt-6 flex flex-row flex-wrap items-center justify-center gap-3">
           <Link
             to="/pricing"
             onClick={() =>
@@ -374,16 +374,16 @@ function Hero() {
                 currency: "USD",
               })
             }
-            className="inline-flex items-center gap-2 rounded-full bg-gradient-gold px-6 py-3 text-base font-medium text-gold-foreground shadow-gold transition hover:opacity-90"
+            className="inline-flex items-center gap-1.5 rounded-full bg-gradient-gold px-4 py-2.5 text-xs font-medium text-gold-foreground shadow-gold transition hover:opacity-90 md:gap-2 md:px-6 md:py-3 md:text-base"
           >
             Start Your Launch — $19/month
-            <ArrowRight className="h-4 w-4" />
+            <ArrowRight className="h-3.5 w-3.5 md:h-4 md:w-4" />
           </Link>
           <a
             href="#how"
-            className="inline-flex items-center gap-2 rounded-full border border-border bg-card/40 px-6 py-3 text-base font-medium text-foreground backdrop-blur transition hover:bg-card"
+            className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card/40 px-4 py-2.5 text-xs font-medium text-foreground backdrop-blur transition hover:bg-card md:gap-2 md:px-6 md:py-3 md:text-base"
           >
-            <PlayCircle className="h-4 w-4 text-gold" />
+            <PlayCircle className="h-3.5 w-3.5 text-gold md:h-4 md:w-4" />
             See How It Works
           </a>
         </div>
