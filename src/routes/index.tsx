@@ -397,12 +397,12 @@ function Hero() {
 
 function ProblemCard({ icon: Icon, title, body }: { icon: any; title: string; body: string }) {
   return (
-    <div className="rounded-2xl border border-border bg-card p-6 shadow-card-soft transition hover:border-gold/40">
-      <div className="mb-4 grid h-10 w-10 place-items-center rounded-lg bg-secondary">
-        <Icon className="h-5 w-5 text-gold" />
+    <div className="rounded-xl md:rounded-2xl border border-border bg-card p-3 md:p-6 shadow-card-soft transition hover:border-gold/40">
+      <div className="mb-2 md:mb-4 grid h-7 w-7 md:h-10 md:w-10 place-items-center rounded-md md:rounded-lg bg-secondary">
+        <Icon className="h-3.5 w-3.5 md:h-5 md:w-5 text-gold" />
       </div>
-      <h3 className="text-lg font-semibold">{title}</h3>
-      <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{body}</p>
+      <h3 className="text-xs md:text-lg font-semibold leading-tight">{title}</h3>
+      <p className="mt-1 md:mt-2 text-[10px] md:text-sm leading-snug md:leading-relaxed text-muted-foreground">{body}</p>
     </div>
   );
 }
@@ -417,7 +417,7 @@ function Problem() {
             <span className="text-gradient-gold">LaunchFly tells you what to do next.</span>
           </h2>
         </div>
-        <div className="mt-14 grid gap-5 md:grid-cols-3">
+        <div className="mt-10 md:mt-14 grid grid-cols-3 gap-2 md:gap-5">
           <ProblemCard
             icon={Lightbulb}
             title="Too many ideas"
@@ -453,17 +453,17 @@ function HowItWorks() {
           <p className="text-xs uppercase tracking-[0.25em] text-gold mb-3">How It Works</p>
           <h2 className="text-4xl md:text-5xl font-semibold tracking-tight">From idea to liftoff in four steps</h2>
         </div>
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
           {steps.map((s) => (
-            <Card key={s.n} className="glass bg-gradient-card p-6 rounded-2xl border-border/50 hover:border-gold/50 transition-all group relative overflow-hidden">
+            <Card key={s.n} className="glass bg-gradient-card p-3 md:p-6 rounded-xl md:rounded-2xl border-border/50 hover:border-gold/50 transition-all group relative overflow-hidden">
               <div className="absolute -top-12 -right-12 w-32 h-32 bg-gradient-gold opacity-0 group-hover:opacity-20 blur-3xl transition-opacity" />
               <div className="relative">
-                <div className="text-xs text-muted-foreground mb-4">{s.n}</div>
-                <div className="w-11 h-11 rounded-xl bg-gradient-gold flex items-center justify-center mb-4 shadow-gold">
-                  <s.icon className="w-5 h-5 text-gold-foreground" />
+                <div className="text-[10px] md:text-xs text-muted-foreground mb-2 md:mb-4">{s.n}</div>
+                <div className="w-7 h-7 md:w-11 md:h-11 rounded-lg md:rounded-xl bg-gradient-gold flex items-center justify-center mb-2 md:mb-4 shadow-gold">
+                  <s.icon className="w-3.5 h-3.5 md:w-5 md:h-5 text-gold-foreground" />
                 </div>
-                <h3 className="text-lg font-semibold mb-2">{s.title}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">{s.text}</p>
+                <h3 className="text-xs md:text-lg font-semibold mb-1 md:mb-2 leading-tight">{s.title}</h3>
+                <p className="text-[10px] md:text-sm text-muted-foreground leading-snug md:leading-relaxed">{s.text}</p>
               </div>
             </Card>
           ))}
@@ -489,14 +489,14 @@ function Features() {
           <p className="text-xs uppercase tracking-[0.25em] text-gold mb-3">Features</p>
           <h2 className="text-4xl md:text-5xl font-semibold tracking-tight">Everything you need to leave the runway</h2>
         </div>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
           {features.map((f) => (
-            <Card key={f.title} className="glass bg-gradient-card p-7 rounded-2xl border-border/50 hover:border-gold/50 hover:shadow-gold hover:-translate-y-1 transition-all">
-              <div className="w-12 h-12 rounded-xl glass glow-ring flex items-center justify-center mb-5">
-                <f.icon className="w-5 h-5 text-gold" />
+            <Card key={f.title} className="glass bg-gradient-card p-3 md:p-7 rounded-xl md:rounded-2xl border-border/50 hover:border-gold/50 hover:shadow-gold hover:-translate-y-1 transition-all">
+              <div className="w-7 h-7 md:w-12 md:h-12 rounded-lg md:rounded-xl glass glow-ring flex items-center justify-center mb-2 md:mb-5">
+                <f.icon className="w-3.5 h-3.5 md:w-5 md:h-5 text-gold" />
               </div>
-              <h3 className="text-xl font-semibold mb-2">{f.title}</h3>
-              <p className="text-muted-foreground leading-relaxed">{f.text}</p>
+              <h3 className="text-xs md:text-xl font-semibold mb-1 md:mb-2 leading-tight">{f.title}</h3>
+              <p className="text-[10px] md:text-base text-muted-foreground leading-snug md:leading-relaxed">{f.text}</p>
             </Card>
           ))}
         </div>
@@ -555,7 +555,7 @@ function MockDashboard() {
         <div className="h-2 rounded-full bg-secondary overflow-hidden">
           <div className="h-full w-[10%] bg-gradient-gold" />
         </div>
-        <div className="grid md:grid-cols-3 gap-4 pt-2">
+        <div className="grid grid-cols-3 gap-2 md:gap-4 pt-2">
           <Card className="glass bg-gradient-card p-4 rounded-xl border-border/50">
             <p className="text-xs text-muted-foreground mb-1">MVP Prompt</p>
             <p className="text-sm">Build a Notion-style…</p>
