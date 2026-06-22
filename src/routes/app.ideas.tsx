@@ -172,15 +172,15 @@ function Ideas() {
 
   return (
     <div className="p-4 md:p-8 max-w-7xl mx-auto w-full">
-      <div className="flex flex-wrap items-end justify-between gap-4">
+      <div className="flex flex-wrap items-end justify-between gap-3 md:gap-4">
         <div>
-          <p className="text-xs uppercase tracking-[0.25em] text-gold">
+          <p className="text-[10px] md:text-xs uppercase tracking-[0.25em] text-gold">
             Your ideas
           </p>
-          <h1 className="mt-2 text-4xl md:text-5xl font-semibold tracking-tight">
+          <h1 className="mt-1 md:mt-2 text-2xl md:text-5xl font-semibold tracking-tight leading-tight">
             Pick the one that calls you.
           </h1>
-          <p className="mt-3 max-w-xl text-muted-foreground leading-relaxed">
+          <p className="mt-2 md:mt-3 max-w-xl text-xs md:text-base text-muted-foreground leading-snug md:leading-relaxed">
             These are matched to your Founder DNA. Picking one unlocks your
             Blueprint and Dashboard — you can switch later.
           </p>
@@ -224,13 +224,13 @@ function Ideas() {
           </p>
         </div>
       ) : (
-        <div className="mt-10 grid gap-5 md:grid-cols-2">
+        <div className="mt-4 md:mt-10 grid gap-3 md:gap-5 md:grid-cols-2">
           {ideas.map((idea, idx) => {
             const isSelected = selectedIdeaId === idea.id;
             return (
               <Card
                 key={idea.id}
-                className={`glass bg-gradient-card p-7 rounded-2xl transition-all ${
+                className={`glass bg-gradient-card p-4 md:p-7 rounded-2xl transition-all ${
                   isSelected
                     ? "border-gold/60 shadow-gold"
                     : "border-border/50 hover:border-gold/40"
@@ -242,32 +242,32 @@ function Ideas() {
                   >
                     {idea.name}
                   </h3>
-                  <div className="mt-2">
+                  <div className="mt-1.5 md:mt-2">
                     <Badge tone="primary">{idea.fit}% fit</Badge>
                   </div>
                 </div>
-                <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
+                <p className="mt-2 text-xs md:text-sm text-muted-foreground leading-snug md:leading-relaxed">
                   {idea.concept}
                 </p>
-                <div className="mt-5 grid gap-3 text-sm">
+                <div className="mt-3 md:mt-5 grid gap-1.5 md:gap-3 text-xs md:text-sm">
                   <div className="flex items-center gap-2 text-muted-foreground">
-                    <Users className="h-4 w-4 text-gold" />
+                    <Users className="h-3.5 w-3.5 md:h-4 md:w-4 text-gold shrink-0" />
                     <span className="text-foreground/90">{idea.audience}</span>
                   </div>
                   <div className="flex items-center gap-2 text-muted-foreground">
-                    <Target className="h-4 w-4 text-gold" />
+                    <Target className="h-3.5 w-3.5 md:h-4 md:w-4 text-gold shrink-0" />
                     <span>Difficulty:&nbsp;</span>
                     <span className="text-foreground/90">
                       {idea.difficulty}
                     </span>
                   </div>
                   <div className="flex items-center gap-2 text-muted-foreground">
-                    <Clock className="h-4 w-4 text-gold" />
+                    <Clock className="h-3.5 w-3.5 md:h-4 md:w-4 text-gold shrink-0" />
                     <span>Time to first paid user:&nbsp;</span>
                     <span className="text-foreground/90">{idea.speed}</span>
                   </div>
                   <div className="flex items-start gap-2 text-muted-foreground">
-                    <Zap className="h-4 w-4 text-gold mt-0.5" />
+                    <Zap className="h-3.5 w-3.5 md:h-4 md:w-4 text-gold mt-0.5 shrink-0" />
                     <span>
                       <span className="font-medium text-foreground/90">
                         First step:&nbsp;
@@ -276,7 +276,7 @@ function Ideas() {
                     </span>
                   </div>
                 </div>
-                <div className="mt-6">
+                <div className="mt-3 md:mt-6">
                   {isSelected ? (
                     <Button
                       variant="hero"
