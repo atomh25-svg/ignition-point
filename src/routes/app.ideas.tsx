@@ -238,7 +238,7 @@ function Ideas() {
               >
                 <div className="relative flex flex-col items-center text-center">
                   <h3
-                    className={`text-3xl md:text-4xl font-bold tracking-tight leading-tight text-idea-${(idx % 6) + 1}`}
+                    className={`text-2xl md:text-3xl font-bold tracking-tight leading-tight text-idea-${(idx % 6) + 1}`}
                   >
                     {idea.name}
                   </h3>
