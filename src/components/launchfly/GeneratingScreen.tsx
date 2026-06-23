@@ -64,9 +64,13 @@ export function GeneratingScreen({
 
       <style>{`
         @keyframes progressSlide {
+          /* Bar width is w-1/3 of container, so 100% translate = one bar
+             width. Container is 3 bar-widths wide. Travel from
+             -100% (right edge at container left) to 300% (left edge
+             at container right) makes the bar enter from off-left and
+             fully exit off-right, covering the full container width. */
           0%   { transform: translateX(-100%); }
-          50%  { transform: translateX(180%); }
-          100% { transform: translateX(180%); }
+          100% { transform: translateX(300%); }
         }
       `}</style>
     </div>
