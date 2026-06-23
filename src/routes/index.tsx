@@ -239,7 +239,7 @@ function Banner() {
           Want to be a founder?
         </h2>
         <h1
-          className="font-display leading-none mt-[-4vh]"
+          className="font-display leading-none"
           style={{
             fontSize: "71px",
             letterSpacing: "-0.07em",
@@ -413,7 +413,7 @@ function Hero() {
     // hero text + body + buttons sit in the bottom third of the banner's
     // full-viewport section across all phone sizes. Desktop -mt-[187px]
     // is tuned by eye for the 1440×720 canvas.
-    <section className="relative px-6 -mt-[42vh] md:-mt-[187px]">
+    <section className="relative px-6 -mt-[36vh] md:-mt-[187px]">
       <div className="mx-auto max-w-5xl text-center">
         <h1
           className="font-display mt-2 md:mt-16 whitespace-nowrap leading-[1.02] tracking-tight md:-translate-x-[11px] md:-translate-y-[3px]"
