@@ -209,7 +209,7 @@ function Banner() {
       <img
         src={bannerImg}
         alt="Builder coding late at night, focused on launching their idea"
-        className="absolute top-0 h-full md:-top-[70px] md:h-[calc(100%+70px)] object-cover object-[60%_center] brightness-125 contrast-[1.1] translate-x-[10px] translate-y-[10px] scale-[1.44] md:translate-y-[10px] md:scale-100"
+        className="absolute top-0 h-full md:-top-[70px] md:h-[calc(100%+70px)] object-cover object-[60%_center] brightness-125 contrast-[1.1] translate-x-[10px] translate-y-[0px] scale-[1.44] md:translate-y-[10px] md:scale-100"
         style={{ left: "-10px", width: "calc(100% + 10px)" }}
       />
       <div className="absolute inset-x-0 top-0 bottom-0 bg-banner-overlay-mobile md:bg-banner-overlay" />
@@ -219,7 +219,7 @@ function Banner() {
           mini-mark below the wordmark; it's redundant with the wordmark
           itself (which already ends in "LaunchFly.") and the nav. Tight
           gaps so the composition lands in a single viewport on phones. */}
-      <div className="relative z-10 flex min-h-[100svh] flex-col items-center justify-end gap-[6vh] px-6 pt-6 pb-[calc(40vh+45px)] text-center md:hidden md:min-h-0">
+      <div className="relative z-10 flex min-h-[100svh] flex-col items-center justify-end gap-[6vh] px-6 pt-6 pb-[calc(40vh+55px)] text-center md:hidden md:min-h-0">
         <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-3 py-1 text-[11px] text-muted-foreground backdrop-blur">
           <Sparkles className="h-3.5 w-3.5 text-gold" /> How to start your own business
         </span>
@@ -413,7 +413,7 @@ function Hero() {
     // hero text + body + buttons sit in the bottom third of the banner's
     // full-viewport section across all phone sizes. Desktop -mt-[187px]
     // is tuned by eye for the 1440×720 canvas.
-    <section className="relative px-6 -mt-[calc(36vh+45px)] md:-mt-[187px]">
+    <section className="relative px-6 -mt-[calc(36vh+55px)] md:-mt-[187px]">
       <div className="mx-auto max-w-5xl text-center">
         <h1
           className="font-display mt-2 md:mt-16 whitespace-nowrap leading-[1.02] tracking-tight md:-translate-x-[11px] md:-translate-y-[3px]"
