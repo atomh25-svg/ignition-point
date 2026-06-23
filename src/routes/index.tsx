@@ -211,7 +211,7 @@ function Banner() {
         className="absolute -top-[70px] h-[calc(100%+70px)] object-cover object-[60%_center] brightness-125 contrast-[1.1] translate-x-[10px] translate-y-[30px] scale-[1.44] md:translate-y-[10px] md:scale-100"
         style={{ left: "-10px", width: "calc(100% + 10px)" }}
       />
-      <div className="absolute inset-x-0 top-0 -bottom-[10px] bg-banner-overlay md:bottom-0" />
+      <div className="absolute inset-x-0 top-0 -bottom-[40px] bg-banner-overlay md:bottom-0" />
       <div className="pointer-events-none absolute inset-0 bg-warm-glow" />
 
       {/* Mobile stacked layout — used below md. Removed the LaunchFly.io
