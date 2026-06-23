@@ -228,7 +228,7 @@ function Blueprint({ data }: { data: BlueprintData }) {
               v1.0 · LOCKED
             </span>
           </div>
-          <h1 className="mt-1.5 md:mt-5 text-[29px] md:text-[77px] font-bold leading-[1] md:leading-[1.05] tracking-tight">
+          <h1 className="mt-1.5 md:mt-5 text-[29px] md:text-[87px] font-bold leading-[1] md:leading-[1.05] tracking-tight">
             <span className="text-gradient-gold">{data.headline}</span>
           </h1>
           <p className="mt-1.5 md:mt-4 max-w-2xl text-xs md:text-base text-muted-foreground leading-snug md:leading-relaxed line-clamp-3 md:line-clamp-none">{data.tagline}</p>
@@ -250,20 +250,20 @@ function Blueprint({ data }: { data: BlueprintData }) {
       </Card>
 
       {/* In plain English */}
-      <Card className="mt-10 glass bg-gradient-card rounded-2xl p-8 border-border/50">
-        <p className="text-xs uppercase tracking-[0.25em] text-amber-glow">
+      <Card className="mt-3 md:mt-10 glass bg-gradient-card rounded-2xl p-3 md:p-8 border-border/50">
+        <p className="text-[10px] md:text-xs uppercase tracking-[0.25em] text-amber-glow">
           In plain English
         </p>
-        <h2 className="mt-2 text-2xl md:text-3xl font-bold tracking-tight">
+        <h2 className="mt-1 md:mt-2 text-lg md:text-3xl font-bold tracking-tight leading-tight">
           Here's exactly what you'll be building.
         </h2>
-        <ol className="mt-6 space-y-4">
+        <ol className="mt-2 md:mt-6 space-y-2 md:space-y-4">
           {data.in_plain_english.map((p, i) => (
-            <li key={i} className="flex gap-4">
-              <div className="shrink-0 w-7 h-7 rounded-full bg-gradient-gold shadow-gold flex items-center justify-center font-semibold text-xs text-gold-foreground">
+            <li key={i} className="flex gap-2 md:gap-4">
+              <div className="shrink-0 w-5 h-5 md:w-7 md:h-7 rounded-full bg-gradient-gold shadow-gold flex items-center justify-center font-semibold text-[10px] md:text-xs text-gold-foreground">
                 {i + 1}
               </div>
-              <p className="text-muted-foreground leading-relaxed pt-0.5">{p}</p>
+              <p className="text-xs md:text-base text-muted-foreground leading-snug md:leading-relaxed pt-0 md:pt-0.5">{p}</p>
             </li>
           ))}
         </ol>
@@ -271,40 +271,40 @@ function Blueprint({ data }: { data: BlueprintData }) {
 
       {/* Pillars — 2-col grid. What-to-skip sits in its normal slot
           but renders a bullet <ul> instead of a paragraph. */}
-      <section className="mt-10 grid md:grid-cols-2 gap-4">
+      <section className="mt-3 md:mt-10 grid grid-cols-2 gap-2 md:gap-4">
         {/* 1) What you're building */}
         <Card
-          className={`glass bg-gradient-card rounded-2xl p-6 border-l-4 animate-fade-in-up ${toneMap.primary}`}
+          className={`glass bg-gradient-card rounded-xl md:rounded-2xl p-3 md:p-6 border-l-4 animate-fade-in-up ${toneMap.primary}`}
         >
-          <div className="flex items-center gap-3">
-            <div className={`w-10 h-10 rounded-xl border ${toneMap.primary} flex items-center justify-center`}>
-              <Hammer className="w-5 h-5" />
+          <div className="flex items-center gap-2 md:gap-3">
+            <div className={`w-7 h-7 md:w-10 md:h-10 rounded-lg md:rounded-xl border ${toneMap.primary} flex items-center justify-center`}>
+              <Hammer className="w-3.5 h-3.5 md:w-5 md:h-5" />
             </div>
-            <h3 className="font-semibold text-lg text-foreground">What you're building</h3>
+            <h3 className="font-semibold text-xs md:text-lg text-foreground leading-tight">What you're building</h3>
           </div>
-          <p className="mt-4 text-sm text-muted-foreground leading-relaxed">
+          <p className="mt-2 md:mt-4 text-[11px] md:text-sm text-muted-foreground leading-snug md:leading-relaxed">
             {data.pillars.what_youre_building}
           </p>
         </Card>
 
         {/* 2) What to skip — bullet list */}
         <Card
-          className={`glass bg-gradient-card rounded-2xl p-6 border-l-4 animate-fade-in-up ${toneMap.destructive}`}
+          className={`glass bg-gradient-card rounded-xl md:rounded-2xl p-3 md:p-6 border-l-4 animate-fade-in-up ${toneMap.destructive}`}
           style={{ animationDelay: "0.05s" }}
         >
-          <div className="flex items-center gap-3">
-            <div className={`w-10 h-10 rounded-xl border ${toneMap.destructive} flex items-center justify-center`}>
-              <Ban className="w-5 h-5" />
+          <div className="flex items-center gap-2 md:gap-3">
+            <div className={`w-7 h-7 md:w-10 md:h-10 rounded-lg md:rounded-xl border ${toneMap.destructive} flex items-center justify-center`}>
+              <Ban className="w-3.5 h-3.5 md:w-5 md:h-5" />
             </div>
-            <h3 className="font-semibold text-lg text-foreground">What to skip (for now)</h3>
+            <h3 className="font-semibold text-xs md:text-lg text-foreground leading-tight">What to skip (for now)</h3>
           </div>
-          <ul className="mt-4 space-y-2.5">
+          <ul className="mt-2 md:mt-4 space-y-1 md:space-y-2.5">
             {skipBullets.map((item, i) => (
               <li
                 key={i}
-                className="flex gap-3 text-sm text-muted-foreground leading-relaxed"
+                className="flex gap-2 md:gap-3 text-[11px] md:text-sm text-muted-foreground leading-snug md:leading-relaxed"
               >
-                <span className="mt-2 inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-destructive/70" />
+                <span className="mt-1.5 md:mt-2 inline-block h-1 w-1 md:h-1.5 md:w-1.5 shrink-0 rounded-full bg-destructive/70" />
                 <span>{item}</span>
               </li>
             ))}
@@ -313,56 +313,56 @@ function Blueprint({ data }: { data: BlueprintData }) {
 
         {/* 3) Tools you'll use */}
         <Card
-          className={`glass bg-gradient-card rounded-2xl p-6 border-l-4 animate-fade-in-up ${toneMap.accent}`}
+          className={`glass bg-gradient-card rounded-xl md:rounded-2xl p-3 md:p-6 border-l-4 animate-fade-in-up ${toneMap.accent}`}
           style={{ animationDelay: "0.1s" }}
         >
-          <div className="flex items-center gap-3">
-            <div className={`w-10 h-10 rounded-xl border ${toneMap.accent} flex items-center justify-center`}>
-              <Wrench className="w-5 h-5" />
+          <div className="flex items-center gap-2 md:gap-3">
+            <div className={`w-7 h-7 md:w-10 md:h-10 rounded-lg md:rounded-xl border ${toneMap.accent} flex items-center justify-center`}>
+              <Wrench className="w-3.5 h-3.5 md:w-5 md:h-5" />
             </div>
-            <h3 className="font-semibold text-lg text-foreground">Tools you'll use</h3>
+            <h3 className="font-semibold text-xs md:text-lg text-foreground leading-tight">Tools you'll use</h3>
           </div>
-          <p className="mt-4 text-sm text-muted-foreground leading-relaxed">
+          <p className="mt-2 md:mt-4 text-[11px] md:text-sm text-muted-foreground leading-snug md:leading-relaxed">
             {data.pillars.tools_youll_use}
           </p>
         </Card>
 
         {/* 4) How you'll get the first 10 users */}
         <Card
-          className={`glass bg-gradient-card rounded-2xl p-6 border-l-4 animate-fade-in-up ${toneMap.primary}`}
+          className={`glass bg-gradient-card rounded-xl md:rounded-2xl p-3 md:p-6 border-l-4 animate-fade-in-up ${toneMap.primary}`}
           style={{ animationDelay: "0.15s" }}
         >
-          <div className="flex items-center gap-3">
-            <div className={`w-10 h-10 rounded-xl border ${toneMap.primary} flex items-center justify-center`}>
-              <Megaphone className="w-5 h-5" />
+          <div className="flex items-center gap-2 md:gap-3">
+            <div className={`w-7 h-7 md:w-10 md:h-10 rounded-lg md:rounded-xl border ${toneMap.primary} flex items-center justify-center`}>
+              <Megaphone className="w-3.5 h-3.5 md:w-5 md:h-5" />
             </div>
-            <h3 className="font-semibold text-lg text-foreground">How you'll get the first 10 users</h3>
+            <h3 className="font-semibold text-xs md:text-lg text-foreground leading-tight">How you'll get first users</h3>
           </div>
-          <p className="mt-4 text-sm text-muted-foreground leading-relaxed">
+          <p className="mt-2 md:mt-4 text-[11px] md:text-sm text-muted-foreground leading-snug md:leading-relaxed">
             {data.pillars.how_to_get_first_users}
           </p>
         </Card>
       </section>
 
       {/* 7-Day Launch Plan */}
-      <Card className="mt-10 glass bg-gradient-card rounded-2xl p-7 border-gold/30">
-        <div className="flex items-center gap-2 mb-5">
-          <Calendar className="w-4 h-4 text-gold" />
-          <h3 className="font-semibold">7-Day Launch Plan</h3>
+      <Card className="mt-3 md:mt-10 glass bg-gradient-card rounded-2xl p-3 md:p-7 border-gold/30">
+        <div className="flex items-center gap-2 mb-2 md:mb-5">
+          <Calendar className="w-3.5 h-3.5 md:w-4 md:h-4 text-gold" />
+          <h3 className="font-semibold text-xs md:text-base">7-Day Launch Plan</h3>
         </div>
-        <ol className="space-y-2.5">
+        <ol className="space-y-1.5 md:space-y-2.5">
           {/* slice(0,7) is defensive — historical cached blueprints may
               still hold the old 30-entry array, but we always show 7. */}
           {data.seven_day_plan.slice(0, 7).map((d, i) => (
-            <li key={i} className="flex items-start gap-3 text-sm">
-              <span className="w-6 h-6 rounded-full bg-gradient-gold text-gold-foreground text-[11px] font-semibold flex items-center justify-center shrink-0 mt-0.5">
+            <li key={i} className="flex items-start gap-2 md:gap-3 text-[11px] md:text-sm">
+              <span className="w-5 h-5 md:w-6 md:h-6 rounded-full bg-gradient-gold text-gold-foreground text-[10px] md:text-[11px] font-semibold flex items-center justify-center shrink-0 mt-0.5">
                 {i + 1}
               </span>
-              <span className="text-muted-foreground">{d}</span>
+              <span className="text-muted-foreground leading-snug md:leading-normal">{d}</span>
             </li>
           ))}
         </ol>
-        <div className="mt-6">
+        <div className="mt-3 md:mt-6">
           {launchStartedAt ? (
             <Button asChild variant="hero" size="lg">
               <Link to="/app/dashboard">
