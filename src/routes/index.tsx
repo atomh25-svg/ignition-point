@@ -219,7 +219,7 @@ function Banner() {
           mini-mark below the wordmark; it's redundant with the wordmark
           itself (which already ends in "LaunchFly.") and the nav. Tight
           gaps so the composition lands in a single viewport on phones. */}
-      <div className="relative z-10 flex min-h-[100svh] flex-col items-center justify-end gap-[6vh] px-6 pt-6 pb-[calc(40vh+55px)] text-center md:hidden md:min-h-0">
+      <div className="relative z-10 flex min-h-[100svh] flex-col items-center justify-end gap-[6vh] px-6 pt-6 pb-[calc(40vh+52px)] text-center md:hidden md:min-h-0">
         <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-3 py-1 text-[11px] text-muted-foreground backdrop-blur">
           <Sparkles className="h-3.5 w-3.5 text-gold" /> How to start your own business
         </span>
