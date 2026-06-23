@@ -586,11 +586,11 @@ function Dashboard() {
             AI tool is the right one for that line.
           </p>
           {breakdown && breakdown.substeps.some((s) => s.tool) && (
-            <div className="mb-5 pb-5 border-b border-border/50">
-              <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground mb-2">
+            <div className="mb-2.5 md:mb-5 pb-2.5 md:pb-5 border-b border-border/50">
+              <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground mb-1.5 md:mb-2">
                 Tools you'll use today
               </p>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-1.5 md:gap-2">
                 {Array.from(
                   new Set(
                     breakdown.substeps
@@ -604,35 +604,36 @@ function Dashboard() {
             </div>
           )}
           {breakdown ? (
-            <ol className="space-y-3">
+            <ol className="space-y-1.5 md:space-y-3">
               {breakdown.substeps.map((step, i) => (
                 <li key={i}>
                   <button
                     type="button"
                     onClick={() => setActiveStep(i)}
-                    className="group w-full text-left flex items-start gap-3 rounded-xl border border-border/50 bg-secondary/20 p-4 transition hover:border-gold/40 hover:bg-secondary/40"
+                    className="group w-full text-left flex items-start gap-2 md:gap-3 rounded-lg md:rounded-xl border border-border/50 bg-secondary/20 p-2.5 md:p-4 transition hover:border-gold/40 hover:bg-secondary/40"
                   >
-                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-gold/40 bg-gold/10 text-xs font-semibold text-gold">
+                    <span className="flex h-5 w-5 md:h-7 md:w-7 shrink-0 items-center justify-center rounded-full border border-gold/40 bg-gold/10 text-[10px] md:text-xs font-semibold text-gold">
                       {i + 1}
                     </span>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm leading-snug">{step.action}</p>
+                      <p className="text-xs md:text-sm leading-snug">{step.action}</p>
                       {step.tool && (
-                        <div className="mt-1.5">
+                        <div className="mt-1 md:mt-1.5">
                           <ToolChip name={step.tool} />
                         </div>
                       )}
                     </div>
-                    <span className="flex items-center gap-1 shrink-0 self-center text-xs font-medium text-muted-foreground group-hover:text-amber-glow transition">
+                    <span className="hidden md:flex items-center gap-1 shrink-0 self-center text-xs font-medium text-muted-foreground group-hover:text-amber-glow transition">
                       More Info
                       <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />
                     </span>
+                    <ArrowRight className="md:hidden w-3.5 h-3.5 shrink-0 self-center text-muted-foreground" />
                   </button>
                 </li>
               ))}
             </ol>
           ) : (
-            <div className="rounded-xl border border-border/50 bg-secondary/10 p-6 text-center text-sm text-muted-foreground">
+            <div className="rounded-lg md:rounded-xl border border-border/50 bg-secondary/10 p-3 md:p-6 text-center text-xs md:text-sm text-muted-foreground">
               {breakdownLoading
                 ? "Generating today's breakdown…"
                 : "Couldn't load today's breakdown — refresh to retry."}
@@ -640,7 +641,7 @@ function Dashboard() {
           )}
 
           {breakdown && (
-            <div className="mt-5 flex items-start gap-3 rounded-xl border border-border/50 bg-card/40 p-4">
+            <div className="mt-2.5 md:mt-5 flex items-start gap-2 md:gap-3 rounded-lg md:rounded-xl border border-border/50 bg-card/40 p-2.5 md:p-4">
               <Lightbulb className="w-4 h-4 text-amber-glow shrink-0 mt-0.5" />
               <div className="text-sm">
                 <span className="font-semibold text-amber-glow">If you get stuck: </span>
