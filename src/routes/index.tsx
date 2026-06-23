@@ -239,7 +239,7 @@ function Banner() {
           Want to be a founder?
         </h2>
         <h1
-          className="font-display leading-none"
+          className="font-display leading-none mt-[-4vh]"
           style={{
             fontSize: "71px",
             letterSpacing: "-0.07em",
