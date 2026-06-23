@@ -326,6 +326,47 @@ function Dashboard() {
   const pct = Math.round((completed / total) * 100);
   const tracker = Array.from({ length: total }, (_, i) => i + 1);
 
+  // Single chip renderer reused by both the mobile (10-col wrap) and
+  // desktop (one-row) progress grids.
+  const renderChip = (d: number) => {
+    const isDone = d <= completed;
+    const isTodayChip = d === today;
+    const isFuture = d > today;
+    const isViewed = (viewingDay ?? today) === d;
+    const dayLine = blueprint.seven_day_plan[d - 1];
+    const baseClass = isDone
+      ? "border-emerald-400/60 bg-emerald-500/15 text-emerald-400"
+      : isTodayChip
+        ? "border-gold bg-gold/10 text-gold animate-pulse"
+        : "border-border bg-muted/40 text-muted-foreground/60";
+    const ringClass = isViewed
+      ? " ring-2 ring-amber-glow ring-offset-2 ring-offset-background"
+      : "";
+    const interactiveClass = !isFuture
+      ? " cursor-pointer hover:scale-110 transition"
+      : " cursor-not-allowed opacity-70";
+    return (
+      <button
+        key={d}
+        type="button"
+        disabled={isFuture}
+        onClick={() => {
+          if (!isFuture) setViewingDay(d);
+        }}
+        title={dayLine ?? `Day ${d}`}
+        className={`aspect-square rounded-md border flex items-center justify-center text-[9px] font-semibold ${baseClass}${ringClass}${interactiveClass}`}
+      >
+        {isDone ? (
+          <Check className="w-3 h-3" strokeWidth={3.5} />
+        ) : isTodayChip ? (
+          <Rocket className="w-2.5 h-2.5" />
+        ) : (
+          d
+        )}
+      </button>
+    );
+  };
+
   const isReviewing = viewingDay !== null && viewingDay !== today;
   const viewedIndex0 = (viewingDay ?? today) - 1;
 
@@ -352,30 +393,30 @@ function Dashboard() {
   return (
     <div className="p-4 md:p-8 max-w-7xl mx-auto w-full">
       {/* Top bar */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-border/50">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 md:gap-4 pb-3 md:pb-6 border-b border-border/50">
         <div>
-          <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
+          <p className="text-[10px] md:text-xs uppercase tracking-[0.2em] text-muted-foreground">
             Build Dashboard
           </p>
-          <h1 className="text-2xl font-semibold">{ideaName ?? blueprint.headline}</h1>
+          <h1 className="text-lg md:text-2xl font-semibold leading-tight">{ideaName ?? blueprint.headline}</h1>
         </div>
-        <div className="flex items-center gap-3">
-          <div className="rounded-xl glass border border-border/50 px-4 py-2 text-sm">
+        <div className="flex items-center gap-2 md:gap-3">
+          <div className="rounded-lg md:rounded-xl glass border border-border/50 px-2.5 md:px-4 py-1 md:py-2 text-xs md:text-sm">
             <span className="text-muted-foreground">Day </span>
             <span className="font-semibold text-foreground">{today}</span>
             <span className="text-muted-foreground"> / {total}</span>
           </div>
-          <div className="rounded-xl glass border border-border/50 px-4 py-2 text-sm">
+          <div className="rounded-lg md:rounded-xl glass border border-border/50 px-2.5 md:px-4 py-1 md:py-2 text-xs md:text-sm">
             <span className="text-muted-foreground">Progress </span>
             <span className="font-semibold text-foreground">{pct}%</span>
           </div>
         </div>
       </div>
 
-      <div className="mt-6 grid lg:grid-cols-3 gap-5">
+      <div className="mt-3 md:mt-6 grid lg:grid-cols-3 gap-3 md:gap-5">
         {/* Today's step card — title + Claude-generated summary +
             outcome, paired with a topical illustration for the day. */}
-        <Card className="lg:col-span-3 glass bg-gradient-card rounded-3xl p-8 relative overflow-hidden border-gold/30">
+        <Card className="lg:col-span-3 glass bg-gradient-card rounded-2xl md:rounded-3xl p-4 md:p-8 relative overflow-hidden border-gold/30">
           <div className="absolute -top-32 -right-16 w-80 h-80 rounded-full bg-gradient-gold blur-3xl opacity-20 pointer-events-none" />
           <div className="relative grid md:grid-cols-[1fr_280px] gap-6 items-center">
             <div>
@@ -393,17 +434,17 @@ function Dashboard() {
                   Back to today
                 </button>
               )}
-              <h2 className="mt-3 text-2xl md:text-3xl font-semibold leading-tight">
+              <h2 className="mt-2 md:mt-3 text-xl md:text-3xl font-semibold leading-tight">
                 <span className="text-gradient-gold">{todaysStep}</span>
               </h2>
               {breakdown ? (
                 <>
-                  <p className="mt-4 text-foreground/90 max-w-3xl leading-relaxed">
+                  <p className="mt-2 md:mt-4 text-sm md:text-base text-foreground/90 max-w-3xl leading-snug md:leading-relaxed">
                     {breakdown.summary}
                   </p>
-                  <div className="mt-5 inline-flex items-start gap-3 rounded-xl border border-emerald-400/30 bg-emerald-500/5 px-4 py-3">
-                    <Target className="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" />
-                    <p className="text-sm text-foreground/90">
+                  <div className="mt-3 md:mt-5 inline-flex items-start gap-2 md:gap-3 rounded-lg md:rounded-xl border border-emerald-400/30 bg-emerald-500/5 px-3 md:px-4 py-2 md:py-3">
+                    <Target className="w-3.5 h-3.5 md:w-4 md:h-4 text-emerald-400 mt-0.5 shrink-0" />
+                    <p className="text-xs md:text-sm text-foreground/90 leading-snug">
                       <span className="font-semibold text-emerald-400">Goal: </span>
                       {breakdown.outcome}
                     </p>
@@ -418,31 +459,31 @@ function Dashboard() {
               )}
 
               {/* Inline stats — slimmed to just days complete + next */}
-              <div className="mt-7 pt-6 border-t border-border/50 grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-emerald-500/15 border border-emerald-400/40 flex items-center justify-center shrink-0">
-                    <Check className="w-4 h-4 text-emerald-400" strokeWidth={3} />
+              <div className="mt-3 md:mt-7 pt-3 md:pt-6 border-t border-border/50 grid grid-cols-2 gap-3 md:gap-6">
+                <div className="flex items-center gap-2 md:gap-3">
+                  <div className="w-7 h-7 md:w-10 md:h-10 rounded-md md:rounded-lg bg-emerald-500/15 border border-emerald-400/40 flex items-center justify-center shrink-0">
+                    <Check className="w-3 h-3 md:w-4 md:h-4 text-emerald-400" strokeWidth={3} />
                   </div>
                   <div className="min-w-0">
-                    <p className="text-[10px] uppercase tracking-wider text-muted-foreground">
+                    <p className="text-[9px] md:text-[10px] uppercase tracking-wider text-muted-foreground">
                       Days complete
                     </p>
-                    <p className="font-semibold text-xl mt-0.5">
+                    <p className="font-semibold text-sm md:text-xl mt-0.5">
                       {completed}
-                      <span className="text-sm text-muted-foreground"> / {total}</span>
+                      <span className="text-xs md:text-sm text-muted-foreground"> / {total}</span>
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-gold/15 border border-gold/40 flex items-center justify-center shrink-0">
-                    <TrendingUp className="w-4 h-4 text-gold" />
+                <div className="flex items-center gap-2 md:gap-3">
+                  <div className="w-7 h-7 md:w-10 md:h-10 rounded-md md:rounded-lg bg-gold/15 border border-gold/40 flex items-center justify-center shrink-0">
+                    <TrendingUp className="w-3 h-3 md:w-4 md:h-4 text-gold" />
                   </div>
                   <div className="min-w-0">
-                    <p className="text-[10px] uppercase tracking-wider text-muted-foreground">
+                    <p className="text-[9px] md:text-[10px] uppercase tracking-wider text-muted-foreground">
                       Tomorrow
                     </p>
                     <p
-                      className="font-semibold mt-0.5 leading-snug truncate"
+                      className="font-semibold text-xs md:text-base mt-0.5 leading-snug truncate"
                       title={nextMilestone ?? ""}
                     >
                       {nextMilestone ? stripDayPrefix(nextMilestone) : "—"}
@@ -478,75 +519,48 @@ function Dashboard() {
         </Card>
 
         {/* 7-day tracker */}
-        <Card className="lg:col-span-3 glass bg-gradient-card rounded-2xl p-6 border-border/50">
-          <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
+        <Card className="lg:col-span-3 glass bg-gradient-card rounded-2xl p-3 md:p-6 border-border/50">
+          <div className="flex items-center justify-between mb-2 md:mb-4 flex-wrap gap-2">
             <div>
-              <h3 className="font-semibold">{total}-day build progress</h3>
-              <p className="text-xs text-muted-foreground mt-0.5">
+              <h3 className="font-semibold text-sm md:text-base">{total}-day build progress</h3>
+              <p className="text-[10px] md:text-xs text-muted-foreground mt-0.5">
                 Each box = one day in your Blueprint.
               </p>
             </div>
-            <div className="flex items-center gap-4 text-xs text-muted-foreground">
-              <span className="flex items-center gap-1.5">
-                <span className="w-3.5 h-3.5 rounded border border-emerald-400/60 bg-emerald-500/20 inline-flex items-center justify-center">
-                  <Check className="w-2.5 h-2.5 text-emerald-400" strokeWidth={3.5} />
+            <div className="flex items-center gap-2 md:gap-4 text-[10px] md:text-xs text-muted-foreground">
+              <span className="flex items-center gap-1 md:gap-1.5">
+                <span className="w-3 h-3 md:w-3.5 md:h-3.5 rounded border border-emerald-400/60 bg-emerald-500/20 inline-flex items-center justify-center">
+                  <Check className="w-2 h-2 md:w-2.5 md:h-2.5 text-emerald-400" strokeWidth={3.5} />
                 </span>{" "}
                 Done
               </span>
-              <span className="flex items-center gap-1.5">
-                <span className="w-3.5 h-3.5 rounded border border-gold bg-gold/10" /> Today
+              <span className="flex items-center gap-1 md:gap-1.5">
+                <span className="w-3 h-3 md:w-3.5 md:h-3.5 rounded border border-gold bg-gold/10" /> Today
               </span>
-              <span className="flex items-center gap-1.5">
-                <span className="w-3.5 h-3.5 rounded border border-border bg-muted/40" /> Upcoming
+              <span className="flex items-center gap-1 md:gap-1.5">
+                <span className="w-3 h-3 md:w-3.5 md:h-3.5 rounded border border-border bg-muted/40" /> Upcoming
               </span>
             </div>
           </div>
+          {/* Mobile (< md): cap to 10 columns so chips stay tappable.
+              30+ chips at iPhone width crushes them to ~10px wide each
+              and the day numbers stack on top of each other. Desktop
+              keeps the original "every chip in one row" layout. */}
           <div
-            className="grid gap-1"
+            className="grid gap-1 md:hidden"
+            style={{ gridTemplateColumns: "repeat(10, minmax(0, 1fr))" }}
+          >
+            {tracker.map((d) => renderChip(d))}
+          </div>
+          <div
+            className="hidden md:grid gap-1"
             style={{
               gridTemplateColumns: `repeat(${total}, minmax(0, 1fr))`,
             }}
           >
-            {tracker.map((d) => {
-              const isDone = d <= completed;
-              const isToday = d === today;
-              const isFuture = d > today;
-              const isViewed = (viewingDay ?? today) === d;
-              const dayLine = blueprint.seven_day_plan[d - 1];
-              const baseClass = isDone
-                ? "border-emerald-400/60 bg-emerald-500/15 text-emerald-400"
-                : isToday
-                  ? "border-gold bg-gold/10 text-gold animate-pulse"
-                  : "border-border bg-muted/40 text-muted-foreground/60";
-              const ringClass = isViewed
-                ? " ring-2 ring-amber-glow ring-offset-2 ring-offset-background"
-                : "";
-              const interactiveClass = !isFuture
-                ? " cursor-pointer hover:scale-110 transition"
-                : " cursor-not-allowed opacity-70";
-              return (
-                <button
-                  key={d}
-                  type="button"
-                  disabled={isFuture}
-                  onClick={() => {
-                    if (!isFuture) setViewingDay(d);
-                  }}
-                  title={dayLine ?? `Day ${d}`}
-                  className={`aspect-square rounded-md border flex items-center justify-center text-[9px] font-semibold ${baseClass}${ringClass}${interactiveClass}`}
-                >
-                  {isDone ? (
-                    <Check className="w-3 h-3" strokeWidth={3.5} />
-                  ) : isToday ? (
-                    <Rocket className="w-2.5 h-2.5" />
-                  ) : (
-                    d
-                  )}
-                </button>
-              );
-            })}
+            {tracker.map((d) => renderChip(d))}
           </div>
-          <div className="mt-4 h-1.5 rounded-full bg-secondary overflow-hidden">
+          <div className="mt-3 md:mt-4 h-1.5 rounded-full bg-secondary overflow-hidden">
             <div
               className="h-full transition-all bg-gradient-gold shadow-gold"
               style={{ width: `${pct}%` }}
@@ -556,9 +570,9 @@ function Dashboard() {
 
         {/* Today's checklist — the AI-generated sub-steps to actually
             execute today's step, plus a "stuck?" escape hatch. */}
-        <Card className="lg:col-span-2 glass bg-gradient-card rounded-2xl p-6 border-border/50">
+        <Card className="lg:col-span-2 glass bg-gradient-card rounded-2xl p-3 md:p-6 border-border/50">
           <div className="flex items-center justify-between mb-1">
-            <h3 className="font-semibold">Today's checklist</h3>
+            <h3 className="font-semibold text-sm md:text-base">Today's checklist</h3>
             <span className="text-[10px] uppercase tracking-[0.2em] text-amber-glow">
               {breakdown
                 ? `${breakdown.substeps.length} sub-steps`
@@ -567,7 +581,7 @@ function Dashboard() {
                   : "—"}
             </span>
           </div>
-          <p className="text-xs text-muted-foreground mb-4">
+          <p className="text-[11px] md:text-xs text-muted-foreground mb-2 md:mb-4 leading-snug">
             The concrete moves to land today's step. Tool chips show which
             AI tool is the right one for that line.
           </p>
