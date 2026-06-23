@@ -327,8 +327,9 @@ function Dashboard() {
   const tracker = Array.from({ length: total }, (_, i) => i + 1);
 
   // Single chip renderer reused by both the mobile (10-col wrap) and
-  // desktop (one-row) progress grids.
-  const renderChip = (d: number) => {
+  // desktop (one-row) progress grids. `aspect` lets the caller force
+  // a shorter aspect on mobile so the 3-row grid doesn't get tall.
+  const renderChip = (d: number, aspect = "aspect-square") => {
     const isDone = d <= completed;
     const isTodayChip = d === today;
     const isFuture = d > today;
@@ -354,7 +355,7 @@ function Dashboard() {
           if (!isFuture) setViewingDay(d);
         }}
         title={dayLine ?? `Day ${d}`}
-        className={`aspect-square rounded-md border flex items-center justify-center text-[9px] font-semibold ${baseClass}${ringClass}${interactiveClass}`}
+        className={`${aspect} rounded-md border flex items-center justify-center text-[9px] font-semibold ${baseClass}${ringClass}${interactiveClass}`}
       >
         {isDone ? (
           <Check className="w-3 h-3" strokeWidth={3.5} />
@@ -519,26 +520,30 @@ function Dashboard() {
         </Card>
 
         {/* 7-day tracker */}
-        <Card className="lg:col-span-3 glass bg-gradient-card rounded-2xl p-3 md:p-6 border-border/50">
-          <div className="flex items-center justify-between mb-2 md:mb-4 flex-wrap gap-2">
+        <Card className="lg:col-span-3 glass bg-gradient-card rounded-2xl p-2.5 md:p-6 border-border/50">
+          <div className="flex items-center justify-between mb-1.5 md:mb-4 flex-wrap gap-2">
             <div>
               <h3 className="font-semibold text-sm md:text-base">{total}-day build progress</h3>
-              <p className="text-[10px] md:text-xs text-muted-foreground mt-0.5">
+              {/* Subtitle desktop-only; on mobile the chips themselves
+                  read clearly enough without the caption. */}
+              <p className="hidden md:block text-xs text-muted-foreground mt-0.5">
                 Each box = one day in your Blueprint.
               </p>
             </div>
-            <div className="flex items-center gap-2 md:gap-4 text-[10px] md:text-xs text-muted-foreground">
-              <span className="flex items-center gap-1 md:gap-1.5">
-                <span className="w-3 h-3 md:w-3.5 md:h-3.5 rounded border border-emerald-400/60 bg-emerald-500/20 inline-flex items-center justify-center">
-                  <Check className="w-2 h-2 md:w-2.5 md:h-2.5 text-emerald-400" strokeWidth={3.5} />
+            {/* Legend desktop-only on mobile; mobile users get color-coded
+                chips that read fine without a key. */}
+            <div className="hidden md:flex items-center gap-4 text-xs text-muted-foreground">
+              <span className="flex items-center gap-1.5">
+                <span className="w-3.5 h-3.5 rounded border border-emerald-400/60 bg-emerald-500/20 inline-flex items-center justify-center">
+                  <Check className="w-2.5 h-2.5 text-emerald-400" strokeWidth={3.5} />
                 </span>{" "}
                 Done
               </span>
-              <span className="flex items-center gap-1 md:gap-1.5">
-                <span className="w-3 h-3 md:w-3.5 md:h-3.5 rounded border border-gold bg-gold/10" /> Today
+              <span className="flex items-center gap-1.5">
+                <span className="w-3.5 h-3.5 rounded border border-gold bg-gold/10" /> Today
               </span>
-              <span className="flex items-center gap-1 md:gap-1.5">
-                <span className="w-3 h-3 md:w-3.5 md:h-3.5 rounded border border-border bg-muted/40" /> Upcoming
+              <span className="flex items-center gap-1.5">
+                <span className="w-3.5 h-3.5 rounded border border-border bg-muted/40" /> Upcoming
               </span>
             </div>
           </div>
@@ -550,7 +555,7 @@ function Dashboard() {
             className="grid gap-1 md:hidden"
             style={{ gridTemplateColumns: "repeat(10, minmax(0, 1fr))" }}
           >
-            {tracker.map((d) => renderChip(d))}
+            {tracker.map((d) => renderChip(d, "aspect-[3/2]"))}
           </div>
           <div
             className="hidden md:grid gap-1"
