@@ -197,11 +197,12 @@ function Banner() {
   return (
     <section
       id="top"
-      className="relative w-full overflow-hidden md:h-[var(--banner-h)]"
+      className="relative w-full overflow-hidden min-h-[100svh] md:min-h-0 md:h-[var(--banner-h)]"
       style={{
-        // On mobile, the canvas is replaced by a simpler stacked layout
-        // (see below) and the section sizes to its content. From md up,
-        // the 1440×720 design canvas drives section height via this var.
+        // On mobile, the section fills the full small-viewport height
+        // (100svh — uses the dynamic viewport that excludes the iOS
+        // address bar so the banner doesn't end up scrolled past it).
+        // From md up, the 1440×720 design canvas drives section height.
         ["--banner-h" as string]: "clamp(280px, 50vw, 720px)",
       }}
     >
@@ -218,7 +219,7 @@ function Banner() {
           mini-mark below the wordmark; it's redundant with the wordmark
           itself (which already ends in "LaunchFly.") and the nav. Tight
           gaps so the composition lands in a single viewport on phones. */}
-      <div className="relative z-10 flex flex-col items-center justify-center gap-3 px-6 pt-6 pb-[15vh] text-center md:hidden">
+      <div className="relative z-10 flex min-h-[100svh] flex-col items-center justify-center gap-3 px-6 pt-6 pb-[28vh] text-center md:hidden md:min-h-0">
         <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-3 py-1 text-[11px] text-muted-foreground backdrop-blur">
           <Sparkles className="h-3.5 w-3.5 text-gold" /> How to start your own business
         </span>
@@ -408,12 +409,11 @@ function Banner() {
 
 function Hero() {
   return (
-    // -mt pulls the Hero (and every section below it) up into the banner.
-    // Mobile: -mt-[14vh] pulls Hero into the banner's extended bottom
-    // padding so "This is How to Start" sits IN the fade-to-black region
-    // of the banner image, not in solid black below it.
-    // Desktop: -mt-[187px] tuned by eye for the 1440x720 canvas.
-    <section className="relative px-6 -mt-[14vh] md:-mt-[187px]">
+    // -mt pulls the Hero up into the banner. Mobile uses -25vh so the
+    // hero text + body + buttons sit in the bottom third of the banner's
+    // full-viewport section across all phone sizes. Desktop -mt-[187px]
+    // is tuned by eye for the 1440×720 canvas.
+    <section className="relative px-6 -mt-[25vh] md:-mt-[187px]">
       <div className="mx-auto max-w-5xl text-center">
         <h1
           className="font-display mt-2 md:mt-16 whitespace-nowrap leading-[1.02] tracking-tight md:-translate-x-[11px] md:-translate-y-[3px]"
