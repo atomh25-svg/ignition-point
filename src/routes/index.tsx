@@ -219,7 +219,7 @@ function Banner() {
           mini-mark below the wordmark; it's redundant with the wordmark
           itself (which already ends in "LaunchFly.") and the nav. Tight
           gaps so the composition lands in a single viewport on phones. */}
-      <div className="relative z-10 flex min-h-[100svh] flex-col items-center justify-center gap-3 px-6 pt-6 pb-0 text-center md:hidden md:min-h-0">
+      <div className="relative z-10 flex min-h-[100svh] flex-col items-center justify-start gap-3 px-6 pt-6 pb-0 text-center md:hidden md:min-h-0">
         <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-3 py-1 text-[11px] text-muted-foreground backdrop-blur">
           <Sparkles className="h-3.5 w-3.5 text-gold" /> How to start your own business
         </span>
@@ -413,7 +413,7 @@ function Hero() {
     // hero text + body + buttons sit in the bottom third of the banner's
     // full-viewport section across all phone sizes. Desktop -mt-[187px]
     // is tuned by eye for the 1440×720 canvas.
-    <section className="relative px-6 -mt-[40vh] md:-mt-[187px]">
+    <section className="relative px-6 -mt-[70vh] md:-mt-[187px]">
       <div className="mx-auto max-w-5xl text-center">
         <h1
           className="font-display mt-2 md:mt-16 whitespace-nowrap leading-[1.02] tracking-tight md:-translate-x-[11px] md:-translate-y-[3px]"
