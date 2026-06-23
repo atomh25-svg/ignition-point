@@ -218,7 +218,7 @@ function Banner() {
           mini-mark below the wordmark; it's redundant with the wordmark
           itself (which already ends in "LaunchFly.") and the nav. Tight
           gaps so the composition lands in a single viewport on phones. */}
-      <div className="relative z-10 flex flex-col items-center justify-center gap-3 px-6 pt-6 pb-[147px] text-center md:hidden">
+      <div className="relative z-10 flex flex-col items-center justify-center gap-3 px-6 pt-6 pb-[118px] text-center md:hidden">
         <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-3 py-1 text-[11px] text-muted-foreground backdrop-blur">
           <Sparkles className="h-3.5 w-3.5 text-gold" /> How to start your own business
         </span>
@@ -409,11 +409,11 @@ function Banner() {
 function Hero() {
   return (
     // -mt pulls the Hero (and every section below it) up into the banner.
-    // Mobile: -mt-[140px] pulls Hero into the banner's extended bottom
+    // Mobile: -mt-[112px] pulls Hero into the banner's extended bottom
     // padding so "This is How to Start" sits IN the fade-to-black region
     // of the banner image, not in solid black below it.
     // Desktop: -mt-[187px] tuned by eye for the 1440x720 canvas.
-    <section className="relative px-6 -mt-[140px] md:-mt-[187px]">
+    <section className="relative px-6 -mt-[112px] md:-mt-[187px]">
       <div className="mx-auto max-w-5xl text-center">
         <h1
           className="font-display mt-2 md:mt-16 whitespace-nowrap leading-[1.02] tracking-tight md:-translate-x-[11px] md:-translate-y-[3px]"
