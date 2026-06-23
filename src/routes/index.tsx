@@ -426,11 +426,11 @@ function Hero() {
           <span className="text-gradient-gold">This</span> is How to Start.
         </h1>
 
-        <p className="mx-auto mt-[8vh] md:mt-[25.5px] max-w-md md:max-w-2xl text-sm md:text-lg text-muted-foreground leading-relaxed">
+        <p className="mx-auto mt-[6vh] md:mt-[25.5px] max-w-md md:max-w-2xl text-sm md:text-lg text-muted-foreground leading-relaxed">
           LaunchFly helps you go from "I want to start something" to knowing exactly what
           to build, how to start, and what to do next.
         </p>
-        <div className="mt-[15vh] md:mt-6 flex flex-row flex-wrap items-center justify-center gap-3">
+        <div className="mt-[8vh] md:mt-6 flex flex-col items-center justify-center gap-3 md:flex-row md:flex-wrap">
           <Link
             to="/pricing"
             onClick={() =>
