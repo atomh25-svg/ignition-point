@@ -220,7 +220,7 @@ function Banner() {
           itself (which already ends in "LaunchFly.") and the nav. Tight
           gaps so the composition lands in a single viewport on phones. */}
       <div className="relative z-10 flex min-h-[100svh] flex-col items-center justify-end gap-[6vh] px-6 pt-6 pb-[calc(40vh+52px)] text-center md:hidden md:min-h-0">
-        <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-3 py-1 text-[11px] text-muted-foreground backdrop-blur">
+        <span className="mt-[-9px] inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-3 py-1 text-[11px] text-muted-foreground backdrop-blur">
           <Sparkles className="h-3.5 w-3.5 text-gold" /> How to start your own business
         </span>
         <h2
@@ -363,7 +363,7 @@ function Banner() {
             background subject. */}
         <div className="absolute inset-x-0 top-[102px] z-10 mx-auto max-w-7xl px-6 -translate-x-6">
           <div className="text-center -translate-y-[9px]">
-            <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-3 py-1 text-xs text-muted-foreground backdrop-blur">
+            <span className="mt-[-9px] inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-3 py-1 text-xs text-muted-foreground backdrop-blur">
               <Sparkles className="h-3.5 w-3.5 text-gold" /> How to start your own business
             </span>
           </div>
