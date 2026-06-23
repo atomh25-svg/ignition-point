@@ -209,7 +209,7 @@ function Banner() {
       <img
         src={bannerImg}
         alt="Builder coding late at night, focused on launching their idea"
-        className="absolute top-0 h-full md:-top-[70px] md:h-[calc(100%+70px)] object-cover object-[60%_center] brightness-125 contrast-[1.1] translate-x-[10px] translate-y-[0px] scale-[1.44] md:translate-y-[10px] md:scale-100"
+        className="absolute top-0 h-full md:-top-[70px] md:h-[calc(100%+70px)] object-cover object-[60%_center] brightness-125 contrast-[1.1] translate-x-[10px] translate-y-[-7px] scale-[1.44] md:translate-y-[10px] md:scale-100"
         style={{ left: "-10px", width: "calc(100% + 10px)" }}
       />
       <div className="absolute inset-x-0 top-0 bottom-0 bg-banner-overlay-mobile md:bg-banner-overlay" />
