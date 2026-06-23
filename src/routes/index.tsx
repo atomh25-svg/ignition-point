@@ -208,7 +208,7 @@ function Banner() {
       <img
         src={bannerImg}
         alt="Builder coding late at night, focused on launching their idea"
-        className="absolute -top-[70px] h-[calc(100%+70px)] object-cover object-[60%_center] brightness-125 contrast-[1.1] translate-x-[10px] translate-y-[10px] scale-[1.2]"
+        className="absolute -top-[70px] h-[calc(100%+70px)] object-cover object-[60%_center] brightness-125 contrast-[1.1] translate-x-[10px] translate-y-[20px] scale-[1.2]"
         style={{ left: "-10px", width: "calc(100% + 10px)" }}
       />
       <div className="absolute inset-0 bg-banner-overlay" />
