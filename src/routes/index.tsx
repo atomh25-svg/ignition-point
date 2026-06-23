@@ -240,7 +240,7 @@ function Banner() {
         <h1
           className="font-display leading-none"
           style={{
-            fontSize: "89px",
+            fontSize: "71px",
             letterSpacing: "-0.07em",
             transform: "scale(0.94, 1.05)",
           }}
