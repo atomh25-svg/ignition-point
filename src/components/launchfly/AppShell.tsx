@@ -76,13 +76,7 @@ export function AppShell() {
         <header className="sticky top-0 z-40 md:hidden">
           <div className="glass-nav border-b border-border/40">
             <div className="flex items-center justify-between gap-2 px-4 py-3">
-              <Link
-                to="/app/dashboard"
-                className="flex items-center gap-1.5"
-                aria-label="LaunchFly dashboard"
-              >
-                <Logo />
-              </Link>
+              <Logo to="/app/dashboard" />
               <button
                 type="button"
                 aria-label={mobileNavOpen ? "Close menu" : "Open menu"}
