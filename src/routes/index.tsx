@@ -208,7 +208,7 @@ function Banner() {
       <img
         src={bannerImg}
         alt="Builder coding late at night, focused on launching their idea"
-        className="absolute -top-[70px] h-[calc(100%+70px)] object-cover object-[60%_center] brightness-125 contrast-[1.1] translate-x-[10px] translate-y-[10px]"
+        className="absolute -top-[70px] h-[calc(100%+70px)] object-cover object-[60%_center] brightness-125 contrast-[1.1] translate-x-[10px] translate-y-[20%] md:translate-y-[10px]"
         style={{ left: "-10px", width: "calc(100% + 10px)" }}
       />
       <div className="absolute inset-0 bg-banner-overlay" />
@@ -240,9 +240,9 @@ function Banner() {
         <h1
           className="font-display leading-none"
           style={{
-            fontSize: "clamp(4.5rem, 24vw, 8rem)",
-            letterSpacing: "-0.06em",
-            transform: "scale(0.96, 1.05)",
+            fontSize: "clamp(3rem, 18vw, 6rem)",
+            letterSpacing: "-0.07em",
+            transform: "scale(0.94, 1.05)",
           }}
         >
           <span className="text-gradient-gold-fade">Lau</span>
