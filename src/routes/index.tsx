@@ -413,7 +413,7 @@ function Hero() {
     // hero text + body + buttons sit in the bottom third of the banner's
     // full-viewport section across all phone sizes. Desktop -mt-[187px]
     // is tuned by eye for the 1440×720 canvas.
-    <section className="relative px-6 -mt-[35vh] md:-mt-[187px]">
+    <section className="relative px-6 -mt-[70vh] md:-mt-[187px]">
       <div className="mx-auto max-w-5xl text-center">
         <h1
           className="font-display mt-2 md:mt-16 whitespace-nowrap leading-[1.02] tracking-tight md:-translate-x-[11px] md:-translate-y-[3px]"
@@ -426,11 +426,11 @@ function Hero() {
           <span className="text-gradient-gold">This</span> is How to Start.
         </h1>
 
-        <p className="mx-auto mt-4 md:mt-[25.5px] max-w-md md:max-w-2xl text-sm md:text-lg text-muted-foreground leading-relaxed">
+        <p className="mx-auto mt-[8vh] md:mt-[25.5px] max-w-md md:max-w-2xl text-sm md:text-lg text-muted-foreground leading-relaxed">
           LaunchFly helps you go from "I want to start something" to knowing exactly what
           to build, how to start, and what to do next.
         </p>
-        <div className="mt-6 flex flex-row flex-wrap items-center justify-center gap-3">
+        <div className="mt-[15vh] md:mt-6 flex flex-row flex-wrap items-center justify-center gap-3">
           <Link
             to="/pricing"
             onClick={() =>
