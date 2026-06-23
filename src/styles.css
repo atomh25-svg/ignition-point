@@ -107,6 +107,17 @@
     oklch(0.16 0.012 70 / 0.85) 75%,
     oklch(0.16 0.012 70) 90%
   );
+  /* Mobile-specific fade — more gradient stops, smoother roll-off into
+     solid black so the transition doesn't look like a hard cutoff. */
+  --gradient-banner-overlay-mobile: linear-gradient(
+    to bottom,
+    oklch(0.16 0.012 70 / 0.55) 0%,
+    oklch(0.16 0.012 70 / 0.30) 25%,
+    oklch(0.16 0.012 70 / 0.40) 50%,
+    oklch(0.16 0.012 70 / 0.65) 70%,
+    oklch(0.16 0.012 70 / 0.88) 85%,
+    oklch(0.16 0.012 70) 100%
+  );
   --gradient-warm-glow: radial-gradient(
     ellipse at 50% 0%,
     oklch(0.84 0.16 86 / 0.18),
@@ -350,6 +361,7 @@
   }
   .bg-gradient-gold { background: var(--gradient-gold); }
   .bg-banner-overlay { background: var(--gradient-banner-overlay); }
+  .bg-banner-overlay-mobile { background: var(--gradient-banner-overlay-mobile); }
   .bg-warm-glow { background: var(--gradient-warm-glow); }
   .shadow-gold { box-shadow: var(--shadow-gold); }
   .shadow-card-soft { box-shadow: var(--shadow-card); }
