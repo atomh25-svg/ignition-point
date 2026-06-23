@@ -107,15 +107,16 @@
     oklch(0.16 0.012 70 / 0.85) 75%,
     oklch(0.16 0.012 70) 90%
   );
-  /* Mobile-specific fade — more gradient stops, smoother roll-off into
-     solid black so the transition doesn't look like a hard cutoff. */
+  /* Mobile-specific fade — long subtle top, then a smooth roll-off
+     into solid black that lands at 100% (the section's bottom edge)
+     so the fade meets the page background seamlessly. */
   --gradient-banner-overlay-mobile: linear-gradient(
     to bottom,
-    oklch(0.16 0.012 70 / 0.55) 0%,
-    oklch(0.16 0.012 70 / 0.30) 25%,
-    oklch(0.16 0.012 70 / 0.40) 50%,
-    oklch(0.16 0.012 70 / 0.65) 70%,
-    oklch(0.16 0.012 70 / 0.88) 85%,
+    oklch(0.16 0.012 70 / 0.50) 0%,
+    oklch(0.16 0.012 70 / 0.30) 35%,
+    oklch(0.16 0.012 70 / 0.45) 55%,
+    oklch(0.16 0.012 70 / 0.70) 75%,
+    oklch(0.16 0.012 70 / 0.92) 90%,
     oklch(0.16 0.012 70) 100%
   );
   --gradient-warm-glow: radial-gradient(
