@@ -219,7 +219,7 @@ function Banner() {
           mini-mark below the wordmark; it's redundant with the wordmark
           itself (which already ends in "LaunchFly.") and the nav. Tight
           gaps so the composition lands in a single viewport on phones. */}
-      <div className="relative z-10 flex min-h-[100svh] flex-col items-center justify-end gap-[6vh] px-6 pt-6 pb-[35vh] text-center md:hidden md:min-h-0">
+      <div className="relative z-10 flex min-h-[100svh] flex-col items-center justify-end gap-[6vh] px-6 pt-6 pb-[40vh] text-center md:hidden md:min-h-0">
         <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-3 py-1 text-[11px] text-muted-foreground backdrop-blur">
           <Sparkles className="h-3.5 w-3.5 text-gold" /> How to start your own business
         </span>
@@ -413,7 +413,7 @@ function Hero() {
     // hero text + body + buttons sit in the bottom third of the banner's
     // full-viewport section across all phone sizes. Desktop -mt-[187px]
     // is tuned by eye for the 1440×720 canvas.
-    <section className="relative px-6 -mt-[35vh] md:-mt-[187px]">
+    <section className="relative px-6 -mt-[40vh] md:-mt-[187px]">
       <div className="mx-auto max-w-5xl text-center">
         <h1
           className="font-display mt-2 md:mt-16 whitespace-nowrap leading-[1.02] tracking-tight md:-translate-x-[11px] md:-translate-y-[3px]"
@@ -426,11 +426,11 @@ function Hero() {
           <span className="text-gradient-gold">This</span> is How to Start.
         </h1>
 
-        <p className="mx-auto mt-[6vh] md:mt-[25.5px] max-w-md md:max-w-2xl text-sm md:text-lg text-muted-foreground leading-relaxed">
+        <p className="mx-auto mt-[5vh] md:mt-[25.5px] max-w-md md:max-w-2xl text-sm md:text-lg text-muted-foreground leading-relaxed">
           LaunchFly helps you go from "I want to start something" to knowing exactly what
           to build, how to start, and what to do next.
         </p>
-        <div className="mt-[8vh] md:mt-6 flex flex-col items-center justify-center gap-3 md:flex-row md:flex-wrap">
+        <div className="mt-[4vh] md:mt-6 flex flex-col items-center justify-center gap-3 md:flex-row md:flex-wrap">
           <Link
             to="/pricing"
             onClick={() =>
