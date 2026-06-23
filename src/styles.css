@@ -112,11 +112,13 @@
      so the fade meets the page background seamlessly. */
   --gradient-banner-overlay-mobile: linear-gradient(
     to bottom,
-    oklch(0.16 0.012 70 / 0.50) 0%,
-    oklch(0.16 0.012 70 / 0.30) 35%,
-    oklch(0.16 0.012 70 / 0.45) 55%,
-    oklch(0.16 0.012 70 / 0.70) 75%,
-    oklch(0.16 0.012 70 / 0.92) 90%,
+    oklch(0.16 0.012 70 / 0.45) 0%,
+    oklch(0.16 0.012 70 / 0.28) 30%,
+    oklch(0.16 0.012 70 / 0.42) 50%,
+    oklch(0.16 0.012 70 / 0.62) 65%,
+    oklch(0.16 0.012 70 / 0.82) 78%,
+    oklch(0.16 0.012 70 / 0.96) 88%,
+    oklch(0.16 0.012 70) 96%,
     oklch(0.16 0.012 70) 100%
   );
   --gradient-warm-glow: radial-gradient(
